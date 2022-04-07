@@ -1,5 +1,6 @@
 import yaml
 import argparse
+import os
 from kubernetes import client, config
 
 
@@ -41,6 +42,8 @@ def parse_config(component_name):
         if section == 'kubernetes':
             result[section]['context'] = chart_config['kubernetes']['context']
             result[section]['namespace'] = chart_config['kubernetes']['namespace']
+        elif section == 'flags':
+            result[section]['remove_ingress_suffix'] = chart_config['flags']['remove_ingress_suffix']
         elif section == 'chart':
             result[section]['apiVersion'] = chart_config['chart']['apiVersion']
             result[section]['name'] = chart_config['chart']['name']
@@ -103,11 +106,16 @@ def load_kubernetes_data(conf):
                 )
                 pass
         elif kind == 'Ingress':
+            try:
+                name_suffix = conf['flags']['remove_ingress_suffix']
+            except KeyError:
+                name_suffix = ''
             for component in conf['components'][kind]:
                 values[component] = create_ingress(
                     name=component,
+                    name_suffix=name_suffix,
                     k8s_client=client,
-                    namespace=conf['kubernetes']['namespace']
+                    namespace=conf['kubernetes']['namespace'],
                 )
                 pass
         conf['kubernetes']['values'][kind] = values
@@ -312,13 +320,20 @@ def remove_empty_from_dict(d):
 
 def read_env(items):
     variables_to_remove = [
-        'STAKATER_OCP_CONFIG_CONFIGMAP',
+        'FOO'
+    ]
+    # TODO: Refactor this section
+    prefixes_to_remove = [
+        'STAKATER_',
     ]
     env = list()
     if type(items) is list:
         for item in items:
-            if item.name in variables_to_remove:
-                break
+            # Remove variables based on prefixes_to_remove
+            if os.path.commonprefix([prefixes_to_remove[0], item.name]) == prefixes_to_remove[0]:
+                continue
+            elif item.name in variables_to_remove:
+                continue
             env.append(dict(
                 name=item.name,
                 value=item.value,
@@ -504,8 +519,8 @@ def create_workload(kind, name, k8s_client, namespace):
     return result | create_workload_template(ret, name)
 
 
-def create_ingress(name: str, k8s_client, namespace):
-    ingress_name = name.replace('-ingress', '')
+def create_ingress(name: str, k8s_client, namespace, name_suffix=''):
+    ingress_name = name.replace(name_suffix, '')
     v1 = k8s_client.NetworkingV1Api()
     ret = v1.list_namespaced_ingress(
         field_selector="metadata.name={name}".format(name=ingress_name),
