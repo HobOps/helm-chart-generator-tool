@@ -1,7 +1,6 @@
 import yaml
 import argparse
 from kubernetes import client, config
-from kubernetes.client import V1ConfigMapEnvSource, V1ContainerPort, V1EnvFromSource, V1EnvVarSource, V1SecretEnvSource
 
 
 def write_file(path, values, mode='yaml'):
@@ -43,7 +42,7 @@ def parse_config(component_name):
             result[section]['context'] = chart_config['kubernetes']['context']
             result[section]['namespace'] = chart_config['kubernetes']['namespace']
         elif section == 'chart':
-            result[section]['appVersion'] = chart_config['chart']['appVersion']
+            result[section]['apiVersion'] = chart_config['chart']['apiVersion']
             result[section]['name'] = chart_config['chart']['name']
             result[section]['description'] = chart_config['chart']['description']
             result[section]['type'] = chart_config['chart']['type']
@@ -67,7 +66,6 @@ def parse_config(component_name):
 def parse_config_list(config_list):
     import re
     result = list()
-    # for item in re.split(',| |\n', config_list):
     for item in re.split('[, \n]', config_list):
         if item != '':
             result.append(item)
@@ -175,7 +173,11 @@ def create_chart_file(conf):
 
 
 def create_values_file(conf):
-    write_file(f"charts/{conf['chart']['name']}/values.yaml", remove_empty_from_dict(conf['kubernetes']['values']))
+    values = dict()
+    for kind in conf['kubernetes']['values']:
+        for item in conf['kubernetes']['values'][kind]:
+            values[item] = conf['kubernetes']['values'][kind][item]
+    write_file(f"charts/{conf['chart']['name']}/values.yaml", remove_empty_from_dict(values))
     pass
 
 
@@ -264,13 +266,37 @@ def convert_values(value):
 
 def to_dict(item):
     if type(item) in [
-        V1ConfigMapEnvSource,
-        V1ContainerPort,
-        V1EnvFromSource,
-        V1EnvVarSource,
-        V1SecretEnvSource
+        client.V1ConfigMapEnvSource,
+        client.V1ContainerPort,
+        client.V1EnvFromSource,
+        client.V1EnvVarSource,
+        client.V1SecretEnvSource,
+        client.V1ConfigMapVolumeSource,
+        client.V1SecretVolumeSource,
+        client.V1VolumeMount,
+        client.V1Probe
     ]:
-        return item.to_dict()
+        # This section converts dictionary keys from underscore to camel case
+        values = item.to_dict()
+        if type(item) is client.V1EnvVarSource:
+            values['configMapKeyRef'] = values.pop('config_map_key_ref')
+        elif type(item) is client.V1ConfigMapVolumeSource:
+            values['defaultMode'] = values.pop('default_mode')
+        elif type(item) is client.V1SecretVolumeSource:
+            values['defaultMode'] = values.pop('default_mode')
+            values['secretName'] = values.pop('secret_name')
+        elif type(item) is client.V1Probe:
+            values['failureThreshold'] = values.pop('failure_threshold')
+            values['httpGet'] = values.pop('http_get')
+            values['initialDelaySeconds'] = values.pop('initial_delay_seconds')
+            values['periodSeconds'] = values.pop('period_seconds')
+            values['successThreshold'] = values.pop('success_threshold')
+            values['tcpSocket'] = values.pop('tcp_socket')
+            values['terminationGracePeriodSeconds'] = values.pop('termination_grace_period_seconds')
+            values['timeoutSeconds'] = values.pop('timeout_seconds')
+        else:
+            values = item.to_dict()
+        return values
     else:
         return None
 
@@ -311,6 +337,34 @@ def read_env_from(items):
                 prefix=item.prefix
             ))
     return env_from
+
+
+def read_volumes(items):
+    values = list()
+    if type(items) is list:
+        for item in items:
+            values.append(dict(
+                name=item.name,
+                configMap=to_dict(item.config_map),
+                secret=to_dict(item.secret),
+                hostPath=to_dict(item.host_path)
+            ))
+    return values
+
+
+def read_volume_mounts(items):
+    values = list()
+    if type(items) is list:
+        for item in items:
+            values.append(dict(
+                mountPath=item.mount_path,
+                mountPropagation=item.mount_propagation,
+                name=item.name,
+                readOnly=item.read_only,
+                subPath=item.sub_path,
+                subPathExpr=item.sub_path_expr
+            ))
+    return values
 
 
 def read_annotations(annotations: dict):
@@ -357,6 +411,27 @@ def read_ingress_tls(tls):
     return result
 
 
+def read_image_pull_secrets(image_pull_secrets):
+    result = list()
+    if type(image_pull_secrets) is list:
+        for item in image_pull_secrets:
+            result.append(dict(
+                name=item.name
+            ))
+    return result
+
+
+def read_host_aliases(host_aliases):
+    result = list()
+    if type(host_aliases) is list:
+        for item in host_aliases:
+            result.append(dict(
+                ip=item.ip,
+                hostnames=item.hostnames,
+            ))
+    return result
+
+
 def create_configmap(name):
     print(name)
     return dict(
@@ -376,6 +451,7 @@ def create_secret(name):
 
 
 def create_workload_template(ret, name):
+    # print(ret.items[0].spec.template.spec.host_aliases)
     return dict(
         annotations=read_annotations(ret.items[0].metadata.annotations),
         selectorLabels=dict(
@@ -391,13 +467,26 @@ def create_workload_template(ret, name):
         envFrom=read_env_from(ret.items[0].spec.template.spec.containers[0].env_from),
         service=dict(
             ports=create_services(ret.items[0].spec.template.spec.containers[0].ports)
-        )
+        ),
+        volumes=read_volumes(ret.items[0].spec.template.spec.volumes),
+        volumeMounts=read_volume_mounts(ret.items[0].spec.template.spec.containers[0].volume_mounts),
+        serviceAccount=ret.items[0].spec.template.spec.service_account,
+        imagePullSecrets=read_image_pull_secrets(ret.items[0].spec.template.spec.image_pull_secrets),
+        hostAliases=read_host_aliases(ret.items[0].spec.template.spec.host_aliases),
+        readinessProbe=to_dict(ret.items[0].spec.template.spec.containers[0].readiness_probe),
+        livenessProbe=to_dict(ret.items[0].spec.template.spec.containers[0].liveness_probe),
+        # strategy
+        # resources
+        # security_context
     )
 
 
 def create_workload(kind, name, k8s_client, namespace):
     v1 = k8s_client.AppsV1Api()
-    result = dict(kind=kind)
+    result = dict(
+        kind=kind,
+        fullnameOverride=name
+    )
     print(name)
     ret = ''
     if kind == "StatefulSet":
