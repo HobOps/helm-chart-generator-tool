@@ -1,4 +1,3 @@
-import yaml
 import argparse
 import os
 from kubernetes import client, config
@@ -6,6 +5,8 @@ from kubernetes import client, config
 
 def write_file(path, values, mode='yaml'):
     import os
+    import yaml
+    import json
     # Create directory
     directory = os.path.dirname(path)
     try:
@@ -15,8 +16,13 @@ def write_file(path, values, mode='yaml'):
 
     # Write file
     if mode == 'yaml':
+        yaml.add_representer(str, str_presenter)
+        yaml.representer.SafeRepresenter.add_representer(str, str_presenter)
         with open(path, 'w') as outfile:
             yaml.dump(values, outfile, default_flow_style=False, sort_keys=False)
+    elif mode == 'json':
+        with open(path, 'w') as outfile:
+            json.dump(values, outfile, sort_keys=False, indent=4)
     else:
         with open(path, 'w') as outfile:
             outfile.writelines('\n'.join(values))
@@ -40,27 +46,26 @@ def parse_config(component_name):
     for section in chart_config:
         result[section] = dict()
         if section == 'kubernetes':
-            result[section]['context'] = chart_config['kubernetes']['context']
-            result[section]['namespace'] = chart_config['kubernetes']['namespace']
+            result[section]['context'] = chart_config[section]['context']
+            result[section]['namespace'] = chart_config[section]['namespace']
         elif section == 'flags':
-            result[section]['remove_ingress_suffix'] = chart_config['flags']['remove_ingress_suffix']
+            result[section]['remove_ingress_suffix'] = chart_config[section]['remove_ingress_suffix']
         elif section == 'chart':
-            result[section]['apiVersion'] = chart_config['chart']['apiVersion']
-            result[section]['name'] = chart_config['chart']['name']
-            result[section]['description'] = chart_config['chart']['description']
-            result[section]['type'] = chart_config['chart']['type']
-            result[section]['version'] = chart_config['chart']['version']
-            result[section]['appVersion'] = chart_config['chart']['appVersion']
-            result[section]['maintainers'] = parse_config_list(chart_config['chart']['maintainers'])
-            result[section]['sources'] = parse_config_list(chart_config['chart']['sources'])
-            result[section]['baselineVersion'] = chart_config['chart']['baselineVersion']
-            result[section]['baselineName'] = chart_config['chart']['baselineName']
-            result[section]['baselineRepository'] = chart_config['chart']['baselineRepository']
+            result[section]['apiVersion'] = chart_config[section]['apiVersion']
+            result[section]['name'] = chart_config[section]['name']
+            result[section]['description'] = chart_config[section]['description']
+            result[section]['type'] = chart_config[section]['type']
+            result[section]['version'] = chart_config[section]['version']
+            result[section]['appVersion'] = chart_config[section]['appVersion']
+            result[section]['maintainers'] = parse_config_list(chart_config[section]['maintainers'])
+            result[section]['sources'] = parse_config_list(chart_config[section]['sources'])
+            result[section]['baselineVersion'] = chart_config[section]['baselineVersion']
+            result[section]['baselineName'] = chart_config[section]['baselineName']
+            result[section]['baselineRepository'] = chart_config[section]['baselineRepository']
         elif section == 'components':
-
-            for kind in chart_config['components']:
+            for kind in chart_config[section]:
                 result[section][convert_values(kind)] = list()
-                result[section][convert_values(kind)] = parse_config_list(chart_config['components'][kind])
+                result[section][convert_values(kind)] = parse_config_list(chart_config[section][kind])
         else:
             result.pop(section)
     return result
@@ -88,15 +93,16 @@ def load_kubernetes_data(conf):
     for kind in conf['components'].keys():
         print("==== " + kind)
         values = dict()
-        if kind == 'ConfigMap':
+        if kind in ['ConfigMap', 'Secret']:
             for component in conf['components'][kind]:
-                values[component] = create_configmap(component)
+                values[component] = create_configmap_or_secret(
+                    kind=kind,
+                    name=component,
+                    k8s_client=client,
+                    namespace=conf['kubernetes']['namespace']
+                )
                 pass
-        elif kind == 'Secret':
-            for component in conf['components'][kind]:
-                values[component] = create_secret(component)
-                pass
-        elif kind in ['Deployment', 'StatefulSet']:
+        elif kind in ['Job', 'Deployment', 'StatefulSet']:
             for component in conf['components'][kind]:
                 values[component] = create_workload(
                     kind=kind,
@@ -119,6 +125,22 @@ def load_kubernetes_data(conf):
                 )
                 pass
         conf['kubernetes']['values'][kind] = values
+    pass
+
+
+def create_vars_file(conf):
+    field = dict(
+        ConfigMap='data',
+        Secret='stringData'
+    )
+    for kind in conf['kubernetes']['values']:
+        if kind in ['ConfigMap', 'Secret']:
+            for item in conf['kubernetes']['values'][kind]:
+                write_file(
+                    f"output/vars/{conf['chart']['name']}/{item}.json",
+                    remove_empty_from_dict(conf['kubernetes']['values'][kind][item][field[kind]]),
+                    mode='json'
+                )
     pass
 
 
@@ -149,7 +171,7 @@ def create_helmignore_file(conf):
         '.vscode/',
         ''
     ]
-    write_file(f"charts/{conf['chart']['name']}/.helmignore", data, mode='raw')
+    write_file(f"output/charts/{conf['chart']['name']}/.helmignore", data, mode='raw')
     pass
 
 
@@ -165,18 +187,16 @@ def create_chart_file(conf):
     for kind in conf['components']:
         for dependency in conf['components'][kind]:
             dependencies.append(dict(
-                alias=dependency,
                 name=conf['chart']['baselineName'],
                 version=conf['chart']['baselineVersion'],
                 repository=conf['chart']['baselineRepository'],
+                alias=dependency,
             ))
     conf['chart']['dependencies'] = dependencies
-
     # Remove unnecessary keys from dictionary
     for item in ['baselineVersion', 'baselineName', 'baselineRepository']:
         conf['chart'].pop(item)
-
-    write_file(f"charts/{conf['chart']['name']}/Chart.yaml", conf['chart'])
+    write_file(f"output/charts/{conf['chart']['name']}/Chart.yaml", conf['chart'])
     pass
 
 
@@ -185,7 +205,13 @@ def create_values_file(conf):
     for kind in conf['kubernetes']['values']:
         for item in conf['kubernetes']['values'][kind]:
             values[item] = conf['kubernetes']['values'][kind][item]
-    write_file(f"charts/{conf['chart']['name']}/values.yaml", remove_empty_from_dict(values))
+            # Remove variables from "values.yaml" file
+            if kind == 'ConfigMap':
+                values[item]['data'] = {}
+            elif kind == 'Secret':
+                values[item]['data'] = {}
+                values[item]['stringData'] = {}
+    write_file(f"output/charts/{conf['chart']['name']}/values.yaml", remove_empty_from_dict(values))
     pass
 
 
@@ -197,19 +223,19 @@ def create_helm_chart(conf):
 
 
 def create_environment_values_file(conf):
-    file = f"environments/{conf['chart']['name']}/{conf['chart']['name']}.values.yaml.gotmpl"
+    file = f"output/environments/{conf['chart']['name']}/{conf['chart']['name']}.values.yaml.gotmpl"
     data = list()
     data.append('# Load global and environment settings')
     data.append('{{ readFile "../../include/values.global.yaml" }}')
     data.append('{{ readFile "values.environment.yaml" }}')
     data.append('')
-
     for kind in conf['kubernetes']['values'].keys():
         if kind == 'ConfigMap':
             data.append(f'### {kind}')
             for component in conf['kubernetes']['values'][kind]:
                 data.append(f'{component}:')
                 data.append(f'  data: {{}}')
+                # Save variables to file
                 data.append(f'')
                 pass
         elif kind == 'Secret':
@@ -225,7 +251,7 @@ def create_environment_values_file(conf):
                 data.append(f'{component}:')
                 data.append(f'  <<: *default-environment')
                 data.append(f'  <<: *default-global-resources-nolimit')
-                data.append(f"  replicas: {conf['kubernetes']['values'][kind][component]['replicas']}")
+                data.append(f"  replicaCount: {conf['kubernetes']['values'][kind][component]['replicas']}")
                 data.append(f"  image:")
                 data.append(f"    repository: {conf['kubernetes']['values'][kind][component]['image']['repository']}")
                 data.append(f"    tag: {conf['kubernetes']['values'][kind][component]['image']['tag']}")
@@ -242,7 +268,6 @@ def create_environment_values_file(conf):
                 data.append(f"  host: {conf['kubernetes']['values'][kind][component]['rules'][0]['host']}")
                 pass
             data.append('')
-
     write_file(file, data, mode='raw')
     pass
 
@@ -267,7 +292,8 @@ def convert_values(value):
         secret='Secret',
         deployment='Deployment',
         statefulset='StatefulSet',
-        ingress='Ingress'
+        ingress='Ingress',
+        job='Job'
     )
     return values[value]
 
@@ -310,12 +336,22 @@ def to_dict(item):
 
 
 def remove_empty_from_dict(d):
+    """efficient way to remove keys with empty strings from a dict
+    Ref: https://stackoverflow.com/questions/12118695/efficient-way-to-remove-keys-with-empty-strings-from-a-dict"""
     if type(d) is dict:
         return dict((k, remove_empty_from_dict(v)) for k, v in d.items() if v and remove_empty_from_dict(v))
     elif type(d) is list:
         return [remove_empty_from_dict(v) for v in d if v and remove_empty_from_dict(v)]
     else:
         return d
+
+
+def str_presenter(dumper, data):
+    """configures yaml for dumping multiline strings
+    Ref: https://stackoverflow.com/questions/8640959/how-can-i-control-what-scalar-form-pyyaml-uses-for-my-data"""
+    if len(data.splitlines()) > 1:  # check for multiline string
+        return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
+    return dumper.represent_scalar('tag:yaml.org,2002:str', data)
 
 
 def read_env(items):
@@ -417,7 +453,7 @@ def read_ingress_rules(rules):
 
 def read_ingress_tls(tls):
     result = list()
-    if tls is list:
+    if type(tls) is list:
         for item in tls:
             result.append(dict(
                 secretName=item.secret_name,
@@ -447,26 +483,34 @@ def read_host_aliases(host_aliases):
     return result
 
 
-def create_configmap(name):
-    print(name)
-    return dict(
-        kind='ConfigMap',
-        fullnameOverride=name,
-        data={}
+def create_configmap_or_secret(kind, name, k8s_client, namespace):
+    import base64
+    v1 = k8s_client.CoreV1Api()
+    result = dict(
+        kind=kind,
+        fullnameOverride=name
     )
-
-
-def create_secret(name):
     print(name)
-    return dict(
-        kind='Secret',
-        fullnameOverride=name,
-        stringData={}
-    )
+    ret = ''
+    if kind == "ConfigMap":
+        ret = v1.list_namespaced_config_map(
+            field_selector="metadata.name={name}".format(name=name),
+            namespace=namespace,
+        )
+        result['data'] = ret.items[0].data
+    elif kind == "Secret":
+        ret = v1.list_namespaced_secret(
+            field_selector="metadata.name={name}".format(name=name),
+            namespace=namespace,
+        )
+        string_data = dict()
+        for item in ret.items[0].data:
+            string_data[item] = base64.b64decode(ret.items[0].data[item]).decode("utf-8")
+        result['stringData'] = string_data
+    return result
 
 
 def create_workload_template(ret, name):
-    # print(ret.items[0].spec.template.spec.host_aliases)
     return dict(
         annotations=read_annotations(ret.items[0].metadata.annotations),
         selectorLabels=dict(
@@ -485,11 +529,15 @@ def create_workload_template(ret, name):
         ),
         volumes=read_volumes(ret.items[0].spec.template.spec.volumes),
         volumeMounts=read_volume_mounts(ret.items[0].spec.template.spec.containers[0].volume_mounts),
-        serviceAccount=ret.items[0].spec.template.spec.service_account,
+        serviceAccount=(ret.items[0].spec.template.spec.service_account, None)[
+            ret.items[0].spec.template.spec.service_account == 'default'
+        ],
         imagePullSecrets=read_image_pull_secrets(ret.items[0].spec.template.spec.image_pull_secrets),
         hostAliases=read_host_aliases(ret.items[0].spec.template.spec.host_aliases),
         readinessProbe=to_dict(ret.items[0].spec.template.spec.containers[0].readiness_probe),
         livenessProbe=to_dict(ret.items[0].spec.template.spec.containers[0].liveness_probe),
+        # TODO: Add missing resources
+        # securityContext=to_dict(ret.items[0].spec.template.spec.containers[0].security_context),
         # strategy
         # resources
         # security_context
@@ -504,7 +552,13 @@ def create_workload(kind, name, k8s_client, namespace):
     )
     print(name)
     ret = ''
-    if kind == "StatefulSet":
+    if kind == "Job":
+        v1 = k8s_client.BatchV1Api()
+        ret = v1.list_namespaced_job(
+            field_selector="metadata.name={name}".format(name=name),
+            namespace=namespace
+        )
+    elif kind == "StatefulSet":
         ret = v1.list_namespaced_stateful_set(
             field_selector="metadata.name={name}".format(name=name),
             namespace=namespace
@@ -546,6 +600,9 @@ def main():
     config_settings = parse_config(args.name)
     load_kubernetes_config(config_settings)
     load_kubernetes_data(config_settings)
+
+    # Create env vars in JSON file
+    create_vars_file(config_settings)
 
     # Creates helm chart files
     create_helm_chart(config_settings)
