@@ -59,9 +59,9 @@ def parse_config(component_name):
             result[section]['appVersion'] = chart_config[section]['appVersion']
             result[section]['maintainers'] = parse_config_list(chart_config[section]['maintainers'])
             result[section]['sources'] = parse_config_list(chart_config[section]['sources'])
-            result[section]['baselineVersion'] = chart_config[section]['baselineVersion']
-            result[section]['baselineName'] = chart_config[section]['baselineName']
-            result[section]['baselineRepository'] = chart_config[section]['baselineRepository']
+            result[section]['baseChartVersion'] = chart_config[section]['baseChartVersion']
+            result[section]['baseChartName'] = chart_config[section]['baseChartName']
+            result[section]['baseChartRepository'] = chart_config[section]['baseChartRepository']
         elif section == 'components':
             for kind in chart_config[section]:
                 result[section][convert_values(kind)] = list()
@@ -183,18 +183,13 @@ def create_chart_file(conf):
     conf['chart']['maintainers'] = maintainers
 
     # Render dependencies
-    dependencies = list()
-    for kind in conf['components']:
-        for dependency in conf['components'][kind]:
-            dependencies.append(dict(
-                name=conf['chart']['baselineName'],
-                version=conf['chart']['baselineVersion'],
-                repository=conf['chart']['baselineRepository'],
-                alias=dependency,
-            ))
-    conf['chart']['dependencies'] = dependencies
+    conf['chart']['dependencies'] = [dict(
+        name=conf['chart']['baseChartName'],
+        version=conf['chart']['baseChartVersion'],
+        repository=conf['chart']['baseChartRepository'],
+    )]
     # Remove unnecessary keys from dictionary
-    for item in ['baselineVersion', 'baselineName', 'baselineRepository']:
+    for item in ['baseChartVersion', 'baseChartName', 'baseChartRepository']:
         conf['chart'].pop(item)
     write_file(f"output/charts/{conf['chart']['name']}/Chart.yaml", conf['chart'])
     pass
@@ -202,15 +197,17 @@ def create_chart_file(conf):
 
 def create_values_file(conf):
     values = dict()
+    values['common-library'] = dict()
     for kind in conf['kubernetes']['values']:
+        values['common-library'][kind] = dict()
         for item in conf['kubernetes']['values'][kind]:
-            values[item] = conf['kubernetes']['values'][kind][item]
+            values['common-library'][kind][item] = conf['kubernetes']['values'][kind][item]
             # Remove variables from "values.yaml" file
-            if kind == 'ConfigMap':
-                values[item]['data'] = {}
-            elif kind == 'Secret':
-                values[item]['data'] = {}
-                values[item]['stringData'] = {}
+            # if kind == 'ConfigMap':
+            #     values['common-library'][kind][item]['data'] = {}
+            # elif kind == 'Secret':
+            #     values['common-library'][kind][item]['data'] = {}
+            #     values['common-library'][kind][item]['stringData'] = {}
     write_file(f"output/charts/{conf['chart']['name']}/values.yaml", remove_empty_from_dict(values))
     pass
 
@@ -427,6 +424,8 @@ def read_annotations(annotations: dict):
         'meta.helm.sh/release-namespace',
         'objectset.rio.cattle.io/applied',
         'objectset.rio.cattle.io/id',
+        'kubectl.kubernetes.io/last-applied-configuration',
+        'kubernetes.io/change-cause',
     ]
     for item in annotations_to_remove:
         result.pop(item, None)
@@ -486,10 +485,7 @@ def read_host_aliases(host_aliases):
 def create_configmap_or_secret(kind, name, k8s_client, namespace):
     import base64
     v1 = k8s_client.CoreV1Api()
-    result = dict(
-        kind=kind,
-        fullnameOverride=name
-    )
+    result = dict()
     print(name)
     ret = ''
     if kind == "ConfigMap":
@@ -546,10 +542,7 @@ def create_workload_template(ret, name):
 
 def create_workload(kind, name, k8s_client, namespace):
     v1 = k8s_client.AppsV1Api()
-    result = dict(
-        kind=kind,
-        fullnameOverride=name
-    )
+    result = dict()
     print(name)
     ret = ''
     if kind == "Job":
@@ -582,8 +575,6 @@ def create_ingress(name: str, k8s_client, namespace, name_suffix=''):
     )
     print(ingress_name)
     return dict(
-        kind='Ingress',
-        fullnameOverride=ingress_name,
         annotations=read_annotations(ret.items[0].metadata.annotations),
         rules=read_ingress_rules(ret.items[0].spec.rules),
         tls=read_ingress_tls(ret.items[0].spec.tls)
