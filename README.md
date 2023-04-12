@@ -32,6 +32,11 @@ This way it's going to help us as following:
 And the final result is to be able to create a modular software structure as 
 the foundation of the future framework.
 
+## Project Schema
+The following schema its intended to explain how its going to be the future solution
+
+![Modular Structure Schema](helm-chart-generator-tool-map.png)
+
 ## Git-Flow
 In the same way, the version control and the development flow it's going to be
 improved introducing Git-Flow as following:
