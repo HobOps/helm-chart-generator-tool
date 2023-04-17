@@ -18,6 +18,18 @@ as the main methodology.
 That means we are going to create the testing in first place then we are going to 
 refactor until the code meets the test specification.
 
+## Project Versions
+In order to keep the project clean we are going to separate the current solution into different
+version. This its going to help us to distinguish between the original solution and the incoming
+refactor. The same way for every release maybe its going to be a different version, this pursue the
+fact to keep the project iterable and add features in a controlled way,
+
+Current version plan:
+- app/v1/script/helm_chart_help - (Original version)
+- app/v2/main/helm_chart_help_v1 - (current refactoring, modular transitioning)
+- app/v2/main/helm_chart_help_v2 - (modular refactoring with testings)
+- modules - (planned framework for future)
+
 ## Architecture
 According to best practices and keep design principles as clean as possible, we
 are going to implement in this project from clean architectures a hexagonal architecture
