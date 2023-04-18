@@ -1,3 +1,4 @@
+pre-commit==3.2.2
 kubernetes==21.7.0
 PyYAML~=6.0
 ConfigParser==5.2.0

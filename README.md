@@ -11,19 +11,43 @@ The ultimate goal it's to be able to create a framework for a long term app
 usability
 
 ## Refactoring
-In order to reach the mentioned above its necessary to generate a framework,
-this means refactoring its required, we are going to explain in a high-level 
-how its has been done.
+In order to reach the mentioned above its necessary to generate a modular framework,
+this means refactoring its required to transform our code in a modular way using TDD
+as the main methodology.
+
+That means we are going to create the testing in first place then we are going to 
+refactor until the code meets the test specification.
+
+## Project Versions
+In order to keep the project clean we are going to separate the current solution into different
+version. This its going to help us to distinguish between the original solution and the incoming
+refactor. The same way for every release maybe its going to be a different version, this pursue the
+fact to keep the project iterable and add features in a controlled way,
+
+Current version plan:
+- app/v1/script/helm_chart_help - (Original version)
+- app/v2/main/helm_chart_help_v1 - (current refactoring, modular transitioning)
+- app/v2/main/helm_chart_help_v2 - (modular refactoring with testings)
+- modules - (planned framework for future)
 
 ## Architecture
-According to best practices and keep design principles as clean as possible we
-are going to implement in this project a hexagonal architecture
-- Port
-- Adapter
+According to best practices and keep design principles as clean as possible, we
+are going to implement in this project from clean architectures a hexagonal architecture
+based mainly in 2 things:
+- Ports
+- Adapters
 
 This way it's going to help us as following:
 - decoupling infrastructure
 - increasing cohesion
+
+And the final result is to be able to create a modular software structure as 
+the foundation of the future framework.
+
+## Project Schema
+The following schema its intended to explain how its going to be the future solution
+
+![Modular Structure Schema](helm-chart-generator-tool-map.png)
 
 ## Git-Flow
 In the same way, the version control and the development flow it's going to be
