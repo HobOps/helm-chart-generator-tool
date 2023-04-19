@@ -4,20 +4,20 @@
 from base.domain.value_objects import ValueObjectBase
 
 
-class DictValueObject(ValueObjectBase):
+class ListValueObject(ValueObjectBase):
     """
-    DictValueObject
+    ListValueObject
     """
 
-    def __init__(self, value: dict):
+    def __init__(self, value: list):
         """
-        DictValueObject constructor
+        ListValueObject constructor
         """
 
         self.__value = value
 
         if not self.__is_valid():
-            raise ValueError(f"Error value: {value} is not a dict type")
+            raise ValueError(f"Error value: {value} is not a list type")
 
     def __is_valid(self):
         """
@@ -26,14 +26,14 @@ class DictValueObject(ValueObjectBase):
         @rtype: bool
         """
 
-        return isinstance(self.__value, dict)
+        return isinstance(self.__value, list)
 
     @property
-    def value(self) -> dict:
+    def value(self) -> list:
         """
         value
         @return: value
-        @rtype: dict
+        @rtype: list
         """
 
         return self.__value

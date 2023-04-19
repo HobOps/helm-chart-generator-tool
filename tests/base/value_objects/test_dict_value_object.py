@@ -16,9 +16,9 @@ def test_dict_value_object_validation_pass():
         "key1": "value1",
         "key2": "value2"
     }
-    text_value = DictValueObject(data)
+    data_value = DictValueObject(data)
 
-    assert text_value.value == data
+    assert data_value.value == data
 
 
 def test_dict_value_object_validation_fails():
@@ -30,7 +30,7 @@ def test_dict_value_object_validation_fails():
     expected_error_message = f"Error value: {data} is not a dict type"
 
     with pytest.raises(ValueError) as err:
-        text_value = DictValueObject(data)
+        data_value = DictValueObject(data)
 
     assert err.value.args[0] == expected_error_message
 
