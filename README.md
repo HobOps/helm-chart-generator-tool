@@ -29,6 +29,7 @@ Current version plan:
 - v2.0 - base - (modular base as a project foundation)
 - v2.1 - app/v2/main/helm_chart_helper_v1 - (current refactoring, modular transitioning)
 - v2.2 - app/v2/main/helm_chart_helper_v2 - (modular refactoring with testings)
+- v2.3 - app/v2/main/helm_chart_helper_v3 - (automatic config detection)
 - v2.x - modules - (planned framework for future)
 
 Chose version according as follows:
@@ -41,6 +42,9 @@ python app/v2/main/helm-chart-helper_v1.py --name test
 
 # v2.2 - future modular solution
 python app/v2/main/helm-chart-helper_v2.py --name test
+
+# v2.3 - automatic config detection
+python app/v2/main/helm-chart-helper_v3.py --name test
 
 # Testings
 pytest -v
