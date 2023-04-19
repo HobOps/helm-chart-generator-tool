@@ -25,10 +25,26 @@ refactor. The same way for every release maybe its going to be a different versi
 fact to keep the project iterable and add features in a controlled way,
 
 Current version plan:
-- app/v1/script/helm_chart_help - (Original version)
-- app/v2/main/helm_chart_help_v1 - (current refactoring, modular transitioning)
-- app/v2/main/helm_chart_help_v2 - (modular refactoring with testings)
-- modules - (planned framework for future)
+- v1.0 - app/v1/script/helm_chart_help - (Original version)
+- v2.0 - base - (modular base as a project foundation)
+- v2.1 - app/v2/main/helm_chart_helper_v1 - (current refactoring, modular transitioning)
+- v2.2 - app/v2/main/helm_chart_helper_v2 - (modular refactoring with testings)
+- v2.x - modules - (planned framework for future)
+
+Chose version according as follows:
+```
+# v1.0 - original
+python app/v1/script/helm-chart-helper_v1.py --name test
+
+# v2.1 - current refactor
+python app/v2/main/helm-chart-helper_v1.py --name test
+
+# v2.2 - future modular solution
+python app/v2/main/helm-chart-helper_v2.py --name test
+
+# Testings
+pytest -v
+```
 
 ## Architecture
 According to best practices and keep design principles as clean as possible, we
@@ -86,5 +102,6 @@ Script for creating helm charts form an existing deployment
 - Create configuration file
 - Execute the following command:
 ```
+# Deprecated
 python helm-chart-helper.py --name test
 ```
