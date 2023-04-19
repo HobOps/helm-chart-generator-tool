@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 
-from base.domain.value_objects import ValueObjectBase
+from base.domain.value_objects import BaseValueObject
 
 
-class DictValueObject(ValueObjectBase):
+class DictValueObject(BaseValueObject):
     """
     DictValueObject
     """

@@ -6,9 +6,9 @@ from typing import runtime_checkable
 
 
 @runtime_checkable
-class ValueObjectBase(Protocol):
+class BaseValueObject(Protocol):
     """
-    ValueObjectBase
+    BaseValueObject
     """
 
     def __is_valid(self):

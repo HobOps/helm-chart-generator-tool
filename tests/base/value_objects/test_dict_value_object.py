@@ -35,4 +35,18 @@ def test_dict_value_object_validation_fails():
     assert err.value.args[0] == expected_error_message
 
 
+def test_dict_value_object_validation_fails_with_none():
+    """
+    test_dict_value_object_validation_fails_with_none
+    """
+
+    data = None
+    expected_error_message = f"Error value: {data} is not a dict type"
+
+    with pytest.raises(ValueError) as err:
+        data_value = DictValueObject(data)
+
+    assert err.value.args[0] == expected_error_message
+
+
 

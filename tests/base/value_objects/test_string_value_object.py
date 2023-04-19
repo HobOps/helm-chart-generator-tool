@@ -32,4 +32,18 @@ def test_string_value_object_validation_fails():
     assert err.value.args[0] == expected_error_message
 
 
+def test_string_value_object_validation_fails_with_none():
+    """
+    test_string_value_object_validation_fails
+    """
+
+    text = None
+    expected_error_message = f"Error value: {text} is not a str type"
+
+    with pytest.raises(ValueError) as err:
+        text_value = StringValueObject(text)
+
+    assert err.value.args[0] == expected_error_message
+
+
 

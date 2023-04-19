@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 
-from base.domain.value_objects import ValueObjectBase
+from base.domain.value_objects import BaseValueObject
 
 
-class ListValueObject(ValueObjectBase):
+class ListValueObject(BaseValueObject):
     """
     ListValueObject
     """
