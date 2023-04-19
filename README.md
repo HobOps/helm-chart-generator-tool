@@ -30,7 +30,7 @@ Current version plan:
 - v2.1 - app/v2/main/helm_chart_helper_v1 - (current refactoring, modular transitioning)
 - v2.2 - app/v2/main/helm_chart_helper_v2 - (modular refactoring with testings)
 - v2.3 - app/v2/main/helm_chart_helper_v3 - (automatic config detection)
-- v2.x - modules - (planned framework for future)
+- v3.x - modules - (planned framework for future)
 
 Chose version according as follows:
 ```
