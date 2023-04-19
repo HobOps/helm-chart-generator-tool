@@ -11,14 +11,7 @@ class ValueObjectBase(Protocol):
     ValueObjectBase
     """
 
-    def __init__(self):
-        """
-        ValueObjectBase constructor
-        """
-
-        raise NotImplementedError("Interface Missing Implementation")
-
-    def is_valid(self):
+    def __is_valid(self):
         """
         is_valid
         @return: True
@@ -26,4 +19,13 @@ class ValueObjectBase(Protocol):
         """
 
         raise NotImplementedError("Interface Missing Implementation")
-    
+
+    @property
+    def value(self):
+        """
+        value
+        @return: value
+        @rtype: Any
+        """
+
+        raise NotImplementedError("Interface Missing Implementation")
