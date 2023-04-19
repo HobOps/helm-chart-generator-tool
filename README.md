@@ -27,7 +27,7 @@ fact to keep the project iterable and add features in a controlled way,
 Current version plan:
 - v1.0 - app/v1/script/helm_chart_help - (Original version)
 - v2.0 - base - (modular base as a project foundation)
-- v2.1 - app/v2/main/helm_chart_helper_v1 - (current refactoring, modular transitioning)
+- v2.1 - app/v2/main/helm_chart_helper_v1 - (OOP Wrappers, modular transitioning)
 - v2.2 - app/v2/main/helm_chart_helper_v2 - (modular refactoring with testings)
 - v2.3 - app/v2/main/helm_chart_helper_v3 - (automatic config detection)
 - v3.x - modules - (planned framework for future)
