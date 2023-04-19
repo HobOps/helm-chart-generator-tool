@@ -4,20 +4,20 @@
 from base.domain.value_objects import ValueObjectBase
 
 
-class StringValueObject(ValueObjectBase):
+class DictValueObject(ValueObjectBase):
     """
-    StringValueObject
+    DictValueObject
     """
 
-    def __init__(self, value: str):
+    def __init__(self, value: dict):
         """
-        StringValueObject constructor
+        DictValueObject constructor
         """
 
         self.__value = value
 
         if not self.__is_valid():
-            raise ValueError(f"Error value: {value} is not a str type")
+            raise ValueError(f"Error value: {value} is not a dict type")
 
     def __is_valid(self):
         """
@@ -26,14 +26,14 @@ class StringValueObject(ValueObjectBase):
         @rtype:
         """
 
-        return isinstance(self.__value, str)
+        return isinstance(self.__value, dict)
 
     @property
-    def value(self) -> str:
+    def value(self) -> dict:
         """
         value
         @return: value
-        @rtype: str
+        @rtype: dict
         """
 
         return self.__value
