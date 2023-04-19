@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from base.domain.value_objects import BaseValueObject
+from base.domain.common.value_objects import BaseValueObject
 
 
 class ListValueObject(BaseValueObject):
@@ -16,10 +16,10 @@ class ListValueObject(BaseValueObject):
 
         self.__value = value
 
-        if not self.__is_valid():
+        if not self.is_valid():
             raise ValueError(f"Error value: {value} is not a list type")
 
-    def __is_valid(self):
+    def is_valid(self):
         """
         is_valid
         @return: True

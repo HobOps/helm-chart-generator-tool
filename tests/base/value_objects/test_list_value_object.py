@@ -4,7 +4,7 @@
 import pytest
 
 
-from base.domain.value_objects import ListValueObject
+from base.domain.common.value_objects import ListValueObject
 
 
 def test_list_value_object_validation_pass():

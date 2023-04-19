@@ -4,7 +4,7 @@
 import pytest
 
 
-from base.domain.value_objects import DictValueObject
+from base.domain.common.value_objects import DictValueObject
 
 
 def test_dict_value_object_validation_pass():

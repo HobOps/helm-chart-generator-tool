@@ -13,7 +13,7 @@ class BaseValueObject(Protocol):
     """
 
     @abstractmethod
-    def __is_valid(self):
+    def is_valid(self):
         """
         is_valid
         @return: True
