@@ -3,6 +3,7 @@
 
 from typing import Protocol
 from typing import runtime_checkable
+from abc import abstractmethod
 
 
 @runtime_checkable
@@ -11,6 +12,7 @@ class BaseValueObject(Protocol):
     BaseValueObject
     """
 
+    @abstractmethod
     def __is_valid(self):
         """
         is_valid
@@ -21,6 +23,7 @@ class BaseValueObject(Protocol):
         raise NotImplementedError("Interface Missing Implementation")
 
     @property
+    @abstractmethod
     def value(self):
         """
         value
