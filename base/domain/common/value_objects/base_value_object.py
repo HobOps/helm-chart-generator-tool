@@ -20,7 +20,7 @@ class BaseValueObject(Protocol):
         @rtype: bool
         """
 
-        raise NotImplementedError("Interface Missing Implementation")
+        raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
 
     @property
     @abstractmethod
@@ -31,4 +31,4 @@ class BaseValueObject(Protocol):
         @rtype: Any
         """
 
-        raise NotImplementedError("Interface Missing Implementation")
+        raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
