@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-import unittest.mock
+
 
 import yaml
-from unittest.mock import MagicMock
+import unittest
 from unittest.mock import Mock
 
 
@@ -38,5 +38,3 @@ def test_yaml_file_management_validation():
     dumped_data2.write.assert_has_calls(calls=[unittest.mock.call("namespace")])
     dumped_data2.write.assert_has_calls(calls=[unittest.mock.call("version")])
     assert True
-
-

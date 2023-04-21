@@ -15,6 +15,6 @@ def get_root_path_handler():
     @rtype: BasePathHandler
     """
 
-    root_path_handler = PathHandler(__file__)
+    root_path_handler = PathHandler(root_path=__file__, target_path='/')
 
     return root_path_handler

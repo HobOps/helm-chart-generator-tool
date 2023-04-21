@@ -4,13 +4,14 @@
 from unittest.mock import Mock
 
 
-# Infrastructure
+# Domain
+from base.domain.file_management.file_handler import BaseFile
 from base.domain.file_management.file_handler import BaseFileHandler
 
 
 class FileHandler(BaseFileHandler):
 
-    def __init__(self, file_mode: str = 'r', file_path: str = None, file_obj: Mock = None):
+    def __init__(self, file_mode: str = 'r', file_path: str = None, file_obj: BaseFile = None):
         """
         FileHandler constructor
         """
@@ -21,8 +22,8 @@ class FileHandler(BaseFileHandler):
         if not isinstance(file_path, (str, type(None))):
             raise ValueError(f"Error file_path: {file_path} is not a str type")
 
-        if not isinstance(file_obj, (Mock, type(None))):
-            raise ValueError(f"Error file_obj: {file_obj} is not a str type")
+        if not isinstance(file_obj, (BaseFile, type(None))):
+            raise ValueError(f"Error file_obj: {file_obj} is not a {BaseFile} type")
 
         self.file = file_obj or open(file_path, file_mode)
 
