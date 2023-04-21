@@ -27,7 +27,7 @@ class BasePathHandler(Protocol):
         @param target_path: target_path
         @type target_path:
         @return: target_path
-        @rtype: str
+        @rtype: Path
         """
 
         raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
@@ -38,7 +38,7 @@ class BasePathHandler(Protocol):
         """
         root_path
         @return: root_path
-        @rtype: str
+        @rtype: Path
         """
 
         raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
@@ -49,7 +49,7 @@ class BasePathHandler(Protocol):
         """
         target_path
         @return: target_path
-        @rtype: str
+        @rtype: Path
         """
 
         raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")

@@ -19,33 +19,33 @@ class PathHandler(BasePathHandler):
         """
 
         self.__root_path = Path(root_path).parent
-        self.__target_path = ""
+        self.__target_path = Path(".")
 
     def join_path(self, target_path):
         """
         join_path
         @return: joined_path
-        @rtype: str
+        @rtype: Path
         """
 
         self.__target_path = Path(f"{self.__root_path}/{target_path}")
 
     @property
-    def root_path(self):
+    def root_path(self) -> Path:
         """
         root_path
         @return: root_path
-        @rtype: str
+        @rtype: Path
         """
 
         return self.__root_path
 
     @property
-    def target_path(self):
+    def target_path(self) -> Path:
         """
         target_path
         @return: target_path
-        @rtype: str
+        @rtype: Path
         """
 
         return self.__target_path
