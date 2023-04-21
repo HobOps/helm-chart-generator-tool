@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 
+from .fake_file import FakeFile
 from .file_handler import FileHandler
-from .fake_file_handler import FakeFileHandler
 
 
 __all__ = [
-    "FakeFileHandler",
+    "FakeFile",
     "FileHandler",
 ]
