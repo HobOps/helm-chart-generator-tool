@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-import os
+import settings
 from unittest.mock import Mock
 
 
@@ -43,10 +43,14 @@ def test_file_handler_validation_real():
 
     expected_data = '# Test\n\nLet see what happen\ngood luck\ncheers\n\n'
 
-    file_path = '/home/yair.avalos/HobOps/workstation2/Projects/helm-chart-generator-tool/config_files/input/configurations/my_test.txt'
+    root_path_handler = settings.get_root_path_handler()
+
+    file_path = '/config_files/input/configurations/my_test.txt'
     file_mode = file_mode_values.read
 
-    with FileHandler(file_path=file_path, file_mode=file_mode) as file_handler:
+    root_path_handler.join_path(file_path)
+
+    with FileHandler(file_path=root_path_handler.target_path.__str__(), file_mode=file_mode) as file_handler:
         read_data = file_handler.read()
 
     assert read_data == expected_data
