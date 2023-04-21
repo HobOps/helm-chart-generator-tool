@@ -2,7 +2,6 @@
 
 
 from abc import abstractmethod
-from typing import List
 from typing import Protocol
 from typing import runtime_checkable
 
@@ -50,7 +49,7 @@ class BaseFile(Protocol):
         raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
 
     @abstractmethod
-    def writelines(self, data_to_write: List[str]):
+    def writelines(self, data_to_write: str):
         """
         writelines
         @param data_to_write: data_to_write

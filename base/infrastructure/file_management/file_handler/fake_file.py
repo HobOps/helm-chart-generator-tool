@@ -56,23 +56,18 @@ class FakeFile(BaseFile):
 
         self.__file_content = f"{self.__file_content}{data_to_write}"
 
-    def writelines(self, data_to_write: List[str]):
+    def writelines(self, data_to_write: str):
         """
         writelines
         """
 
-        if not isinstance(data_to_write, list):
-            raise ValueError(f"Error data_to_write: {data_to_write} is not list type")
+        if not isinstance(data_to_write, str):
+            raise ValueError(f"Error data_to_write: {data_to_write} is not str type")
 
         if not self.__file_open:
             raise ValueError(f"Error file is not open")
 
-        data_to_write_in_lines = ""
-
-        for line in data_to_write:
-            data_to_write_in_lines += f"{line}\n"
-
-        self.__file_content = data_to_write_in_lines
+        self.__file_content = data_to_write
 
     def close(self):
         """
