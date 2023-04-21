@@ -13,9 +13,11 @@ class BaseFileWriter(Protocol):
     """
 
     @abstractmethod
-    def write_file(self):
+    def write_file(self, data):
         """
         write_file
+        @param data: data
+        @type data: data
         @return: None
         @rtype: None
         """
