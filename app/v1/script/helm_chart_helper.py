@@ -33,7 +33,7 @@ def parse_config(component_name):
     # Open config file
     import configparser
     import os.path
-    config_path = f'configurations/{component_name}.ini'
+    config_path = f'config_files/input/configurations/{component_name}.ini'
     chart_config = configparser.ConfigParser()
     if os.path.isfile(config_path):
         chart_config.read(config_path)

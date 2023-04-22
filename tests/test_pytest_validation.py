@@ -2,6 +2,7 @@
 
 
 import pytest
+import settings
 
 
 def test_pytest_version_validation():
@@ -12,14 +13,12 @@ def test_pytest_version_validation():
     assert "7.3.1" == str(pytest.__version__)
 
 
-def test_pytest_print_validation():
+def test_pytest_root_path_validation():
     """
-    test_pytest_print_validation
+    test_pytest_root_path_validation
     """
 
-    info = f"We are using Pytest: {pytest.__version__}"
+    path_handler = settings.get_root_path_handler()
+    assert path_handler.root_path is not None
+    assert isinstance(path_handler.root_path, str)
 
-    print(info)
-
-    assert "We are using Pytest: 7.3.1" == info
-    

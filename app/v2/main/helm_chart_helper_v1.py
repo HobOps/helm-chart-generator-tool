@@ -33,7 +33,7 @@ def parse_config(component_name):
     # Open config file
     import configparser
     import os.path
-    config_path = f'configurations/{component_name}.ini'
+    config_path = f'config_files/input/configurations/{component_name}.ini'
     chart_config = configparser.ConfigParser()
     if os.path.isfile(config_path):
         chart_config.read(config_path)
@@ -137,7 +137,7 @@ def create_vars_file(conf):
         if kind in ['ConfigMap', 'Secret']:
             for item in conf['kubernetes']['values'][kind]:
                 write_file(
-                    f"output/vars/{conf['chart']['name']}/{item}.json",
+                    f"config_files/output/vars/{conf['chart']['name']}/{item}.json",
                     remove_empty_from_dict(conf['kubernetes']['values'][kind][item][field[kind]]),
                     mode='json'
                 )
@@ -171,7 +171,7 @@ def create_helmignore_file(conf):
         '.vscode/',
         ''
     ]
-    write_file(f"output/charts/{conf['chart']['name']}/.helmignore", data, mode='raw')
+    write_file(f"config_files/output/charts/{conf['chart']['name']}/.helmignore", data, mode='raw')
     pass
 
 
@@ -191,7 +191,7 @@ def create_chart_file(conf):
     # Remove unnecessary keys from dictionary
     for item in ['baseChartVersion', 'baseChartName', 'baseChartRepository']:
         conf['chart'].pop(item)
-    write_file(f"output/charts/{conf['chart']['name']}/Chart.yaml", conf['chart'])
+    write_file(f"config_files/output/charts/{conf['chart']['name']}/Chart.yaml", conf['chart'])
     pass
 
 
@@ -208,7 +208,7 @@ def create_values_file(conf):
             # elif kind == 'Secret':
             #     values['common-library'][kind][item]['data'] = {}
             #     values['common-library'][kind][item]['stringData'] = {}
-    write_file(f"output/charts/{conf['chart']['name']}/values.yaml", remove_empty_from_dict(values))
+    write_file(f"config_files/output/charts/{conf['chart']['name']}/values.yaml", remove_empty_from_dict(values))
     pass
 
 
@@ -220,7 +220,7 @@ def create_helm_chart(conf):
 
 
 def create_environment_values_file(conf):
-    file = f"output/environments/{conf['chart']['name']}/{conf['chart']['name']}.values.yaml.gotmpl"
+    file = f"config_files/output/environments/{conf['chart']['name']}/{conf['chart']['name']}.values.yaml.gotmpl"
     data = list()
     data.append('# Load global and environment settings')
     data.append('{{ readFile "../../include/values.global.yaml" }}')
