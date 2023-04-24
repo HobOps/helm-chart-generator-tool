@@ -32,7 +32,7 @@ class PathDirectoryValidator(BasePathDirectoryValidator):
 
         target_path_to_check = Path(target_path)
 
-        if not Path.exists(target_path_to_check):
+        if not target_path_to_check.exists():
             raise ValueError(f"Error target_path: {target_path} is not a valid directory path")
 
         if not target_path_to_check.is_dir():
