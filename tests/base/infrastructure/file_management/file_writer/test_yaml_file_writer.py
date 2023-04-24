@@ -13,6 +13,8 @@ def test_yaml_file_writer_validation():
     test_yaml_file_writer_validation
     """
 
+    expected_content = 'Nonekey1: data1\nkey2: data2\nkey3:\n  key31: data31\n  key32: data32\n'
+
     data = {
         "key1": "data1",
         "key2": "data2",
@@ -31,6 +33,6 @@ def test_yaml_file_writer_validation():
     yaml_file_writer = YamlFileWriter(path_handler=path_handler, file_handler=file_handler)
     yaml_file_writer.write_file(data=data)
 
-    assert fake_file.content is not None
+    assert fake_file.content == expected_content
     assert True
 

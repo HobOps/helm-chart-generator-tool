@@ -13,6 +13,8 @@ def test_json_file_writer_validation():
     test_json_file_writer_validation
     """
 
+    expected_content = 'None{\n    "key1": "data1",\n    "key2": "data2",\n    "key3": {\n        "key31": "data31",\n        "key32": "data32"\n    }\n}'
+
     data = {
         "key1": "data1",
         "key2": "data2",
@@ -31,6 +33,6 @@ def test_json_file_writer_validation():
     json_file_writer = JsonFileWriter(path_handler=path_handler, file_handler=file_handler)
     json_file_writer.write_file(data=data)
 
-    assert fake_file.content is not None
+    assert fake_file.content == expected_content
     assert True
 
