@@ -4,6 +4,9 @@
 from typing import List
 
 
+# Infrastructure
+from base.infrastructure.file_management.file_validator import FileTypeValidator
+
 # Domain
 from base.domain.file_management.file_handler import BaseFile
 
@@ -21,6 +24,8 @@ class FakeFile(BaseFile):
         if not isinstance(initial_content, (str, type(None))):
             raise ValueError(f"Error initial_content: {initial_content} is not str type")
 
+        self.__file_name = ""
+        self.__file_type = ""
         self.__file_open = False
         self.__file_content: str = initial_content
 
