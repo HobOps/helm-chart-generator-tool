@@ -2,9 +2,11 @@
 
 
 # Infrastructure
+from base.infrastructure.file_management.file_handler import FakeFile
 from base.infrastructure.path_management.path_validator import PathFormatValidator
 
 # Domain
+from base.domain.file_management.file_handler import BaseFile
 from base.domain.path_management.path_handler import BasePath
 
 
@@ -13,7 +15,7 @@ class FakePath(BasePath):
     FakePath
     """
 
-    def __init__(self, target_path: str = None):
+    def __init__(self, target_path: str = None, fake_file: FakeFile = None):
         """
         FakePath
         """
@@ -21,11 +23,18 @@ class FakePath(BasePath):
         if not isinstance(target_path, str):
             raise ValueError(f"Error target_path: {target_path} is not str type")
 
-        valid_target_path = PathFormatValidator.validate_path_format(target_path=target_path)
+        if not isinstance(fake_file, FakeFile):
+            raise ValueError(f"Error fake_file: {fake_file} is not str type")
 
+        valid_target_path = "/"
+
+        if target_path is not None:
+            valid_target_path = PathFormatValidator.validate_path_format(target_path=target_path)
+
+        self.__fake_file = FakeFile()
         self.__fake_store_path = dict()
-        self.__fake_target_path = valid_target_path or "/"
-        self.__fake_store_path[self.__fake_target_path] = "\n"
+        self.__fake_target_path = valid_target_path
+        self.__fake_store_path[self.__fake_target_path] = "dir"
 
     def cwd(self):
         """
@@ -44,6 +53,30 @@ class FakePath(BasePath):
         """
 
         if self.__fake_store_path.get(self.__fake_target_path):
+            return True
+
+        return False
+
+    def is_dir(self):
+        """
+        is_dir
+        @return: is_dir
+        @rtype: bool
+        """
+
+        if self.__fake_store_path[self.__fake_target_path] == "dir":
+            return True
+
+        return False
+
+    def is_file(self):
+        """
+        is_file
+        @return: is_file
+        @rtype: bool
+        """
+
+        if isinstance(self.__fake_store_path[self.__fake_target_path], BaseFile):
             return True
 
         return False
@@ -74,6 +107,18 @@ class FakePath(BasePath):
 
         if not self.exists():
 
-            self.__fake_store_path[self.__fake_target_path] = "\n"
+            self.__fake_store_path[self.__fake_target_path] = "dir"
 
+    def touch(self, exist_ok: bool = None):
+        """
+        touch
+        @param exist_ok: exist_ok
+        @type exist_ok: bool
+        @return: None
+        @rtype: None
+        """
+
+        if not self.exists():
+
+            self.__fake_store_path[self.__fake_target_path] = self.__fake_file
 

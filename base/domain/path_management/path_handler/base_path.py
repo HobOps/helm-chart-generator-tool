@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
+from abc import abstractmethod
 from typing import Protocol
 from typing import runtime_checkable
 
@@ -11,6 +12,7 @@ class BasePath(Protocol):
     BasePath
     """
 
+    @abstractmethod
     def cwd(self):
         """
         cwd
@@ -20,6 +22,7 @@ class BasePath(Protocol):
 
         raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
 
+    @abstractmethod
     def exists(self):
         """
         exists
@@ -29,6 +32,27 @@ class BasePath(Protocol):
 
         raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
 
+    @abstractmethod
+    def is_dir(self):
+        """
+        is_dir
+        @return: is_dir
+        @rtype: bool
+        """
+
+        raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
+
+    @abstractmethod
+    def is_file(self):
+        """
+        is_file
+        @return: is_file
+        @rtype: bool
+        """
+
+        raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
+
+    @abstractmethod
     def joinpath(self, relative_path: str):
         """
         joinpath
@@ -38,6 +62,7 @@ class BasePath(Protocol):
 
         raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
 
+    @abstractmethod
     def mkdir(self, parents: bool = None, exist_ok: bool = None):
         """
         mkdir
@@ -50,3 +75,16 @@ class BasePath(Protocol):
         """
 
         raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
+
+    @abstractmethod
+    def touch(self, exist_ok: bool = None):
+        """
+        touch
+        @param exist_ok: exist_ok
+        @type exist_ok: bool
+        @return: None
+        @rtype: None
+        """
+
+        raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
+
