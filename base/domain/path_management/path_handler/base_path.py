@@ -77,6 +77,16 @@ class BasePath(Protocol):
         raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
 
     @abstractmethod
+    def suffix(self):
+        """
+        suffix
+        @return: None
+        @rtype: None
+        """
+
+        raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
+
+    @abstractmethod
     def touch(self, exist_ok: bool = None):
         """
         touch

@@ -4,7 +4,12 @@
 from pathlib import Path
 
 
+# Infrastructure
+from base.infrastructure.file_management.file_validator import FileTypeValidator
+from base.infrastructure.path_management.path_validator import PathFormatValidator
+
 # Domain
+from base.domain.path_management.path_handler import BasePath
 from base.domain.path_management.path_handler import BasePathHandler
 
 
@@ -13,55 +18,77 @@ class PathHandler(BasePathHandler):
     PathHandler
     """
 
-    def __init__(self, root_path: str = None, current_path: str = None, target_path: str = None, expected_path: str = None):
+    def __init__(self, target_path: str = None, path_obj: BasePath = None):
         """
-        BasePathHandler
+        PathHandler
+        @param target_path: target_path
+        @type target_path: str
+        @param path_obj: path_obj
+        @type path_obj: BasePath
         """
-
-        if not isinstance(root_path, (str, type(None))):
-            raise ValueError(f"Error root_pah: {root_path} is not str type")
 
         if not isinstance(target_path, (str, type(None))):
             raise ValueError(f"Error target_path: {target_path} is not str type")
 
-        if not isinstance(current_path, (str, type(None))):
-            raise ValueError(f"Error current_path: {current_path} is not str type")
+        if not isinstance(path_obj, (BasePath, type(None))):
+            raise ValueError(f"Error path_obj: {path_obj} is not {BasePath} type")
 
-        if not isinstance(expected_path, (str, type(None))):
-            raise ValueError(f"Error expected_path: {expected_path} is not str type")
+        valid_target_path = "/"
 
-        self.__root_path = current_path or Path(root_path).parent.__str__()
-        self.__target_path = expected_path or Path(target_path).parent.__str__()
+        if target_path is not None:
+            valid_target_path = PathFormatValidator.validate_path_format(target_path)
 
-    def join_path(self, target_path: str):
+        self.__stored_path = path_obj or Path(valid_target_path)
+
+    def make_directory(self):
         """
-        join_path
-        @return: joined_path
-        @rtype: Path
-        """
-
-        if not isinstance(target_path, str):
-            raise ValueError(f"Error target_path: {target_path} is not str type")
-
-        self.__target_path = Path(f"{self.__root_path}/{target_path}").__str__()
-
-    @property
-    def root_path(self) -> str:
-        """
-        root_path
-        @return: root_path
-        @rtype: str
+        make_directory
+        @return: None
+        @rtype: None
         """
 
-        return self.__root_path
+        if self.__stored_path.is_dir():
+            raise ValueError(f"Error stored_path: {self.__stored_path} is not a directory")
 
-    @property
-    def target_path(self) -> str:
+        self.__stored_path.mkdir(parents=True, exist_ok=True)
+
+    def make_file(self, file_name: str, file_type_suffix: str):
         """
-        target_path
-        @return: target_path
-        @rtype: str
+        make_file
+        @param file_name: file_name
+        @type file_name: str
+        @param file_type_suffix: file_type_suffix
+        @type file_type_suffix: str
+        @return: None
+        @rtype: None
         """
 
-        return self.__target_path
+        if not isinstance(file_name, str):
+            raise ValueError(f"Error file_name: {file_name} is not str type")
+
+        if not isinstance(file_type_suffix, str):
+            raise ValueError(f"Error file_type_suffix: {file_type_suffix} is not str type")
+
+        if not self.__stored_path.exists():
+            raise ValueError(f"Error stored_path: {self.__stored_path} doesn't exists")
+
+        if not self.__stored_path.is_dir():
+            raise ValueError(f"Error stored_path: {self.__stored_path} is not directory")
+
+        FileTypeValidator.validate_file_type_suffix(file_type_suffix=file_type_suffix)
+
+        file_address = f"/{file_name}{file_type_suffix}"
+
+        self.__stored_path.joinpath(f"{file_address}")
+
+        if not self.__stored_path.is_file():
+            raise ValueError(f"Error stored_path: {self.__stored_path} is not file")
+
+        if not self.__stored_path.suffix() == file_type_suffix:
+            raise ValueError(f"Error stored_path: {self.__stored_path} suffix doesn't match the file_type: {file_type_suffix}")
+
+        self.__stored_path.touch(exist_ok=True)
+
+        if not self.__stored_path.exists():
+            raise ValueError(f"Error stored_path: {self.__stored_path} something went wrong to create file")
 

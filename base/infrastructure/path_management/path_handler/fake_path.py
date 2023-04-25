@@ -31,7 +31,7 @@ class FakePath(BasePath):
         if target_path is not None:
             valid_target_path = PathFormatValidator.validate_path_format(target_path=target_path)
 
-        self.__fake_file = FakeFile()
+        self.__fake_file = fake_file or FakeFile(file_name="fake_file_default", file_type_suffix="txt")
         self.__fake_store_path = dict()
         self.__fake_target_path = valid_target_path
         self.__fake_store_path[self.__fake_target_path] = "dir"
@@ -108,6 +108,15 @@ class FakePath(BasePath):
         if not self.exists():
 
             self.__fake_store_path[self.__fake_target_path] = "dir"
+
+    def suffix(self):
+        """
+        suffix
+        @return: None
+        @rtype: None
+        """
+
+        self.__fake_file.suffix
 
     def touch(self, exist_ok: bool = None):
         """
