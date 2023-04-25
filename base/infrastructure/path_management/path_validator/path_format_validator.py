@@ -2,26 +2,25 @@
 
 
 import re
-import os
 
 
 # Domain
-from base.domain.path_management.path_creator import BasePathDirectoryCreator
+from base.domain.path_management.path_validator import BasePathFormatValidator
 
 
-class PathDirectoryCreator(BasePathDirectoryCreator):
+class PathFormatValidator(BasePathFormatValidator):
     """
-    PathDirectoryCreator
+    PathFormatValidator
     """
 
     @staticmethod
-    def create_directory(target_path: str):
+    def validate_path_format(target_path: str):
         """
-        create_directory
+        validate_path_format
         @param target_path: target_path
         @type target_path: str
-        @return: None
-        @rtype: None
+        @return: valid_target_path
+        @rtype: str
         """
 
         if not isinstance(target_path, str):
@@ -33,6 +32,4 @@ class PathDirectoryCreator(BasePathDirectoryCreator):
         if not match_result:
             raise ValueError(f"Error target_path: {target_path} is not a valid path format")
 
-        directory = os.path.dirname(target_path)
-        os.makedirs(directory, exist_ok=True)
-
+        return target_path

@@ -22,5 +22,5 @@ class BasePathDirectoryValidator(Protocol):
         @rtype: str
         """
 
-        raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
+        raise NotImplementedError(f"{BasePathDirectoryValidator.__class__.__name__} Interface Missing Implementation")
 

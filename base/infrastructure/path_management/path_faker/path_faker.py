@@ -29,6 +29,9 @@ class PathFaker(BasePathFaker):
         @rtype: None
         """
 
+        if not isinstance(target_path, str):
+            raise ValueError(f"Error target_path: {target_path} is not str type")
+
         pattern = r"^(\/[a-z_\-\s0-9\.]+)"
         match_result = re.match(pattern=pattern, string=target_path)
 
@@ -43,6 +46,9 @@ class PathFaker(BasePathFaker):
         @return: is_valid
         @rtype: bool
         """
+
+        if not isinstance(target_path, str):
+            raise ValueError(f"Error target_path: {target_path} is not str type")
 
         pattern = r"^(\/[a-z_\-\s0-9\.]+)"
         path_to_validate = target_path or self.__path_tree

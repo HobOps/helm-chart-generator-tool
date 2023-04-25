@@ -24,6 +24,9 @@ class PathDirectoryValidator(BasePathDirectoryValidator):
         @rtype: str
         """
 
+        if not isinstance(target_path, str):
+            raise ValueError(f"Error target_path: {target_path} is not str type")
+
         pattern = r"^(\/[a-z_\-\s0-9\.]+)"
         match_result = re.match(pattern=pattern, string=target_path)
 
