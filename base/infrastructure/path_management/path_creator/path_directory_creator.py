@@ -3,7 +3,7 @@
 
 import re
 import os
-
+import pathlib
 
 # Domain
 from base.domain.path_management.path_creator import BasePathDirectoryCreator
@@ -35,4 +35,3 @@ class PathDirectoryCreator(BasePathDirectoryCreator):
 
         directory = os.path.dirname(target_path)
         os.makedirs(directory, exist_ok=True)
-
