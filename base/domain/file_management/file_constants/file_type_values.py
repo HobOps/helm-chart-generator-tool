@@ -17,9 +17,9 @@ class FileTypeValues:
 
 
 file_type_values = FileTypeValues(
-    ini="ini",
-    json="json",
-    text="txt",
-    yaml="yaml"
+    ini=".ini",
+    json=".json",
+    text=".txt",
+    yaml=".yaml"
 )
 
