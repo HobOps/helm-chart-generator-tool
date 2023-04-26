@@ -32,6 +32,9 @@ class TextFileWriter(BaseFileWriter):
 
         self.__path_handler = path_handler or PathHandler(target_path='/')
 
+        if not self.__path_handler.stored_path.exists():
+            raise ValueError(f"Error stored_path: {self.__path_handler.stored_path} doesn't exists in file system")
+
         if self.__path_handler.stored_path.suffix() != file_type_values.text:
             raise ValueError(f"Error path_handler: {path_handler} file_type_suffix is not .txt")
 
@@ -51,9 +54,6 @@ class TextFileWriter(BaseFileWriter):
 
         if not isinstance(data, list):
             raise ValueError(f"Error data: {data} is not list type")
-
-        if not self.__path_handler.stored_path.exists():
-            raise ValueError(f"Error stored_path: {self.__path_handler.stored_path} doesn't exists in file system")
 
         data_value = ListValueObject(data)
 
