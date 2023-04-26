@@ -86,8 +86,8 @@ class FakePath(BasePath):
         """
 
         path_split = relative_path.split(".")
-        valid_file_types = [value for key, value in file_type_values.__dict__]
-        self.__fake_target_path_type = path_types_values.file if path_split[1] in valid_file_types else path_types_values.directory
+        valid_file_types = [value for key, value in file_type_values.__dict__.items()]
+        self.__fake_target_path_type = path_types_values.file if f".{path_split[1]}" in valid_file_types else path_types_values.directory
 
         self.__fake_target_path = f"{self.__fake_target_path}/{relative_path}"
 
@@ -108,15 +108,6 @@ class FakePath(BasePath):
 
             self.__fake_stored_path[self.__fake_target_path] = "dir"
 
-    def suffix(self):
-        """
-        suffix
-        @return: None
-        @rtype: None
-        """
-
-        return self.__fake_file.suffix
-
     def touch(self, exist_ok: bool = None):
         """
         touch
@@ -129,5 +120,15 @@ class FakePath(BasePath):
         if self.__fake_target_path_type == path_types_values.file:
 
             self.__fake_stored_path[self.__fake_target_path] = self.__fake_file
+
+    @property
+    def suffix(self):
+        """
+        suffix
+        @return: None
+        @rtype: None
+        """
+
+        return self.__fake_file.suffix
 
 

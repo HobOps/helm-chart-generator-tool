@@ -66,6 +66,7 @@ class BasePath(Protocol):
 
         raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
 
+    @property
     @abstractmethod
     def suffix(self):
         """

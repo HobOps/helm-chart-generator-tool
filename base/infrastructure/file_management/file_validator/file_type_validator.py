@@ -42,7 +42,9 @@ class FileTypeValidator(BaseFileTypeValidator):
         if not isinstance(file_type_suffix, str):
             raise ValueError(f"Error file_type_suffix: {file_type_suffix} is not str type")
 
-        if file_type_values.__getattribute__(file_type_suffix):
+        valid_file_types = [value for key, value in file_type_values.__dict__.items()]
+
+        if file_type_suffix in valid_file_types:
             return True
 
         return False

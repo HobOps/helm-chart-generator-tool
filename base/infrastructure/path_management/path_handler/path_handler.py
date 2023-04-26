@@ -77,14 +77,14 @@ class PathHandler(BasePathHandler):
 
         FileTypeValidator.validate_file_type_suffix(file_type_suffix=file_type_suffix)
 
-        file_address = f"/{file_name}{file_type_suffix}"
+        file_address = f"{file_name}{file_type_suffix}"
 
         self.__stored_path.joinpath(f"{file_address}")
 
         if not self.__stored_path.is_file():
             raise ValueError(f"Error stored_path: {self.__stored_path} is not file")
 
-        if not self.__stored_path.suffix() == file_type_suffix:
+        if not self.__stored_path.suffix == file_type_suffix:
             raise ValueError(f"Error stored_path: {self.__stored_path} suffix doesn't match the file_type: {file_type_suffix}")
 
         self.__stored_path.touch(exist_ok=True)

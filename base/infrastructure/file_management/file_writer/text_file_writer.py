@@ -35,7 +35,7 @@ class TextFileWriter(BaseFileWriter):
         if not self.__path_handler.stored_path.exists():
             raise ValueError(f"Error stored_path: {self.__path_handler.stored_path} doesn't exists in file system")
 
-        if self.__path_handler.stored_path.suffix() != file_type_values.text:
+        if self.__path_handler.stored_path.suffix != file_type_values.text:
             raise ValueError(f"Error path_handler: {path_handler} file_type_suffix is not .txt")
 
         self.__file_handler = file_handler or FileHandler(
