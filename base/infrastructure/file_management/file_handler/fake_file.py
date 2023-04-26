@@ -95,7 +95,7 @@ class FakeFile(BaseFile):
         @rtype: str
         """
 
-        return self.__file_name + self.__file_type_suffix
+        return self.__file_name
 
     @property
     def suffix(self):

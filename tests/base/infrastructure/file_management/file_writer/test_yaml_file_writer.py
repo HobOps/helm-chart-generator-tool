@@ -9,7 +9,8 @@ from base.infrastructure.path_management.path_handler import FakePath
 from base.infrastructure.path_management.path_handler import PathHandler
 
 # Domain
-from base.domain.file_management.file_constants import file_type_values
+from base.domain.file_management.file_constants.file_type_values import file_type_values
+from base.domain.path_management.path_constants.path_type_values import path_types_values
 
 
 def test_yaml_file_writer_validation():
@@ -31,9 +32,12 @@ def test_yaml_file_writer_validation():
     fake_file = FakeFile(file_name="fake_file_tester", file_type_suffix=file_type_values.yaml)
     fake_file.open()
 
-    fake_path = FakePath(target_path="/home/user1/folder1", fake_file=fake_file)
-    path_handler = PathHandler(path_obj=fake_path)
+    target_path = "/home/user1/project1/folder1"
+    target_path = f"{target_path}/{fake_file.name}{fake_file.suffix}"
+    fake_path = FakePath(target_path=target_path, target_path_type=path_types_values.file, fake_file=fake_file)
+    fake_path.touch()
 
+    path_handler = PathHandler(path_obj=fake_path)
     file_handler = FileHandler(file_obj=fake_file)
 
     yaml_file_writer = YamlFileWriter(path_handler=path_handler, file_handler=file_handler)

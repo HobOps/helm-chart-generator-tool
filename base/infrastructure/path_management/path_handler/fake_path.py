@@ -37,7 +37,7 @@ class FakePath(BasePath):
 
         self.__fake_stored_path = dict()
         self.__fake_target_path = valid_target_path
-        self.__fake_target_path_type = target_path_type
+        self.__fake_target_path_type = target_path_type or path_types_values.directory
         self.__fake_file = fake_file or FakeFile(file_name="fake_file_default", file_type_suffix=file_type_values.text)
 
     def exists(self):
