@@ -39,7 +39,7 @@ class JsonFileWriter(BaseFileWriter):
             raise ValueError(f"Error stored_path: {self.__path_handler.stored_path} doesn't exists in file system")
 
         if self.__path_handler.stored_path.suffix() != file_type_values.json:
-            raise ValueError(f"Error path_handler: {path_handler} file_type_suffix is not .txt")
+            raise ValueError(f"Error path_handler: {path_handler} file_type_suffix is not .json")
 
         self.__file_handler = file_handler or FileHandler(
             file_path=self.__path_handler.stored_path.__str__(),
