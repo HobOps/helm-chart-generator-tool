@@ -32,9 +32,9 @@ class FakePath(BasePath):
         if target_path is not None:
             valid_target_path = PathFormatValidator.validate_path_format(target_path=target_path)
 
-        self.__fake_store_path = dict()
+        self.__fake_stored_path = dict()
         self.__fake_target_path = valid_target_path
-        self.__fake_store_path[self.__fake_target_path] = "dir"
+        self.__fake_stored_path[self.__fake_target_path] = "dir"
         self.__fake_file = fake_file or FakeFile(file_name="fake_file_default", file_type_suffix=file_type_values.text)
 
     def cwd(self):
@@ -44,7 +44,7 @@ class FakePath(BasePath):
         @rtype: str
         """
 
-        return self.__fake_store_path[self.__fake_target_path]
+        return self.__fake_stored_path[self.__fake_target_path]
 
     def exists(self):
         """
@@ -53,7 +53,7 @@ class FakePath(BasePath):
         @rtype: bool
         """
 
-        if self.__fake_store_path.get(self.__fake_target_path):
+        if self.__fake_stored_path.get(self.__fake_target_path):
             return True
 
         return False
@@ -65,7 +65,7 @@ class FakePath(BasePath):
         @rtype: bool
         """
 
-        if self.__fake_store_path[self.__fake_target_path] == "dir":
+        if self.__fake_stored_path[self.__fake_target_path] == "dir":
             return True
 
         return False
@@ -77,7 +77,7 @@ class FakePath(BasePath):
         @rtype: bool
         """
 
-        if isinstance(self.__fake_store_path[self.__fake_target_path], BaseFile):
+        if isinstance(self.__fake_stored_path[self.__fake_target_path], BaseFile):
             return True
 
         return False
@@ -108,7 +108,7 @@ class FakePath(BasePath):
 
         if not self.exists():
 
-            self.__fake_store_path[self.__fake_target_path] = "dir"
+            self.__fake_stored_path[self.__fake_target_path] = "dir"
 
     def suffix(self):
         """
@@ -130,5 +130,5 @@ class FakePath(BasePath):
 
         if not self.exists():
 
-            self.__fake_store_path[self.__fake_target_path] = self.__fake_file
+            self.__fake_stored_path[self.__fake_target_path] = self.__fake_file
 

@@ -31,7 +31,7 @@ def test_json_file_writer_validation():
     fake_file = FakeFile(file_name="fake_file_tester", file_type_suffix=file_type_values.json)
     fake_file.open()
 
-    fake_path = FakePath(fake_file=fake_file)
+    fake_path = FakePath(target_path="/home/user1/folder1", fake_file=fake_file)
     path_handler = PathHandler(path_obj=fake_path)
 
     file_handler = FileHandler(file_obj=fake_file)

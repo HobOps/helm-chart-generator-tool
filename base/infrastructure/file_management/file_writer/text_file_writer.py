@@ -49,6 +49,12 @@ class TextFileWriter(BaseFileWriter):
         @rtype: None
         """
 
+        if not isinstance(data, list):
+            raise ValueError(f"Error data: {data} is not list type")
+
+        if not self.__path_handler.stored_path.exists():
+            raise ValueError(f"Error stored_path: {self.__path_handler.stored_path} doesn't exists in file system")
+
         data_value = ListValueObject(data)
 
         with self.__file_handler as text_file_handler:

@@ -52,8 +52,13 @@ class JsonFileWriter(BaseFileWriter):
         @rtype: None
         """
 
+        if not isinstance(data, dict):
+            raise ValueError(f"Error data: {data} is not dict type")
+
+        if not self.__path_handler.stored_path.exists():
+            raise ValueError(f"Error stored_path: {self.__path_handler.stored_path} doesn't exists in file system")
+
         data_value = DictValueObject(data)
 
         with self.__file_handler as json_file_handler:
             json.dump(data_value.value, json_file_handler, sort_keys=False, indent=4)
-
