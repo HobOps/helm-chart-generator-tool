@@ -75,7 +75,8 @@ class PathHandler(BasePathHandler):
         if not self.__stored_path.is_dir():
             raise ValueError(f"Error stored_path: {self.__stored_path} is not directory")
 
-        FileTypeValidator.validate_file_type_suffix(file_type_suffix=file_type_suffix)
+        if not FileTypeValidator.validate_file_type_suffix(file_type_suffix=file_type_suffix):
+            raise ValueError(f"Error file_type_suffix: {file_type_suffix} is not valid file type")
 
         file_address = f"{file_name}{file_type_suffix}"
 
