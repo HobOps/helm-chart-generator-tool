@@ -47,7 +47,7 @@ class PathHandler(BasePathHandler):
         @rtype: None
         """
 
-        if self.__stored_path.is_dir():
+        if not self.__stored_path.is_dir():
             raise ValueError(f"Error stored_path: {self.__stored_path} is not a directory")
 
         self.__stored_path.mkdir(parents=True, exist_ok=True)

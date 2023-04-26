@@ -13,16 +13,6 @@ class BasePath(Protocol):
     """
 
     @abstractmethod
-    def cwd(self):
-        """
-        cwd
-        @return: path
-        @rtype: str
-        """
-
-        raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
-
-    @abstractmethod
     def exists(self):
         """
         exists
