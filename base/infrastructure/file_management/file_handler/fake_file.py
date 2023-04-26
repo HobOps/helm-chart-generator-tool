@@ -4,6 +4,9 @@
 from typing import List
 
 
+# Infrastructure
+from base.infrastructure.file_management.file_validator import FileTypeValidator
+
 # Domain
 from base.domain.file_management.file_handler import BaseFile
 
@@ -13,16 +16,24 @@ class FakeFile(BaseFile):
     FakeFile
     """
 
-    def __init__(self, initial_content: str = None):
+    def __init__(self, file_name: str = None, file_type_suffix: str = None, initial_content: str = None):
         """
         BaseFile constructor
         """
 
+        if not isinstance(file_name, (str, type(None))):
+            raise ValueError(f"Error file_name: {file_name} is not str type")
+
+        if not isinstance(file_type_suffix, (str, type(None))):
+            raise ValueError(f"Error file_type_suffix: {file_type_suffix} is not str type")
+
         if not isinstance(initial_content, (str, type(None))):
             raise ValueError(f"Error initial_content: {initial_content} is not str type")
 
-        self.__file_open = False
+        self.__file_name: str = file_name
+        self.__file_type_suffix: str = file_type_suffix
         self.__file_content: str = initial_content
+        self.__file_open = False
 
     def open(self):
         """
@@ -77,6 +88,26 @@ class FakeFile(BaseFile):
         self.__file_open = False
 
     @property
+    def name(self):
+        """
+        name
+        @return: file_name
+        @rtype: str
+        """
+
+        return self.__file_name
+
+    @property
+    def suffix(self):
+        """
+        suffix
+        @return: suffix
+        @rtype: str
+        """
+
+        return self.__file_type_suffix
+
+    @property
     def content(self):
         """
         content
@@ -85,3 +116,4 @@ class FakeFile(BaseFile):
         """
 
         return self.__file_content
+

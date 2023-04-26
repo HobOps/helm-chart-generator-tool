@@ -21,35 +21,25 @@ class BasePathHandler(Protocol):
         raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
 
     @abstractmethod
-    def join_path(self, target_path):
+    def make_directory(self):
         """
-        join_path
-        @param target_path: target_path
-        @type target_path:
-        @return: target_path
-        @rtype: Path
+        maker_directory
+        @return: None
+        @rtype: None
         """
 
         raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
 
-    @property
     @abstractmethod
-    def root_path(self):
+    def make_file(self, file_name: str, file_type: str):
         """
-        root_path
-        @return: root_path
-        @rtype: Path
-        """
-
-        raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
-
-    @property
-    @abstractmethod
-    def target_path(self):
-        """
-        target_path
-        @return: target_path
-        @rtype: Path
+        make_file
+        @param file_name: file_name
+        @type file_name: str
+        @param file_type: file_type
+        @type file_type: str
+        @return:
+        @rtype:
         """
 
         raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
