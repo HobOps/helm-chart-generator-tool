@@ -92,3 +92,13 @@ class PathHandler(BasePathHandler):
         if not self.__stored_path.exists():
             raise ValueError(f"Error stored_path: {self.__stored_path} something went wrong to create file")
 
+    @property
+    def stored_path(self):
+        """
+        stored_path
+        @return: stored_path
+        @rtype: BasePath
+        """
+
+        return self.__stored_path
+

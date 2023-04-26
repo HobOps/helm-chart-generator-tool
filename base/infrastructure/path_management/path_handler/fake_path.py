@@ -6,6 +6,7 @@ from base.infrastructure.file_management.file_handler import FakeFile
 from base.infrastructure.path_management.path_validator import PathFormatValidator
 
 # Domain
+from base.domain.file_management.file_constants import file_type_values
 from base.domain.file_management.file_handler import BaseFile
 from base.domain.path_management.path_handler import BasePath
 
@@ -20,10 +21,10 @@ class FakePath(BasePath):
         FakePath
         """
 
-        if not isinstance(target_path, str):
+        if not isinstance(target_path, (str, type(None))):
             raise ValueError(f"Error target_path: {target_path} is not str type")
 
-        if not isinstance(fake_file, FakeFile):
+        if not isinstance(fake_file, (FakeFile, type(None))):
             raise ValueError(f"Error fake_file: {fake_file} is not str type")
 
         valid_target_path = "/"
@@ -31,10 +32,10 @@ class FakePath(BasePath):
         if target_path is not None:
             valid_target_path = PathFormatValidator.validate_path_format(target_path=target_path)
 
-        self.__fake_file = fake_file or FakeFile(file_name="fake_file_default", file_type_suffix="txt")
         self.__fake_store_path = dict()
         self.__fake_target_path = valid_target_path
         self.__fake_store_path[self.__fake_target_path] = "dir"
+        self.__fake_file = fake_file or FakeFile(file_name="fake_file_default", file_type_suffix=file_type_values.text)
 
     def cwd(self):
         """
@@ -116,7 +117,7 @@ class FakePath(BasePath):
         @rtype: None
         """
 
-        self.__fake_file.suffix
+        return self.__fake_file.suffix
 
     def touch(self, exist_ok: bool = None):
         """
