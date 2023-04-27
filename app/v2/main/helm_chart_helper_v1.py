@@ -37,10 +37,10 @@ def write_file(path, values, mode='yaml'):
     app_version = settings.get_app_version()
 
     if app_version == "version1":
-        pass
+        write_file_version1(path=path, values=values, mode=mode)
 
-    if app_version == "version1":
-        pass
+    if app_version == "version2":
+        write_file_version2(path=path, values=values, mode=mode)
 
 
 def parse_config(component_name):
