@@ -41,7 +41,7 @@ def test_json_file_writer_validation_with_valid_params():
     fake_path.touch()
 
     path_handler = PathHandler(path_obj=fake_path)
-    file_handler = FileHandler(file_obj=fake_file)
+    file_handler = FileHandler(path_handler=path_handler, file_obj=fake_file)
 
     json_file_writer = JsonFileWriter(path_handler=path_handler, file_handler=file_handler)
     json_file_writer.write_file(data=data)
@@ -62,11 +62,11 @@ def test_json_file_writer_validation_with_invalid_path_not_exists():
     fake_path = FakePath(target_path=target_path, target_path_type=path_types_values.file, fake_file=fake_file)
 
     path_handler = PathHandler(path_obj=fake_path)
-    file_handler = FileHandler(file_obj=fake_file)
 
     expected_error_message = f"Error stored_path: {path_handler.stored_path} doesn't exists in file system"
 
     with pytest.raises(ValueError) as err:
+        file_handler = FileHandler(path_handler=path_handler, file_obj=fake_file)
         json_file_writer = JsonFileWriter(path_handler=path_handler, file_handler=file_handler)
 
     assert err.value.args[0] == expected_error_message
@@ -86,7 +86,7 @@ def test_json_file_writer_validation_with_invalid_file_type():
     fake_path.touch()
 
     path_handler = PathHandler(path_obj=fake_path)
-    file_handler = FileHandler(file_obj=fake_file)
+    file_handler = FileHandler(path_handler=path_handler, file_obj=fake_file)
 
     expected_error_message = f"Error path_handler: {path_handler} file_type_suffix is not .json"
 

@@ -46,10 +46,10 @@ class YamlFileWriter(BaseFileWriter):
         YamlFileWriter constructor
         """
 
-        if not isinstance(path_handler, BasePathHandler):
+        if not isinstance(path_handler, (BasePathHandler, type(None))):
             raise ValueError(f"Error path_handler: {path_handler} is not an instance of {BasePathHandler}")
 
-        if not isinstance(file_handler, BaseFileHandler):
+        if not isinstance(file_handler, (BaseFileHandler, type(None))):
             raise ValueError(f"Error file_handler: {file_handler} is not an instance of {BaseFileHandler}")
 
         self.__path_handler = path_handler or PathHandler(target_path='/')
@@ -61,8 +61,8 @@ class YamlFileWriter(BaseFileWriter):
             raise ValueError(f"Error path_handler: {path_handler} file_type_suffix is not .yaml")
 
         self.__file_handler = file_handler or FileHandler(
-            file_path=self.__path_handler.stored_path.__str__(),
             file_mode=file_mode_values.write,
+            path_handler=path_handler,
         )
 
     def write_file(self, data: dict):

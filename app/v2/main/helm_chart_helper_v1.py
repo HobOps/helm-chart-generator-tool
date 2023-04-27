@@ -1,32 +1,46 @@
+# -*- coding: utf-8 -*-
+
 import argparse
 import os
-from kubernetes import client, config
+import settings
+
+from kubernetes import client
+from kubernetes import config
+
+
+def write_file_version1(path, values, mode='yaml'):
+    """
+    write_file_version1
+    """
+
+    from app.v1.modules.file_manager import ScriptFileWriterManager
+
+    ScriptFileWriterManager.write_file(path=path, values=values, mode=mode)
+
+
+def write_file_version2(path, values, mode='yaml'):
+    """
+    write_file_version2
+    """
+
+    from app.v2.modules.file_manager.infrastructure.manager import MainFileWriterManager
+
+    file_writer_manager = MainFileWriterManager()
+    file_writer_manager.write_file(path=path, values=values, mode=mode)
 
 
 def write_file(path, values, mode='yaml'):
-    import os
-    import yaml
-    import json
-    # Create directory
-    directory = os.path.dirname(path)
-    try:
-        os.makedirs(directory, exist_ok=True)
-    except OSError as error:
-        print("Directory '%s' can not be created" % directory)
+    """
+    write_file
+    """
 
-    # Write file
-    if mode == 'yaml':
-        yaml.add_representer(str, str_presenter)
-        yaml.representer.SafeRepresenter.add_representer(str, str_presenter)
-        with open(path, 'w') as outfile:
-            yaml.dump(values, outfile, default_flow_style=False, sort_keys=False)
-    elif mode == 'json':
-        with open(path, 'w') as outfile:
-            json.dump(values, outfile, sort_keys=False, indent=4)
-    else:
-        with open(path, 'w') as outfile:
-            outfile.writelines('\n'.join(values))
-    pass
+    app_version = settings.get_app_version()
+
+    if app_version == "version1":
+        write_file_version1(path=path, values=values, mode=mode)
+
+    if app_version == "version2":
+        write_file_version2(path=path, values=values, mode=mode)
 
 
 def parse_config(component_name):
@@ -341,14 +355,6 @@ def remove_empty_from_dict(d):
         return [remove_empty_from_dict(v) for v in d if v and remove_empty_from_dict(v)]
     else:
         return d
-
-
-def str_presenter(dumper, data):
-    """configures yaml for dumping multiline strings
-    Ref: https://stackoverflow.com/questions/8640959/how-can-i-control-what-scalar-form-pyyaml-uses-for-my-data"""
-    if len(data.splitlines()) > 1:  # check for multiline string
-        return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
-    return dumper.represent_scalar('tag:yaml.org,2002:str', data)
 
 
 def read_env(items):

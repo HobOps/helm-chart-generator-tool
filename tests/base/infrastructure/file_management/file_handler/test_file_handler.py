@@ -6,10 +6,15 @@ from unittest.mock import Mock
 
 
 # Infrastructure
+from base.infrastructure.file_management.file_handler import FakeFile
 from base.infrastructure.file_management.file_handler import FileHandler
+from base.infrastructure.path_management.path_handler import FakePath
+from base.infrastructure.path_management.path_handler import PathHandler
 
 # Domain
-from base.domain.file_management.file_constants import file_mode_values
+from base.domain.file_management.file_constants.file_mode_values import file_mode_values
+from base.domain.file_management.file_constants.file_type_values import file_type_values
+from base.domain.path_management.path_constants.path_type_values import path_types_values
 
 
 def test_file_handler_validation():
@@ -17,23 +22,24 @@ def test_file_handler_validation():
     test_file_handler_validation
     """
 
-    fake_file_path = "/fake/path/fake_file.txt"
-    file_mode = file_mode_values.read
-
     fake_data = """
     # My Fake Data
     Data:
       fake_data
     """
 
-    read_function = Mock(return_value=fake_data)
-    fake_file = Mock(read=read_function)
+    fake_file = FakeFile(file_name="my_test_file", file_type_suffix=file_type_values.text, initial_content=fake_data)
+    fake_path = FakePath(target_path="/fake_root/fake_user1/project1", target_path_type=path_types_values.directory, fake_file=fake_file)
+    fake_file.open()
 
-    with FileHandler(file_path=fake_file_path, file_obj=fake_file, file_mode=file_mode) as file_handler:
+    path_handler = PathHandler(path_obj=fake_path)
+    path_handler.make_directory()
+    path_handler.make_file(file_name=fake_file.name, file_type_suffix=fake_file.suffix)
+
+    with FileHandler(path_handler=path_handler, file_obj=fake_file, file_mode=file_mode_values.read) as file_handler:
         read_data = file_handler.read()
 
     assert read_data == fake_data
-    assert True
 
 
 def test_file_handler_validation_read():
@@ -47,7 +53,9 @@ def test_file_handler_validation_read():
     root_path = settings.get_root_path()
     target_path = root_path + file_path
 
-    with FileHandler(file_path=target_path, file_mode=file_mode_values.read) as file_handler:
+    path_handler = PathHandler(target_path=target_path)
+
+    with FileHandler(path_handler=path_handler, file_mode=file_mode_values.read) as file_handler:
         read_data = file_handler.read()
 
     assert read_data == expected_data
@@ -64,10 +72,12 @@ def test_file_handler_validation_write():
     root_path = settings.get_root_path()
     target_path = root_path + file_path
 
-    with FileHandler(file_path=target_path, file_mode=file_mode_values.write) as file_handler:
+    path_handler = PathHandler(target_path=target_path)
+
+    with FileHandler(path_handler=path_handler, file_mode=file_mode_values.write) as file_handler:
         file_handler.write(expected_data)
 
-    with FileHandler(file_path=target_path, file_mode=file_mode_values.read) as file_handler:
+    with FileHandler(path_handler=path_handler, file_mode=file_mode_values.read) as file_handler:
         read_data = file_handler.read()
 
     assert read_data == expected_data
