@@ -74,10 +74,10 @@ class PathHandler(BasePathHandler):
             raise ValueError(f"Error file_type_suffix: {file_type_suffix} is not str type")
 
         if not isinstance(raw_enabled, bool):
-            raise ValueError(f"Error file_type_suffix: {file_type_suffix} is not str type")
+            raise ValueError(f"Error raw_enabled: {raw_enabled} is not bool type")
 
-        if not isinstance(file_type_suffix, str):
-            raise ValueError(f"Error file_type_suffix: {file_type_suffix} is not str type")
+        if not isinstance(custom_suffix, str):
+            raise ValueError(f"Error custom_suffix: {custom_suffix} is not str type")
 
         if not self.__stored_path.exists():
             raise ValueError(f"Error stored_path: {self.__stored_path} doesn't exists")
@@ -99,7 +99,7 @@ class PathHandler(BasePathHandler):
         if not self.__stored_path.is_file():
             raise ValueError(f"Error stored_path: {self.__stored_path} is not file")
 
-        if not self.__stored_path.suffix == file_type_suffix:
+        if not self.__stored_path.suffix == file_type_suffix or self.__stored_path.suffix == f".{custom_suffix}":
             raise ValueError(f"Error stored_path: {self.__stored_path} suffix doesn't match the file_type: {file_type_suffix}")
 
         self.__stored_path.touch(exist_ok=True)
