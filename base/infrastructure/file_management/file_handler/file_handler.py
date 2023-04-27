@@ -7,11 +7,12 @@ from unittest.mock import Mock
 # Domain
 from base.domain.file_management.file_handler import BaseFile
 from base.domain.file_management.file_handler import BaseFileHandler
+from base.domain.path_management.path_handler import BasePathHandler
 
 
 class FileHandler(BaseFileHandler):
 
-    def __init__(self, file_mode: str = 'r', file_path: str = None, file_obj: BaseFile = None):
+    def __init__(self, file_mode: str = 'r', path_handler: BasePathHandler = None, file_obj: BaseFile = None):
         """
         FileHandler constructor
         """
@@ -19,13 +20,21 @@ class FileHandler(BaseFileHandler):
         if not isinstance(file_mode, (str, type(None))):
             raise ValueError(f"Error file_mode: {file_mode} is not a str type")
 
-        if not isinstance(file_path, (str, type(None))):
-            raise ValueError(f"Error file_path: {file_path} is not a str type")
+        if not isinstance(path_handler, (BasePathHandler, type(None))):
+            raise ValueError(f"Error fpath_handler: {path_handler} is not a {BasePathHandler} type")
 
         if not isinstance(file_obj, (BaseFile, type(None))):
             raise ValueError(f"Error file_obj: {file_obj} is not a {BaseFile} type")
 
-        self.file = file_obj or open(file_path, file_mode)
+        self.__path_handler = path_handler
+
+        if not self.__path_handler.stored_path.exists():
+            raise ValueError(f"Error stored_path: {self.__path_handler.stored_path} doesn't exists")
+
+        if not self.__path_handler.stored_path.is_file():
+            raise ValueError(f"Error stored_path: {self.__path_handler.stored_path} is not a File")
+
+        self.file = file_obj or open(self.__path_handler.stored_path.as_posix(), file_mode)
 
     def __enter__(self):
         """

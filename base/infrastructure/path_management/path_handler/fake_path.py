@@ -40,6 +40,15 @@ class FakePath(BasePath):
         self.__fake_target_path_type = target_path_type or path_types_values.directory
         self.__fake_file = fake_file or FakeFile(file_name="fake_file_default", file_type_suffix=file_type_values.text)
 
+    def as_posix(self):
+        """
+        as_posix
+        @return: as_posix
+        @rtype: str
+        """
+
+        return self.__fake_target_path
+
     def exists(self):
         """
         exists

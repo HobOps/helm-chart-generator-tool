@@ -13,6 +13,16 @@ class BasePath(Protocol):
     """
 
     @abstractmethod
+    def as_posix(self):
+        """
+        as_posix
+        @return: as_posix
+        @rtype: str
+        """
+
+        raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
+
+    @abstractmethod
     def exists(self):
         """
         exists

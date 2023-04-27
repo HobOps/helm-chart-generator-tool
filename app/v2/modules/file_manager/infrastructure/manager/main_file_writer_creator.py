@@ -31,7 +31,7 @@ class MainFileWriterCreator(FileWriterCreator):
             raise ValueError(f"Error path_handler: {path_handler} is not an instance of {BasePathHandler}")
 
         if not isinstance(file_handler, (BaseFileHandler, type(None))):
-            raise ValueError(f"Error path_handler: {path_handler} is not an instance of {BasePathHandler}")
+            raise ValueError(f"Error file_handler: {file_handler} is not an instance of {BaseFileHandler}")
 
         self.__path_handler = path_handler
         self.__file_handler = file_handler
@@ -62,7 +62,7 @@ class MainFileWriterCreator(FileWriterCreator):
         @rtype: YamlFileWriter
         """
 
-        return YamlFileWriter(path_handler=self.__path_handler)
+        return YamlFileWriter(path_handler=self.__path_handler, file_handler=self.__file_handler)
 
     def json_file_writer(self) -> JsonFileWriter:
         """
@@ -71,7 +71,7 @@ class MainFileWriterCreator(FileWriterCreator):
         @rtype: YamlFileWriter
         """
 
-        return JsonFileWriter(path_handler=self.__path_handler)
+        return JsonFileWriter(path_handler=self.__path_handler, file_handler=self.__file_handler)
 
     def text_file_writer(self) -> TextFileWriter:
         """
@@ -80,4 +80,4 @@ class MainFileWriterCreator(FileWriterCreator):
         @rtype: YamlFileWriter
         """
 
-        return TextFileWriter(path_handler=self.__path_handler)
+        return TextFileWriter(path_handler=self.__path_handler, file_handler=self.__file_handler)
