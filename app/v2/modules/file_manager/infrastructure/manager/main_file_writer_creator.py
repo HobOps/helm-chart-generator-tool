@@ -2,8 +2,9 @@
 
 
 # Infrastructure
-from base.infrastructure.file_management.file_writer import TextFileWriter
 from base.infrastructure.file_management.file_writer import JsonFileWriter
+from base.infrastructure.file_management.file_writer import RawFileWriter
+from base.infrastructure.file_management.file_writer import TextFileWriter
 from base.infrastructure.file_management.file_writer import YamlFileWriter
 
 # Domain
@@ -52,15 +53,6 @@ class MainFileWriterCreator(FileWriterCreator):
 
         return file_writer_type_factory()
 
-    def yaml_file_writer(self) -> YamlFileWriter:
-        """
-        yaml_file_writer
-        @return: yaml_file_writer
-        @rtype: YamlFileWriter
-        """
-
-        return YamlFileWriter(path_handler=self.__path_handler, file_handler=self.__file_handler)
-
     def json_file_writer(self) -> JsonFileWriter:
         """
         json_file_writer
@@ -70,6 +62,15 @@ class MainFileWriterCreator(FileWriterCreator):
 
         return JsonFileWriter(path_handler=self.__path_handler, file_handler=self.__file_handler)
 
+    def raw_file_writer(self) -> RawFileWriter:
+        """
+        raw_file_writer
+        @return: raw_file_writer
+        @rtype: RawFileWriter
+        """
+
+        return RawFileWriter(path_handler=self.__path_handler, file_handler=self.__file_handler)
+
     def text_file_writer(self) -> TextFileWriter:
         """
         text_file_writer
@@ -78,3 +79,13 @@ class MainFileWriterCreator(FileWriterCreator):
         """
 
         return TextFileWriter(path_handler=self.__path_handler, file_handler=self.__file_handler)
+
+    def yaml_file_writer(self) -> YamlFileWriter:
+        """
+        yaml_file_writer
+        @return: yaml_file_writer
+        @rtype: YamlFileWriter
+        """
+
+        return YamlFileWriter(path_handler=self.__path_handler, file_handler=self.__file_handler)
+
