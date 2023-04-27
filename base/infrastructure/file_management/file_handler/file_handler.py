@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
 
-from unittest.mock import Mock
-
-
 # Domain
 from base.domain.file_management.file_handler import BaseFile
 from base.domain.file_management.file_handler import BaseFileHandler

@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
 
-from typing import Callable
-
-
 # Infrastructure
 from base.infrastructure.file_management.file_writer import TextFileWriter
 from base.infrastructure.file_management.file_writer import JsonFileWriter
