@@ -61,8 +61,8 @@ class YamlFileWriter(BaseFileWriter):
             raise ValueError(f"Error path_handler: {path_handler} file_type_suffix is not .yaml")
 
         self.__file_handler = file_handler or FileHandler(
-            file_path=self.__path_handler.stored_path.__str__(),
             file_mode=file_mode_values.write,
+            path_handler=path_handler,
         )
 
     def write_file(self, data: dict):

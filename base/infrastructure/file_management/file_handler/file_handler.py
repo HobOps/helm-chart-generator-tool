@@ -29,7 +29,7 @@ class FileHandler(BaseFileHandler):
         self.__path_handler = path_handler
 
         if not self.__path_handler.stored_path.exists():
-            raise ValueError(f"Error stored_path: {self.__path_handler.stored_path} doesn't exists")
+            raise ValueError(f"Error stored_path: {self.__path_handler.stored_path} doesn't exists in file system")
 
         if not self.__path_handler.stored_path.is_file():
             raise ValueError(f"Error stored_path: {self.__path_handler.stored_path} is not a File")
