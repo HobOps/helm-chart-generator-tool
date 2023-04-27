@@ -27,10 +27,10 @@ class JsonFileWriter(BaseFileWriter):
         JsonFileWriter constructor
         """
 
-        if not isinstance(path_handler, BasePathHandler):
+        if not isinstance(path_handler, (BasePathHandler, type(None))):
             raise ValueError(f"Error path_handler: {path_handler} is not an instance of {BasePathHandler}")
 
-        if not isinstance(path_handler, BasePathHandler):
+        if not isinstance(file_handler, (BaseFileHandler, type(None))):
             raise ValueError(f"Error path_handler: {path_handler} is not an instance of {BasePathHandler}")
 
         self.__path_handler = path_handler or PathHandler(target_path='/')

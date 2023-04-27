@@ -11,8 +11,10 @@ from base.infrastructure.file_management.file_writer import YamlFileWriter
 
 # Domain
 from app.v2.modules.file_manager.domain.services.create import FileWriterCreator
-from base.domain.file_management.file_constants import file_types_values
+from base.domain.file_management.file_constants.file_type_values import file_type_values
 from base.domain.file_management.file_writer import BaseFileWriter
+from base.domain.file_management.file_handler import BaseFileHandler
+from base.domain.path_management.path_handler import BasePathHandler
 
 
 class MainFileWriterCreator(FileWriterCreator):
@@ -20,8 +22,21 @@ class MainFileWriterCreator(FileWriterCreator):
     MainFileWriterCreator
     """
 
-    @classmethod
-    def create_file_writer(cls, file_type: str) -> BaseFileWriter:
+    def __init__(self, path_handler: BasePathHandler = None, file_handler: BaseFileHandler = None):
+        """
+        MainFileWriterCreator constructor
+        """
+
+        if not isinstance(path_handler, (BasePathHandler, type(None))):
+            raise ValueError(f"Error path_handler: {path_handler} is not an instance of {BasePathHandler}")
+
+        if not isinstance(file_handler, (BaseFileHandler, type(None))):
+            raise ValueError(f"Error path_handler: {path_handler} is not an instance of {BasePathHandler}")
+
+        self.__path_handler = path_handler
+        self.__file_handler = file_handler
+
+    def create_file_writer(self, file_type: str) -> BaseFileWriter:
         """
         create_writer
         @param file_type: file_type
@@ -33,51 +48,36 @@ class MainFileWriterCreator(FileWriterCreator):
         if not isinstance(file_type, str):
             raise ValueError(f"Error file_type: {file_type} is not str type")
 
-        if file_type not in file_types_values:
+        if file_type not in [key for key, value in file_type_values.__dict__.items()]:
             raise ValueError(f"Error file_type: {file_type} is not a valid file type")
 
-        file_writer_type = f"{file_type}_file_writer"
+        file_writer_type_factory = getattr(self, f"{file_type}_file_writer")
 
-        return cls.file_writer_factory(file_writer_type)
+        return file_writer_type_factory()
 
-    @classmethod
-    def file_writer_factory(cls, file_writer_type: Callable) -> BaseFileWriter:
-        """
-        file_writer_callback
-        @param file_writer_type: file_writer_type
-        @type file_writer_type: Callable
-        @return: file_writer
-        @rtype: BaseFileWriter
-        """
-
-        return file_writer_type()
-
-    @staticmethod
-    def yaml_file_writer() -> YamlFileWriter:
+    def yaml_file_writer(self) -> YamlFileWriter:
         """
         yaml_file_writer
         @return: yaml_file_writer
         @rtype: YamlFileWriter
         """
 
-        return YamlFileWriter()
+        return YamlFileWriter(path_handler=self.__path_handler)
 
-    @staticmethod
-    def json_file_writer() -> JsonFileWriter:
+    def json_file_writer(self) -> JsonFileWriter:
         """
         json_file_writer
         @return: json_file_writer
         @rtype: YamlFileWriter
         """
 
-        return JsonFileWriter()
+        return JsonFileWriter(path_handler=self.__path_handler)
 
-    @staticmethod
-    def text_file_writer() -> TextFileWriter:
+    def text_file_writer(self) -> TextFileWriter:
         """
         text_file_writer
         @return: text_file_writer
         @rtype: YamlFileWriter
         """
 
-        return TextFileWriter()
+        return TextFileWriter(path_handler=self.__path_handler)

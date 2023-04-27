@@ -16,8 +16,8 @@ class FileWriterCreator(Protocol):
     FileWriterCreator
     """
 
-    @classmethod
-    def create_file_writer(cls, file_type: str) -> BaseFileWriter:
+    @abstractmethod
+    def create_file_writer(self, file_type: str) -> BaseFileWriter:
         """
         create_writer
         @param file_type: file_type
@@ -26,6 +26,6 @@ class FileWriterCreator(Protocol):
         @rtype: BaseFileWriter
         """
 
-        raise NotImplementedError(f"{cls.__class__.__name__} Interface Missing Implementation")
+        raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
 
 
