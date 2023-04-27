@@ -52,19 +52,29 @@ class PathHandler(BasePathHandler):
 
         self.__stored_path.mkdir(parents=True, exist_ok=True)
 
-    def make_file(self, file_name: str, file_type_suffix: str):
+    def make_file(self, file_name: str, file_type_suffix: str, raw_enabled: bool = False, custom_suffix: str = None):
         """
-        make_file
-        @param file_name: file_name
-        @type file_name: str
-        @param file_type_suffix: file_type_suffix
-        @type file_type_suffix: str
-        @return: None
-        @rtype: None
+
+        @param file_name:
+        @type file_name:
+        @param file_type_suffix:
+        @type file_type_suffix:
+        @param raw_enabled:
+        @type raw_enabled:
+        @param custom_suffix:
+        @type custom_suffix:
+        @return:
+        @rtype:
         """
 
         if not isinstance(file_name, str):
             raise ValueError(f"Error file_name: {file_name} is not str type")
+
+        if not isinstance(file_type_suffix, str):
+            raise ValueError(f"Error file_type_suffix: {file_type_suffix} is not str type")
+
+        if not isinstance(raw_enabled, bool):
+            raise ValueError(f"Error file_type_suffix: {file_type_suffix} is not str type")
 
         if not isinstance(file_type_suffix, str):
             raise ValueError(f"Error file_type_suffix: {file_type_suffix} is not str type")
@@ -78,7 +88,11 @@ class PathHandler(BasePathHandler):
         if not FileTypeValidator.validate_file_type_suffix(file_type_suffix=file_type_suffix):
             raise ValueError(f"Error file_type_suffix: {file_type_suffix} is not valid file type")
 
-        file_address = f"{file_name}{file_type_suffix}"
+        if not raw_enabled:
+            file_address = f"{file_name}{file_type_suffix}"
+
+        if raw_enabled:
+            file_address = f"{file_name}{file_type_suffix}{custom_suffix}"
 
         self.__stored_path.joinpath(f"{file_address}")
 

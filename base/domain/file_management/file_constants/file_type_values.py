@@ -12,6 +12,7 @@ class FileTypeValues:
 
     ini: str
     json: str
+    raw: str
     text: str
     yaml: str
 
@@ -19,6 +20,7 @@ class FileTypeValues:
 file_type_values = FileTypeValues(
     ini=".ini",
     json=".json",
+    raw=".",
     text=".txt",
     yaml=".yaml"
 )
