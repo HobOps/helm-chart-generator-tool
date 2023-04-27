@@ -76,7 +76,7 @@ class PathHandler(BasePathHandler):
         if not isinstance(raw_enabled, bool):
             raise ValueError(f"Error raw_enabled: {raw_enabled} is not bool type")
 
-        if not isinstance(custom_suffix, str):
+        if not isinstance(custom_suffix, (str, type(None))):
             raise ValueError(f"Error custom_suffix: {custom_suffix} is not str type")
 
         if not self.__stored_path.exists():
