@@ -117,6 +117,20 @@ class FakePath(BasePath):
 
             self.__fake_stored_path[self.__fake_target_path] = "dir"
 
+    @property
+    def parent(self):
+        """
+        parent
+        @return: path
+        @rtype: str
+        """
+
+        path_in_parts = self.__fake_target_path.split("/")
+        path_in_parts = path_in_parts[1:-1]
+        path_parent = "/".join(path_in_parts)
+
+        return path_parent
+
     def touch(self, exist_ok: bool = None):
         """
         touch
