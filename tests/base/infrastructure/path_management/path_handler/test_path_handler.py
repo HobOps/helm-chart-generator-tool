@@ -5,7 +5,7 @@ import pytest
 
 
 # Infrastructure
-from base.infrastructure.path_management.path_handler import FakePath
+from base.infrastructure.path_management.path_doubles import PathFaker
 from base.infrastructure.path_management.path_handler import PathHandler
 
 # Domain
@@ -21,7 +21,7 @@ def test_path_handler_with_valid_params():
     target_path = "/home/user1/project1/folder1"
     target_path_type = path_types_values.directory
 
-    fake_path = FakePath(target_path=target_path, target_path_type=target_path_type)
+    fake_path = PathFaker(target_path=target_path, target_path_type=target_path_type)
     path_handler = PathHandler(path_obj=fake_path)
 
     assert path_handler.stored_path.exists() is False
@@ -48,7 +48,7 @@ def test_path_handler_validate_direct_touch_with_not_directory_assigned_fails():
     target_path = "/home/user1/project1/folder1"
     target_path_type = path_types_values.directory
 
-    fake_path = FakePath(target_path=target_path, target_path_type=target_path_type)
+    fake_path = PathFaker(target_path=target_path, target_path_type=target_path_type)
     path_handler = PathHandler(path_obj=fake_path)
 
     assert path_handler.stored_path.exists() is False
@@ -84,7 +84,7 @@ def test_path_handler_make_file_with_invalid_file_type_fails():
     target_path = "/home/user1/project1/folder1"
     target_path_type = path_types_values.directory
 
-    fake_path = FakePath(target_path=target_path, target_path_type=target_path_type)
+    fake_path = PathFaker(target_path=target_path, target_path_type=target_path_type)
     path_handler = PathHandler(path_obj=fake_path)
     path_handler.make_directory()
 

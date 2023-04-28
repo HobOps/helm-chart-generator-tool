@@ -8,7 +8,7 @@ from base.infrastructure.file_management.file_writer import TextFileWriter
 from base.infrastructure.file_management.file_writer import YamlFileWriter
 from base.infrastructure.file_management.file_handler import FakeFile
 from base.infrastructure.file_management.file_handler import FileHandler
-from base.infrastructure.path_management.path_handler import FakePath
+from base.infrastructure.path_management.path_doubles import PathFaker
 from base.infrastructure.path_management.path_handler import PathHandler
 
 # Domain
@@ -22,7 +22,7 @@ def test_file_writer_creator_for_json_file_writer_type():
     """
 
     fake_file = FakeFile(file_name="my_test", file_type_suffix=file_type_values.json)
-    fake_path = FakePath(target_path="/home/user1/project1", fake_file=fake_file)
+    fake_path = PathFaker(target_path="/home/user1/project1", fake_file=fake_file)
 
     path_handler = PathHandler(path_obj=fake_path)
     path_handler.make_directory()
@@ -42,7 +42,7 @@ def test_file_writer_creator_for_text_file_writer_type():
     """
 
     fake_file = FakeFile(file_name="my_test", file_type_suffix=file_type_values.text)
-    fake_path = FakePath(target_path="/home/user1/project1", fake_file=fake_file)
+    fake_path = PathFaker(target_path="/home/user1/project1", fake_file=fake_file)
 
     path_handler = PathHandler(path_obj=fake_path)
     path_handler.make_directory()
@@ -62,7 +62,7 @@ def test_file_writer_creator_for_yaml_file_writer_type():
     """
 
     fake_file = FakeFile(file_name="my_test", file_type_suffix=file_type_values.yaml)
-    fake_path = FakePath(target_path="/home/user1/project1", fake_file=fake_file)
+    fake_path = PathFaker(target_path="/home/user1/project1", fake_file=fake_file)
 
     path_handler = PathHandler(path_obj=fake_path)
     path_handler.make_directory()

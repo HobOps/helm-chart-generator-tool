@@ -8,17 +8,17 @@ from base.infrastructure.path_management.path_validator import PathFormatValidat
 # Domain
 from base.domain.file_management.file_constants import file_type_values
 from base.domain.path_management.path_constants import path_types_values
-from base.domain.path_management.path_handler import BasePath
+from base.domain.path_management.path_doubles import BasePath
 
 
-class FakePath(BasePath):
+class PathFaker(BasePath):
     """
-    FakePath
+    PathFaker
     """
 
     def __init__(self, target_path: str = None, target_path_type: str = None, fake_file: FakeFile = None):
         """
-        FakePath
+        PathFaker
         """
 
         if not isinstance(target_path, (str, type(None))):

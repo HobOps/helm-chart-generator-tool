@@ -9,7 +9,7 @@ from base.infrastructure.file_management.file_validator import FileTypeValidator
 from base.infrastructure.path_management.path_validator import PathFormatValidator
 
 # Domain
-from base.domain.path_management.path_handler import BasePath
+from base.domain.path_management.path_doubles import BasePath
 from base.domain.path_management.path_handler import BasePathHandler
 
 

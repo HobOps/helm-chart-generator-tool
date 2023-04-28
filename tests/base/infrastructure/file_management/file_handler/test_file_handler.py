@@ -8,7 +8,7 @@ from unittest.mock import Mock
 # Infrastructure
 from base.infrastructure.file_management.file_handler import FakeFile
 from base.infrastructure.file_management.file_handler import FileHandler
-from base.infrastructure.path_management.path_handler import FakePath
+from base.infrastructure.path_management.path_doubles import PathFaker
 from base.infrastructure.path_management.path_handler import PathHandler
 
 # Domain
@@ -29,7 +29,7 @@ def test_file_handler_validation():
     """
 
     fake_file = FakeFile(file_name="my_test_file", file_type_suffix=file_type_values.text, initial_content=fake_data)
-    fake_path = FakePath(target_path="/fake_root/fake_user1/project1", target_path_type=path_types_values.directory, fake_file=fake_file)
+    fake_path = PathFaker(target_path="/fake_root/fake_user1/project1", target_path_type=path_types_values.directory, fake_file=fake_file)
     fake_file.open()
 
     path_handler = PathHandler(path_obj=fake_path)
