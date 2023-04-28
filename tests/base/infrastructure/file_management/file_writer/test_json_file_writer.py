@@ -5,7 +5,7 @@ import pytest
 
 
 # Infrastructure
-from base.infrastructure.file_management.file_handler import FakeFile
+from base.infrastructure.file_management.file_doubles import FileFaker
 from base.infrastructure.file_management.file_handler import FileHandler
 from base.infrastructure.file_management.file_writer import JsonFileWriter
 from base.infrastructure.path_management.path_doubles import PathFaker
@@ -32,7 +32,7 @@ def test_json_file_writer_validation_with_valid_params():
         }
     }
 
-    fake_file = FakeFile(file_name="fake_file_tester", file_type_suffix=file_type_values.json)
+    fake_file = FileFaker(file_name="fake_file_tester", file_type_suffix=file_type_values.json)
     fake_file.open()
 
     target_path = "/home/user1/project1/folder1"
@@ -54,7 +54,7 @@ def test_json_file_writer_validation_with_invalid_path_not_exists():
     test_json_file_writer_validation_with_invalid_path_not_exists
     """
 
-    fake_file = FakeFile(file_name="fake_file_tester", file_type_suffix=file_type_values.json)
+    fake_file = FileFaker(file_name="fake_file_tester", file_type_suffix=file_type_values.json)
     fake_file.open()
 
     target_path = "/home/user1/project1/folder1"
@@ -77,7 +77,7 @@ def test_json_file_writer_validation_with_invalid_file_type():
     test_json_file_writer_validation_with_invalid_file_type
     """
 
-    fake_file = FakeFile(file_name="fake_file_tester", file_type_suffix=file_type_values.yaml)
+    fake_file = FileFaker(file_name="fake_file_tester", file_type_suffix=file_type_values.yaml)
     fake_file.open()
 
     target_path = "/home/user1/project1/folder1"

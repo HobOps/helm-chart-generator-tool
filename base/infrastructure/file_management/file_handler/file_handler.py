@@ -2,7 +2,7 @@
 
 
 # Domain
-from base.domain.file_management.file_handler import BaseFile
+from base.domain.file_management.file_doubles import BaseFile
 from base.domain.file_management.file_handler import BaseFileHandler
 from base.domain.path_management.path_handler import BasePathHandler
 

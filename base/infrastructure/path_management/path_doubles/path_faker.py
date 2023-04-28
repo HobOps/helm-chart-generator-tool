@@ -2,7 +2,7 @@
 
 
 # Infrastructure
-from base.infrastructure.file_management.file_handler import FakeFile
+from base.infrastructure.file_management.file_doubles import FileFaker
 from base.infrastructure.path_management.path_validator import PathFormatValidator
 
 # Domain
@@ -16,7 +16,7 @@ class PathFaker(BasePath):
     PathFaker
     """
 
-    def __init__(self, target_path: str = None, target_path_type: str = None, fake_file: FakeFile = None):
+    def __init__(self, target_path: str = None, target_path_type: str = None, fake_file: FileFaker = None):
         """
         PathFaker
         """
@@ -27,7 +27,7 @@ class PathFaker(BasePath):
         if not isinstance(target_path_type, (str, type(None))):
             raise ValueError(f"Error target_path_type: {target_path_type} is not str type")
 
-        if not isinstance(fake_file, (FakeFile, type(None))):
+        if not isinstance(fake_file, (FileFaker, type(None))):
             raise ValueError(f"Error fake_file: {fake_file} is not str type")
 
         valid_target_path = "/"
@@ -38,7 +38,7 @@ class PathFaker(BasePath):
         self.__fake_stored_path = dict()
         self.__fake_target_path = valid_target_path
         self.__fake_target_path_type = target_path_type or path_types_values.directory
-        self.__fake_file = fake_file or FakeFile(file_name="fake_file_default", file_type_suffix=file_type_values.text)
+        self.__fake_file = fake_file or FileFaker(file_name="fake_file_default", file_type_suffix=file_type_values.text)
 
     def as_posix(self):
         """
