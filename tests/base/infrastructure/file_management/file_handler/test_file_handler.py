@@ -83,6 +83,30 @@ def test_file_handler_validation_write():
     assert read_data == expected_data
 
 
+def test_file_handler_validation_create_and_write():
+    """
+    test_file_handler_validation_create_and_write
+    """
+
+    expected_data = '# Test\n\nLet see what happen\ngood luck\ncheers\n\n'
+
+    file_path = '/config_files/input/configurations/new_folder1/my_write_test.txt'
+    root_path = settings.get_root_path()
+    target_path = root_path + file_path
+
+    path_handler = PathHandler(target_path=target_path)
+    path_handler.make_directory()
+    path_handler.make_file()
+
+    with FileHandler(path_handler=path_handler, file_mode=file_mode_values.write) as file_handler:
+        file_handler.write(expected_data)
+
+    with FileHandler(path_handler=path_handler, file_mode=file_mode_values.read) as file_handler:
+        read_data = file_handler.read()
+
+    assert read_data == expected_data
+
+
 
 
 

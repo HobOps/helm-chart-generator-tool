@@ -47,73 +47,26 @@ class PathHandler(BasePathHandler):
         @rtype: None
         """
 
-        if not self.__stored_path.is_dir():
-            raise ValueError(f"Error stored_path: {self.__stored_path} is not a directory")
+        self.__stored_path.parent.mkdir(parents=True, exist_ok=True)
 
-        self.__stored_path.mkdir(parents=True, exist_ok=True)
-
-    def make_file(self, file_name: str, file_type_suffix: str, raw_enabled: bool = False, custom_suffix: str = None):
+    def make_file(self, file_name: str = None, file_type_suffix: str = None):
         """
-
-        @param file_name:
-        @type file_name:
-        @param file_type_suffix:
-        @type file_type_suffix:
-        @param raw_enabled:
-        @type raw_enabled:
-        @param custom_suffix:
-        @type custom_suffix:
+        make_file
         @return:
         @rtype:
         """
 
-        if not isinstance(file_name, str):
-            raise ValueError(f"Error file_name: {file_name} is not str type")
-
-        if not isinstance(file_type_suffix, str):
-            raise ValueError(f"Error file_type_suffix: {file_type_suffix} is not str type")
-
-        if not isinstance(raw_enabled, bool):
-            raise ValueError(f"Error raw_enabled: {raw_enabled} is not bool type")
-
-        if not isinstance(custom_suffix, (str, type(None))):
-            raise ValueError(f"Error custom_suffix: {custom_suffix} is not str type")
-
-        if not self.__stored_path.exists():
-            raise ValueError(f"Error stored_path: {self.__stored_path} doesn't exists")
-
-        if not self.__stored_path.is_dir():
-            raise ValueError(f"Error stored_path: {self.__stored_path} is not directory")
-
-        if not FileTypeValidator.validate_file_type_suffix(file_type_suffix=file_type_suffix):
-            raise ValueError(f"Error file_type_suffix: {file_type_suffix} is not valid file type")
-
-        if not raw_enabled:
-            file_address = f"{file_name}{file_type_suffix}"
-
-        if raw_enabled:
-            file_address = f"{file_name}{file_type_suffix}{custom_suffix}"
-
-        self.__stored_path.joinpath(f"{file_address}")
-
-        if not self.__stored_path.is_file():
-            raise ValueError(f"Error stored_path: {self.__stored_path} is not file")
-
-        if not self.__stored_path.suffix == file_type_suffix or self.__stored_path.suffix == f".{custom_suffix}":
-            raise ValueError(f"Error stored_path: {self.__stored_path} suffix doesn't match the file_type: {file_type_suffix}")
+        if not self.__stored_path.parent.exists():
+            raise ValueError(f"Error stored_path: {self.__stored_path.parent} needs to exists before file creation")
 
         self.__stored_path.touch(exist_ok=True)
-
-        if not self.__stored_path.exists():
-            raise ValueError(f"Error stored_path: {self.__stored_path} something went wrong to create file")
 
     @property
     def stored_path(self):
         """
         stored_path
         @return: stored_path
-        @rtype: BasePath
+        @rtype: path
         """
 
         return self.__stored_path
-
