@@ -16,7 +16,7 @@ class PathFaker(BasePath):
     PathFaker
     """
 
-    def __init__(self, target_path: str = None, target_path_type: str = None, fake_file: FileFaker = None, recursive_counter: int = 1):
+    def __init__(self, target_path: str = None, target_path_type: str = None, fake_file: FileFaker = None):
         """
         PathFaker
         """
@@ -30,9 +30,6 @@ class PathFaker(BasePath):
         if not isinstance(fake_file, (FileFaker, type(None))):
             raise ValueError(f"Error fake_file: {fake_file} is not str type")
 
-        if not isinstance(recursive_counter, int):
-            raise ValueError(f"Error fake_file: {fake_file} is not str type")
-
         valid_target_path = "/"
 
         if target_path is not None:
@@ -42,7 +39,6 @@ class PathFaker(BasePath):
         self.__fake_target_path = valid_target_path
         self.__fake_target_path_type = target_path_type or path_types_values.directory
         self.__fake_file = fake_file or FileFaker(file_name="fake_file_default", file_type_suffix=file_type_values.text)
-        self.__recursive_counter = recursive_counter
 
     def as_posix(self):
         """
@@ -51,7 +47,7 @@ class PathFaker(BasePath):
         @rtype: str
         """
 
-        return self.recursive_counter(self.__fake_target_path)
+        return self.__fake_target_path
 
     def exists(self):
         """
@@ -61,9 +57,9 @@ class PathFaker(BasePath):
         """
 
         if self.__fake_stored_path.get(self.__fake_target_path):
-            return self.recursive_counter(True)
+            return True
 
-        return self.recursive_counter(False)
+        return False
 
     def is_dir(self):
         """
@@ -73,9 +69,9 @@ class PathFaker(BasePath):
         """
 
         if self.__fake_target_path_type == path_types_values.directory:
-            return self.recursive_counter(True)
+            return True
 
-        return self.recursive_counter(False)
+        return False
 
     def is_file(self):
         """
@@ -85,9 +81,9 @@ class PathFaker(BasePath):
         """
 
         if self.__fake_target_path_type == path_types_values.file:
-            return self.recursive_counter(True)
+            return True
 
-        return self.recursive_counter(False)
+        return False
 
     def joinpath(self, relative_path: str):
         """
@@ -104,7 +100,7 @@ class PathFaker(BasePath):
 
         self.__fake_target_path = f"{self.__fake_target_path}/{relative_path}"
 
-        return self.recursive_counter(self.__fake_target_path)
+        return self.__fake_target_path
 
     def mkdir(self, parents: bool = None, exist_ok: bool = None):
         """
@@ -119,7 +115,7 @@ class PathFaker(BasePath):
 
         self.__fake_stored_path[self.__fake_target_path] = "dir"
 
-        return self.recursive_counter(True)
+        return True
 
     @property
     def parent(self):
@@ -133,7 +129,7 @@ class PathFaker(BasePath):
         path_in_parts = path_in_parts[1:-1]
         path_parent = "/".join(path_in_parts)
 
-        return self.recursive_counter(path_parent)
+        return path_parent
 
     def touch(self, exist_ok: bool = None):
         """
@@ -148,8 +144,6 @@ class PathFaker(BasePath):
 
             self.__fake_stored_path[self.__fake_target_path] = self.__fake_file
 
-            return self.recursive_counter(True)
-
     @property
     def suffix(self):
         """
@@ -159,21 +153,5 @@ class PathFaker(BasePath):
         """
 
         return self.__fake_file.suffix
-
-    def recursive_counter(self, value):
-        """
-        recursive_counter
-        @param value: value
-        @type value: Any
-        @return: self
-        @rtype: self
-        """
-
-        self.__recursive_counter -= 1
-
-        if self.__recursive_counter == 0:
-            return value
-
-        return self
 
 
