@@ -18,19 +18,25 @@ def test_path_handler_with_valid_params():
     test_path_handler_with_valid_params
     """
 
-    target_path = "/home/user1/project1/folder1"
-    target_path_type = path_types_values.directory
+    target_folder_path = "/home/user1/project1/folder1"
+    target_folder_path_type = path_types_values.directory
 
-    fake_path = PathFaker(target_path=target_path, target_path_type=target_path_type)
-    path_handler = PathHandler(path_obj=fake_path)
+    fake_folder_path = PathFaker(target_path=target_folder_path, target_path_type=target_folder_path_type)
+
+    target_file_path = "/home/user1/project1/folder1/my_file1.txt"
+    target_file_path_type = path_types_values.file
+
+    fake_file_path = PathFaker(target_path=target_file_path, target_path_type=target_file_path_type, fake_parent_path=fake_folder_path)
+    path_handler = PathHandler(path_obj=fake_file_path)
 
     assert path_handler.stored_path.exists() is False
 
     path_handler.make_directory()
 
-    assert path_handler.stored_path.exists() is True
-    assert path_handler.stored_path.is_dir() is True
-    assert path_handler.stored_path.is_file() is False
+    assert path_handler.stored_path.parent.exists() is True
+    assert path_handler.stored_path.parent.is_dir() is True
+    assert path_handler.stored_path.exists() is False
+    assert path_handler.stored_path.is_file() is True
 
     path_handler.make_file(file_name="fake_file_name", file_type_suffix=file_type_values.text)
 
@@ -45,15 +51,20 @@ def test_path_handler_validate_direct_touch_with_not_directory_assigned_fails():
     test_path_handler_validate_direct_touch_fails_with_not_directory_assigned
     """
 
-    target_path = "/home/user1/project1/folder1"
-    target_path_type = path_types_values.directory
+    target_folder_path = "/home/user1/project1/folder1"
+    target_folder_path_type = path_types_values.directory
 
-    fake_path = PathFaker(target_path=target_path, target_path_type=target_path_type)
-    path_handler = PathHandler(path_obj=fake_path)
+    fake_folder_path = PathFaker(target_path=target_folder_path, target_path_type=target_folder_path_type)
 
-    assert path_handler.stored_path.exists() is False
+    target_file_path = "/home/user1/project1/folder1/my_file1.txt"
+    target_file_path_type = path_types_values.file
 
-    expected_error_message = f"Error stored_path: {path_handler.stored_path} doesn't exists"
+    fake_file_path = PathFaker(target_path=target_file_path, target_path_type=target_file_path_type, fake_parent_path=fake_folder_path)
+    path_handler = PathHandler(path_obj=fake_file_path)
+
+    assert path_handler.stored_path.parent.exists() is False
+
+    expected_error_message = f"Error stored_path: {path_handler.stored_path.parent} needs to exists before file creation"
 
     with pytest.raises(ValueError) as err:
         path_handler.make_file(file_name="fake_file_name", file_type_suffix=file_type_values.text)

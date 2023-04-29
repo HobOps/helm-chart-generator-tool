@@ -16,7 +16,7 @@ class PathFaker(BasePath):
     PathFaker
     """
 
-    def __init__(self, target_path: str = None, target_path_type: str = None, fake_file: FileFaker = None):
+    def __init__(self, target_path: str = None, target_path_type: str = None, fake_parent_path: BasePath = None, fake_file: FileFaker = None):
         """
         PathFaker
         """
@@ -26,6 +26,9 @@ class PathFaker(BasePath):
 
         if not isinstance(target_path_type, (str, type(None))):
             raise ValueError(f"Error target_path_type: {target_path_type} is not str type")
+
+        if not isinstance(fake_parent_path, (BasePath, type(None))):
+            raise ValueError(f"Error fake_parent_path: {fake_parent_path} is not str type")
 
         if not isinstance(fake_file, (FileFaker, type(None))):
             raise ValueError(f"Error fake_file: {fake_file} is not str type")
@@ -38,6 +41,7 @@ class PathFaker(BasePath):
         self.__fake_stored_path = dict()
         self.__fake_target_path = valid_target_path
         self.__fake_target_path_type = target_path_type or path_types_values.directory
+        self.__fake_target_path_parent_path = fake_parent_path
         self.__fake_file = fake_file or FileFaker(file_name="fake_file_default", file_type_suffix=file_type_values.text)
 
     def as_posix(self):
@@ -125,11 +129,7 @@ class PathFaker(BasePath):
         @rtype: str
         """
 
-        path_in_parts = self.__fake_target_path.split("/")
-        path_in_parts = path_in_parts[1:-1]
-        path_parent = "/".join(path_in_parts)
-
-        return path_parent
+        return self.__fake_target_path_parent_path
 
     def touch(self, exist_ok: bool = None):
         """

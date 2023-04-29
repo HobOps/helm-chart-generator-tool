@@ -29,10 +29,19 @@ def test_file_handler_validation():
     """
 
     fake_file = FileFaker(file_name="my_test_file", file_type_suffix=file_type_values.text, initial_content=fake_data)
-    fake_path = PathFaker(target_path="/fake_root/fake_user1/project1", target_path_type=path_types_values.directory, fake_file=fake_file)
     fake_file.open()
 
-    path_handler = PathHandler(path_obj=fake_path)
+    target_folder_path = "/home/user1/project1/folder1"
+    target_folder_path_type = path_types_values.directory
+
+    fake_folder_path = PathFaker(target_path=target_folder_path, target_path_type=target_folder_path_type)
+
+    target_file_path = "/home/user1/project1/folder1"
+    target_file_path_type = path_types_values.file
+
+    fake_file_path = PathFaker(target_path=target_file_path, target_path_type=target_file_path_type, fake_file=fake_file, fake_parent_path=fake_folder_path)
+
+    path_handler = PathHandler(path_obj=fake_file_path)
     path_handler.make_directory()
     path_handler.make_file(file_name=fake_file.name, file_type_suffix=fake_file.suffix)
 
