@@ -23,7 +23,6 @@ class PathItemCreator(BasePathCreator):
         folder_path: str = None,
         file_raw_enabled: bool = False,
         file_raw_custom_suffix: str = None,
-        path_obj: BasePath = None,
         root_path: str = None,
         project_path: str = None,
     ):
@@ -54,7 +53,7 @@ class PathItemCreator(BasePathCreator):
             raise ValueError(f"Error file_type_suffix: {file_type_suffix} is not str type")
 
         if not isinstance(folder_path, (str, type(None))):
-            raise ValueError(f"Error path_obj: {path_obj} is not an instance of {BasePath}")
+            raise ValueError(f"Error folder_path: {folder_path} is not str type")
 
         if not isinstance(file_raw_enabled, bool):
             raise ValueError(f"Error file_raw_enabled: {file_raw_enabled} is not bool type")
@@ -62,26 +61,26 @@ class PathItemCreator(BasePathCreator):
         if not isinstance(file_raw_custom_suffix, (str, type(None))):
             raise ValueError(f"Error file_raw_custom_suffix: {file_raw_custom_suffix} is not str type")
 
-        if not isinstance(path_obj, (BasePath, type(None))):
-            raise ValueError(f"Error path_obj: {path_obj} is not an instance of {BasePath}")
-
         if not FileTypeValidator.validate_file_type_suffix(file_type_suffix):
             raise ValueError(f"Error file_type_suffix: {file_type_suffix} is not a valid file_type_suffix")
 
+        if file_raw_enabled and file_raw_custom_suffix is None:
+            raise ValueError(f"Error file_raw_custom_suffix: {file_raw_custom_suffix} can't be None when is file_raw_enabled: {file_raw_enabled}")
+
         self.__root_path = root_path
-        self.__project_path = project_path
+        self.__project_path = root_path + project_path
+        self.__target_folder_path = f"{self.__project_path}/{folder_path}"
         self.__path_file_type_validator = FileTypeValidator()
         self.__path_format_validator = PathFormatValidator()
         self.__target_path = ""
         self.__stored_path = ""
 
-        self.__target_path = f"{self.__root_path}{self.__target_path}{folder_path}/{file_name}{file_type_suffix}"
+        self.__target_path = f"{self.__target_folder_path}/{file_name}{file_type_suffix}"
 
         if file_raw_enabled:
             self.__target_path = self.__target_path + file_raw_custom_suffix
 
-        if not PathFormatValidator.validate_path_format(self.__target_path):
-            raise ValueError(f"Error full_path: {self.__target_path} has not valid path format")
+        PathFormatValidator.validate_path_format(self.__target_path)
 
     def generate_path(self, path_obj: BasePath) -> BasePath:
         """
@@ -127,7 +126,7 @@ class PathItemCreator(BasePathCreator):
         @rtype: str
         """
 
-        return self.__project_path
+        return self.__target_folder_path
 
     @property
     def target_path(self):
