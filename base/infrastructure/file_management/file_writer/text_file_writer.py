@@ -17,7 +17,7 @@ class TextFileWriter(BaseFileWriter):
     TextFileWriter
     """
 
-    def __init__(self, path_obj: BasePath = None, file_handler: BaseFileHandler = None):
+    def __init__(self, path_obj: BasePath, file_handler: BaseFileHandler = None):
         """
         TextFileWriter constructor
         """
