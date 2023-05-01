@@ -11,9 +11,9 @@ from base.domain.path_management.path_doubles import BasePath
 
 
 @runtime_checkable
-class BasePathHandler(Protocol):
+class BasePathCreator(Protocol):
     """
-    BasePathHandler
+    BasePathCreator
     """
 
     @abstractmethod

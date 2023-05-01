@@ -9,7 +9,7 @@ from base.infrastructure.file_management.file_writer import YamlFileWriter
 from base.infrastructure.file_management.file_doubles import FileFaker
 from base.infrastructure.file_management.file_handler import FileHandler
 from base.infrastructure.path_management.path_doubles import PathFaker
-from base.infrastructure.path_management.path_handler import PathHandler
+from base.infrastructure.path_management.path_factory import PathItemCreator
 
 # Domain
 from base.domain.file_management.file_constants.file_mode_values import file_mode_values
@@ -39,7 +39,7 @@ def test_file_writer_creator_for_json_file_writer_type():
         fake_file=fake_file,
     )
 
-    path_handler = PathHandler(path_obj=fake_file_path)
+    path_handler = PathItemCreator(path_obj=fake_file_path)
 
     path_handler.make_directory()
     path_handler.generate_path()
@@ -74,7 +74,7 @@ def test_file_writer_creator_for_text_file_writer_type():
         fake_file=fake_file,
     )
 
-    path_handler = PathHandler(path_obj=fake_file_path)
+    path_handler = PathItemCreator(path_obj=fake_file_path)
 
     path_handler.make_directory()
     path_handler.generate_path()
@@ -109,7 +109,7 @@ def test_file_writer_creator_for_yaml_file_writer_type():
         fake_file=fake_file,
     )
 
-    path_handler = PathHandler(path_obj=fake_file_path)
+    path_handler = PathItemCreator(path_obj=fake_file_path)
 
     path_handler.make_directory()
     path_handler.generate_path()

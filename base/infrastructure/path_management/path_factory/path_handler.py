@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
 
-from pathlib import Path
-
-
 # Infrastructure
 from base.infrastructure.file_management.file_validator import FileTypeValidator
 from base.infrastructure.path_management.path_doubles import PathItem
@@ -11,12 +8,12 @@ from base.infrastructure.path_management.path_validator import PathFormatValidat
 
 # Domain
 from base.domain.path_management.path_doubles import BasePath
-from base.domain.path_management.path_handler import BasePathHandler
+from base.domain.path_management.path_factory import BasePathCreator
 
 
-class PathHandler(BasePathHandler):
+class PathItemCreator(BasePathCreator):
     """
-    PathHandler
+    PathItemCreator
     """
 
     def __init__(
@@ -31,7 +28,7 @@ class PathHandler(BasePathHandler):
         project_path: str = None,
     ):
         """
-        PathHandler constructor
+        PathItemCreator constructor
         @param file_name: file_name
         @type file_name: str
         @param file_type_suffix: file_type_suffix

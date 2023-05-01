@@ -6,7 +6,7 @@ import pytest
 
 # Infrastructure
 from base.infrastructure.path_management.path_doubles import PathFaker
-from base.infrastructure.path_management.path_handler import PathHandler
+from base.infrastructure.path_management.path_factory import PathItemCreator
 
 # Domain
 from base.domain.file_management.file_constants.file_type_values import file_type_values
@@ -27,7 +27,7 @@ def test_path_handler_with_valid_params():
     target_file_path_type = path_types_values.file
 
     fake_file_path = PathFaker(target_path=target_file_path, target_path_type=target_file_path_type, fake_parent_path=fake_folder_path)
-    path_handler = PathHandler(path_obj=fake_file_path)
+    path_handler = PathItemCreator(path_obj=fake_file_path)
 
     assert path_handler.stored_path.exists() is False
 
@@ -60,7 +60,7 @@ def test_path_handler_validate_direct_touch_with_not_directory_assigned_fails():
     target_file_path_type = path_types_values.file
 
     fake_file_path = PathFaker(target_path=target_file_path, target_path_type=target_file_path_type, fake_parent_path=fake_folder_path)
-    path_handler = PathHandler(path_obj=fake_file_path)
+    path_handler = PathItemCreator(path_obj=fake_file_path)
 
     assert path_handler.stored_path.parent.exists() is False
 
@@ -82,7 +82,7 @@ def test_path_handler_init_with_invalid_path_format_fails():
     expected_error_message = f"Error target_path: {invalid_target_path} is not a valid path format"
 
     with pytest.raises(ValueError) as err:
-        path_handler = PathHandler(target_path=invalid_target_path)
+        path_handler = PathItemCreator(target_path=invalid_target_path)
 
     assert err.value.args[0] == expected_error_message
 
@@ -96,7 +96,7 @@ def test_path_handler_make_file_with_invalid_file_type_fails():
     target_path_type = path_types_values.directory
 
     fake_path = PathFaker(target_path=target_path, target_path_type=target_path_type)
-    path_handler = PathHandler(path_obj=fake_path)
+    path_handler = PathItemCreator(path_obj=fake_path)
     path_handler.make_directory()
 
     file_type_suffix = ".not_valid_suffix"
