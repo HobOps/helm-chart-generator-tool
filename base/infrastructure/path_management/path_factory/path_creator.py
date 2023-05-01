@@ -86,7 +86,7 @@ class PathItemCreator(BasePathCreator):
 
         PathFormatValidator.validate_path_format(self.__target_path)
 
-    def generate_path(self, path_obj: BasePath) -> BasePath:
+    def generate_path(self, path_obj: BasePath = None) -> BasePath:
         """
         generate_path
         @param path_obj: path_obj
@@ -95,7 +95,7 @@ class PathItemCreator(BasePathCreator):
         @rtype: BasePath
         """
 
-        if not isinstance(path_obj, BasePath):
+        if not isinstance(path_obj, (BasePath, type(None))):
             raise ValueError(f"Error path_obj: {path_obj} is not an instance of {BasePath}")
 
         self.__stored_path = path_obj or PathItem(target_path=self.__target_path)
