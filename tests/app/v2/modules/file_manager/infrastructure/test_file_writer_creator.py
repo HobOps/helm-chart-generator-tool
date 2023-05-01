@@ -42,7 +42,7 @@ def test_file_writer_creator_for_json_file_writer_type():
     path_handler = PathHandler(path_obj=fake_file_path)
 
     path_handler.make_directory()
-    path_handler.make_file()
+    path_handler.generate_path()
 
     file_handler = FileHandler(path_handler=path_handler, file_obj=fake_file, file_mode=file_mode_values.write)
 
@@ -77,7 +77,7 @@ def test_file_writer_creator_for_text_file_writer_type():
     path_handler = PathHandler(path_obj=fake_file_path)
 
     path_handler.make_directory()
-    path_handler.make_file()
+    path_handler.generate_path()
 
     file_handler = FileHandler(path_handler=path_handler, file_obj=fake_file, file_mode=file_mode_values.write)
 
@@ -112,7 +112,7 @@ def test_file_writer_creator_for_yaml_file_writer_type():
     path_handler = PathHandler(path_obj=fake_file_path)
 
     path_handler.make_directory()
-    path_handler.make_file()
+    path_handler.generate_path()
 
     file_handler = FileHandler(path_handler=path_handler, file_obj=fake_file, file_mode=file_mode_values.write)
 

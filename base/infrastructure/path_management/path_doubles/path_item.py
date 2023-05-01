@@ -57,15 +57,6 @@ class PathItem(BasePath):
 
         return self.__stored_path.is_file()
 
-    def joinpath(self, relative_path: str):
-        """
-        joinpath
-        @return: None
-        @rtype: None
-        """
-
-        return self.__stored_path.joinpath(relative_path)
-
     def mkdir(self, parents: bool = None, exist_ok: bool = None):
         """
         mkdir

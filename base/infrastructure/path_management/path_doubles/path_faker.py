@@ -89,23 +89,6 @@ class PathFaker(BasePath):
 
         return False
 
-    def joinpath(self, relative_path: str):
-        """
-        joinpath
-        @param relative_path: relative_path
-        @type relative_path: str
-        @return: None
-        @rtype: None
-        """
-
-        path_split = relative_path.split(".")
-        valid_file_types = [value for key, value in file_type_values.__dict__.items()]
-        self.__fake_target_path_type = path_types_values.file if f".{path_split[1]}" in valid_file_types else path_types_values.directory
-
-        self.__fake_target_path = f"{self.__fake_target_path}/{relative_path}"
-
-        return self.__fake_target_path
-
     def mkdir(self, parents: bool = None, exist_ok: bool = None):
         """
         mkdir

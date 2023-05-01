@@ -43,7 +43,7 @@ def test_file_handler_validation():
 
     path_handler = PathHandler(path_obj=fake_file_path)
     path_handler.make_directory()
-    path_handler.make_file(file_name=fake_file.name, file_type_suffix=fake_file.suffix)
+    path_handler.generate_path(file_name=fake_file.name, file_type_suffix=fake_file.suffix)
 
     with FileHandler(path_handler=path_handler, file_obj=fake_file, file_mode=file_mode_values.read) as file_handler:
         read_data = file_handler.read()
@@ -105,7 +105,7 @@ def test_file_handler_validation_create_and_write():
 
     path_handler = PathHandler(target_path=target_path)
     path_handler.make_directory()
-    path_handler.make_file()
+    path_handler.generate_path()
 
     with FileHandler(path_handler=path_handler, file_mode=file_mode_values.write) as file_handler:
         file_handler.write(expected_data)

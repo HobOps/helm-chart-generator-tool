@@ -38,7 +38,7 @@ def test_path_handler_with_valid_params():
     assert path_handler.stored_path.exists() is False
     assert path_handler.stored_path.is_file() is True
 
-    path_handler.make_file(file_name="fake_file_name", file_type_suffix=file_type_values.text)
+    path_handler.generate_path(file_name="fake_file_name", file_type_suffix=file_type_values.text)
 
     assert path_handler.stored_path.exists() is True
     assert path_handler.stored_path.is_dir() is False
@@ -67,7 +67,7 @@ def test_path_handler_validate_direct_touch_with_not_directory_assigned_fails():
     expected_error_message = f"Error stored_path: {path_handler.stored_path.parent} needs to exists before file creation"
 
     with pytest.raises(ValueError) as err:
-        path_handler.make_file(file_name="fake_file_name", file_type_suffix=file_type_values.text)
+        path_handler.generate_path(file_name="fake_file_name", file_type_suffix=file_type_values.text)
 
     assert err.value.args[0] == expected_error_message
 
@@ -104,7 +104,7 @@ def test_path_handler_make_file_with_invalid_file_type_fails():
     expected_error_message = f"Error file_type_suffix: {file_type_suffix} is not valid file type"
 
     with pytest.raises(ValueError) as err:
-        path_handler.make_file(file_name="fake_file_name", file_type_suffix=file_type_suffix)
+        path_handler.generate_path(file_name="fake_file_name", file_type_suffix=file_type_suffix)
 
     assert err.value.args[0] == expected_error_message
 
