@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from .path_handler import PathItemCreator
+from .path_creator import PathItemCreator
 
 
 __all__ = [
