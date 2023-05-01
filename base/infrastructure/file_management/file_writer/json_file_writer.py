@@ -20,22 +20,19 @@ class JsonFileWriter(BaseFileWriter):
     JsonFileWriter
     """
 
-    def __init__(self, path_obj: BasePath = None, file_handler: BaseFileHandler = None):
+    def __init__(self, path_obj: BasePath, file_handler: BaseFileHandler = None):
         """
         JsonFileWriter constructor
         """
 
-        if not isinstance(path_obj, (BasePath, type(None))):
+        if not isinstance(path_obj, BasePath):
             raise ValueError(f"Error path_obj: {path_obj} is not an instance of {BasePath}")
 
         if not isinstance(file_handler, (BaseFileHandler, type(None))):
             raise ValueError(f"Error path_obj: {path_obj} is not an instance of {BasePath}")
 
         self.__path_obj = path_obj
-        self.__file_handler = file_handler or FileHandler(
-            file_mode=file_mode_values.write,
-            path_obj=self.__path_obj,
-        )
+        self.__file_handler = file_handler or FileHandler(path_obj=self.__path_obj, file_mode=file_mode_values.write)
 
     def write_file(self, data: dict):
         """
