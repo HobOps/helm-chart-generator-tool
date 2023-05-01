@@ -67,9 +67,13 @@ class PathItemCreator(BasePathCreator):
         if file_raw_enabled and file_raw_custom_suffix is None:
             raise ValueError(f"Error file_raw_custom_suffix: {file_raw_custom_suffix} can't be None when is file_raw_enabled: {file_raw_enabled}")
 
+        PathFormatValidator.validate_path_format(root_path)
+        PathFormatValidator.validate_path_format(project_path)
+        PathFormatValidator.validate_path_format(folder_path)
+
         self.__root_path = root_path
         self.__project_path = root_path + project_path
-        self.__target_folder_path = f"{self.__project_path}/{folder_path}"
+        self.__target_folder_path = self.__project_path + folder_path
         self.__path_file_type_validator = FileTypeValidator()
         self.__path_format_validator = PathFormatValidator()
         self.__target_path = ""

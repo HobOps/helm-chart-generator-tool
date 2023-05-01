@@ -22,6 +22,16 @@ def test_file_handler_validation():
     test_file_handler_validation
     """
 
+    root_path = "/home/user1"
+    project_path = "/project1"
+    folder_path = "folder1"
+
+    file_name = "test_file"
+    file_type_suffix = file_type_values.raw
+
+    target_folder_path = "/home/user1/project1/folder1" + f"{root_path}{project_path}/{folder_path}"
+    target_file_path = "/home/user1/project1/folder1/test_file.values.toml"
+
     fake_data = """
     # My Fake Data
     Data:
@@ -41,9 +51,16 @@ def test_file_handler_validation():
 
     fake_file_path = PathFaker(target_path=target_file_path, target_path_type=target_file_path_type, fake_file=fake_file, fake_parent_path=fake_folder_path)
 
-    path_handler = PathItemCreator(path_obj=fake_file_path)
-    path_handler.make_directory()
-    path_handler.generate_path(file_name=fake_file.name, file_type_suffix=fake_file.suffix)
+    path_handler = PathItemCreator(
+        root_path=root_path,
+        project_path=project_path,
+        folder_path=folder_path,
+        file_name=file_name,
+        file_type_suffix=file_type_suffix,
+        file_raw_enabled=True,
+        file_raw_custom_suffix="values.toml",
+    )
+    path_handler.generate_path()
 
     with FileHandler(path_handler=path_handler, file_obj=fake_file, file_mode=file_mode_values.read) as file_handler:
         read_data = file_handler.read()

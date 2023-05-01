@@ -21,13 +21,13 @@ def test_path_creator_with_valid_params():
 
     root_path = "/home/user1"
     project_path = "/project1"
-    folder_path = "folder1"
+    folder_path = "/folder1"
 
     file_name = "test_file"
     file_type_suffix = file_type_values.text
 
-    target_folder_path = "/home/user1/project1/folder1"
-    target_file_path = "/home/user1/project1/folder1/test_file.txt"
+    target_folder_path = f"{root_path}{project_path}{folder_path}"
+    target_file_path = f"{target_folder_path}/{file_name}{file_type_suffix}"
 
     fake_folder_path = PathFaker(target_path=target_folder_path, target_path_type=path_types_values.directory)
     fake_file_path = PathFaker(target_path=target_file_path, target_path_type=path_types_values.file, fake_parent_path=fake_folder_path)
@@ -51,20 +51,21 @@ def test_path_creator_with_valid_params():
     assert isinstance(fake_path_created, BasePath) is True
 
 
-def test_path_creator_with_valid_enabled_custom_file_raw():
+def test_path_creator_with_valid_file_raw_enabled_params():
     """
-    test_path_creator_with_valid_enabled_custom_file_raw
+    test_path_creator_with_valid_file_raw_enabled_params
     """
 
     root_path = "/home/user1"
     project_path = "/project1"
-    folder_path = "folder1"
+    folder_path = "/folder1"
 
     file_name = "test_file"
     file_type_suffix = file_type_values.raw
+    file_raw_custom_suffix = "values.toml"
 
-    target_folder_path = "/home/user1/project1/folder1"
-    target_file_path = "/home/user1/project1/folder1/test_file.values.toml"
+    target_folder_path = f"{root_path}{project_path}{folder_path}"
+    target_file_path = f"{target_folder_path}/{file_name}{file_type_suffix}{file_raw_custom_suffix}"
 
     fake_folder_path = PathFaker(target_path=target_folder_path, target_path_type=path_types_values.directory)
     fake_file_path = PathFaker(target_path=target_file_path, target_path_type=path_types_values.file, fake_parent_path=fake_folder_path)
@@ -76,7 +77,7 @@ def test_path_creator_with_valid_enabled_custom_file_raw():
         file_name=file_name,
         file_type_suffix=file_type_suffix,
         file_raw_enabled=True,
-        file_raw_custom_suffix="values.toml",
+        file_raw_custom_suffix=file_raw_custom_suffix,
     )
 
     fake_path_created = path_creator.generate_path(path_obj=fake_file_path)
@@ -97,18 +98,18 @@ def test_path_creator_with_not_valid_path_format():
 
     invalid_root_path = "home/user1"
     project_path = "/project1"
-    folder_path = "folder1"
+    folder_path = "/folder1"
 
     file_name = "test_file"
     file_type_suffix = file_type_values.text
 
-    target_folder_path = "/home/user1/project1/folder1"
-    target_file_path = "/home/user1/project1/folder1/test_file.txt"
+    target_folder_path = f"{invalid_root_path}{project_path}{folder_path}"
+    target_file_path = f"{target_folder_path}/{file_name}{file_type_suffix}"
 
-    fake_folder_path = PathFaker(target_path=target_folder_path, target_path_type=path_types_values.directory)
-    fake_file_path = PathFaker(target_path=target_file_path, target_path_type=path_types_values.file, fake_parent_path=fake_folder_path)
+    fake_folder_path = PathFaker(target_path=f"/{target_folder_path}", target_path_type=path_types_values.directory)
+    fake_file_path = PathFaker(target_path=f"/{target_file_path}", target_path_type=path_types_values.file, fake_parent_path=fake_folder_path)
 
-    expected_error_message = f"Error target_path: home/user1/project1/folder1/test_file.txt is not a valid path format"
+    expected_error_message = f"Error target_path: home/user1 is not a valid path format"
 
     with pytest.raises(ValueError) as err:
 
@@ -128,15 +129,15 @@ def test_path_creator_with_not_valid_file_type_suffix():
     test_path_creator_with_not_valid_file_type_suffix
     """
 
-    invalid_root_path = "home/user1"
+    root_path = "/home/user1"
     project_path = "/project1"
-    folder_path = "folder1"
+    folder_path = "/folder1"
 
     file_name = "test_file"
     file_type_suffix = "not_valid_suffix"
 
-    target_folder_path = "/home/user1/project1/folder1"
-    target_file_path = "/home/user1/project1/folder1/test_file.txt"
+    target_folder_path = f"{root_path}{project_path}{folder_path}"
+    target_file_path = f"{target_folder_path}/{file_name}{file_type_suffix}"
 
     fake_folder_path = PathFaker(target_path=target_folder_path, target_path_type=path_types_values.directory)
     fake_file_path = PathFaker(target_path=target_file_path, target_path_type=path_types_values.file, fake_parent_path=fake_folder_path)
@@ -146,7 +147,7 @@ def test_path_creator_with_not_valid_file_type_suffix():
     with pytest.raises(ValueError) as err:
 
         path_creator = PathItemCreator(
-            root_path=invalid_root_path,
+            root_path=root_path,
             project_path=project_path,
             folder_path=folder_path,
             file_name=file_name,
@@ -161,16 +162,16 @@ def test_path_creator_with_not_valid_raw_activation():
     test_path_creator_with_not_valid_raw_activation
     """
 
-    invalid_root_path = "home/user1"
+    root_path = "/home/user1"
     project_path = "/project1"
-    folder_path = "folder1"
+    folder_path = "/folder1"
 
     file_name = "test_file"
     file_type_suffix = file_type_values.raw
     file_raw_enabled = True
 
-    target_folder_path = "/home/user1/project1/folder1"
-    target_file_path = "/home/user1/project1/folder1/test_file.txt"
+    target_folder_path = f"{root_path}{project_path}{folder_path}"
+    target_file_path = f"{target_folder_path}/{file_name}{file_type_suffix}"
 
     fake_folder_path = PathFaker(target_path=target_folder_path, target_path_type=path_types_values.directory)
     fake_file_path = PathFaker(target_path=target_file_path, target_path_type=path_types_values.file, fake_parent_path=fake_folder_path)
@@ -180,13 +181,51 @@ def test_path_creator_with_not_valid_raw_activation():
     with pytest.raises(ValueError) as err:
 
         path_creator = PathItemCreator(
-            root_path=invalid_root_path,
+            root_path=root_path,
             project_path=project_path,
             folder_path=folder_path,
             file_name=file_name,
             file_type_suffix=file_type_suffix,
             file_raw_enabled=True,
         )
+
+    assert err.value.args[0] == expected_error_message
+
+
+def test_path_creator_with_not_valid_path_obj_to_generate():
+    """
+    test_path_creator_with_not_valid_path_obj_to_generate
+    """
+
+    root_path = "/home/user1"
+    project_path = "/project1"
+    folder_path = "/folder1"
+
+    file_name = "test_file"
+    file_type_suffix = file_type_values.raw
+    file_raw_custom_suffix = "values.toml"
+
+    target_folder_path = f"{root_path}{project_path}{folder_path}"
+    target_file_path = f"{target_folder_path}/{file_name}{file_type_suffix}{file_raw_custom_suffix}"
+
+    fake_folder_path = PathFaker(target_path=target_folder_path, target_path_type=path_types_values.directory)
+    fake_file_path = 12345
+
+    expected_error_message = f"Error path_obj: {fake_file_path} is not an instance of {BasePath}"
+
+    path_creator = PathItemCreator(
+        root_path=root_path,
+        project_path=project_path,
+        folder_path=folder_path,
+        file_name=file_name,
+        file_type_suffix=file_type_suffix,
+        file_raw_enabled=True,
+        file_raw_custom_suffix=file_raw_custom_suffix,
+    )
+
+    with pytest.raises(ValueError) as err:
+
+        fake_path_created = path_creator.generate_path(path_obj=fake_file_path)
 
     assert err.value.args[0] == expected_error_message
 
