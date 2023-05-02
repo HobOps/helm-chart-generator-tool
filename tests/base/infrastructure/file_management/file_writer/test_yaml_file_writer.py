@@ -9,7 +9,6 @@ from base.infrastructure.file_management.file_doubles import FileFaker
 from base.infrastructure.file_management.file_handler import FileHandler
 from base.infrastructure.file_management.file_writer import YamlFileWriter
 from base.infrastructure.path_management.path_doubles import PathFaker
-from base.infrastructure.path_management.path_factory import PathItemCreator
 
 # Domain
 from base.domain.file_management.file_constants.file_type_values import file_type_values
