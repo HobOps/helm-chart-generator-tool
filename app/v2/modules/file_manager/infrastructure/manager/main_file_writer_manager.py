@@ -15,12 +15,12 @@ class MainFileWriterManager:
 
     def write_file(self, path, values, mode='yaml'):
         """
-
-        @param path:
+        write_file
+        @param path: path
         @type path:
-        @param values:
+        @param values: values
         @type values:
-        @param mode:
+        @param mode: mode
         @type mode:
         @return:
         @rtype:

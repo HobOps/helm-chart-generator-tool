@@ -53,16 +53,6 @@ class BasePath(Protocol):
         raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
 
     @abstractmethod
-    def joinpath(self, relative_path: str):
-        """
-        joinpath
-        @return: None
-        @rtype: None
-        """
-
-        raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
-
-    @abstractmethod
     def mkdir(self, parents: bool = None, exist_ok: bool = None):
         """
         mkdir
@@ -72,6 +62,17 @@ class BasePath(Protocol):
         @type exist_ok: bool
         @return: None
         @rtype: None
+        """
+
+        raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
+
+    @property
+    @abstractmethod
+    def parent(self):
+        """
+        parent
+        @return: parent
+        @rtype: str
         """
 
         raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")

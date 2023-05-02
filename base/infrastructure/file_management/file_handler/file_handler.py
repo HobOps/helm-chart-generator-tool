@@ -2,14 +2,14 @@
 
 
 # Domain
-from base.domain.file_management.file_handler import BaseFile
+from base.domain.file_management.file_doubles import BaseFile
 from base.domain.file_management.file_handler import BaseFileHandler
-from base.domain.path_management.path_handler import BasePathHandler
+from base.domain.path_management.path_doubles import BasePath
 
 
 class FileHandler(BaseFileHandler):
 
-    def __init__(self, file_mode: str = 'r', path_handler: BasePathHandler = None, file_obj: BaseFile = None):
+    def __init__(self, file_mode: str = 'r', path_obj: BasePath = None, file_obj: BaseFile = None):
         """
         FileHandler constructor
         """
@@ -17,21 +17,15 @@ class FileHandler(BaseFileHandler):
         if not isinstance(file_mode, (str, type(None))):
             raise ValueError(f"Error file_mode: {file_mode} is not a str type")
 
-        if not isinstance(path_handler, (BasePathHandler, type(None))):
-            raise ValueError(f"Error fpath_handler: {path_handler} is not a {BasePathHandler} type")
+        if not isinstance(path_obj, (BasePath, type(None))):
+            raise ValueError(f"Error path_obj: {path_obj} is not a {BasePath} type")
 
         if not isinstance(file_obj, (BaseFile, type(None))):
             raise ValueError(f"Error file_obj: {file_obj} is not a {BaseFile} type")
 
-        self.__path_handler = path_handler
+        self.__path_obj = path_obj
 
-        if not self.__path_handler.stored_path.exists():
-            raise ValueError(f"Error stored_path: {self.__path_handler.stored_path} doesn't exists in file system")
-
-        if not self.__path_handler.stored_path.is_file():
-            raise ValueError(f"Error stored_path: {self.__path_handler.stored_path} is not a File")
-
-        self.file = file_obj or open(self.__path_handler.stored_path.as_posix(), file_mode)
+        self.file = file_obj or open(self.__path_obj.as_posix(), file_mode)
 
     def __enter__(self):
         """

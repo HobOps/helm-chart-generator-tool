@@ -2,8 +2,9 @@
 
 
 # Infrastructure
-from base.infrastructure.file_management.file_writer import TextFileWriter
 from base.infrastructure.file_management.file_writer import JsonFileWriter
+from base.infrastructure.file_management.file_writer import RawFileWriter
+from base.infrastructure.file_management.file_writer import TextFileWriter
 from base.infrastructure.file_management.file_writer import YamlFileWriter
 
 # Domain
@@ -11,7 +12,7 @@ from app.v2.modules.file_manager.domain.services.create import FileWriterCreator
 from base.domain.file_management.file_constants.file_type_values import file_type_values
 from base.domain.file_management.file_writer import BaseFileWriter
 from base.domain.file_management.file_handler import BaseFileHandler
-from base.domain.path_management.path_handler import BasePathHandler
+from base.domain.path_management.path_doubles import BasePath
 
 
 class MainFileWriterCreator(FileWriterCreator):
@@ -19,18 +20,18 @@ class MainFileWriterCreator(FileWriterCreator):
     MainFileWriterCreator
     """
 
-    def __init__(self, path_handler: BasePathHandler = None, file_handler: BaseFileHandler = None):
+    def __init__(self, path_obj: BasePath = None, file_handler: BaseFileHandler = None):
         """
         MainFileWriterCreator constructor
         """
 
-        if not isinstance(path_handler, (BasePathHandler, type(None))):
-            raise ValueError(f"Error path_handler: {path_handler} is not an instance of {BasePathHandler}")
+        if not isinstance(path_obj, (BasePath, type(None))):
+            raise ValueError(f"Error path_obj: {path_obj} is not an instance of {BasePath}")
 
         if not isinstance(file_handler, (BaseFileHandler, type(None))):
             raise ValueError(f"Error file_handler: {file_handler} is not an instance of {BaseFileHandler}")
 
-        self.__path_handler = path_handler
+        self.__path_obj = path_obj
         self.__file_handler = file_handler
 
     def create_file_writer(self, file_type: str) -> BaseFileWriter:
@@ -52,15 +53,6 @@ class MainFileWriterCreator(FileWriterCreator):
 
         return file_writer_type_factory()
 
-    def yaml_file_writer(self) -> YamlFileWriter:
-        """
-        yaml_file_writer
-        @return: yaml_file_writer
-        @rtype: YamlFileWriter
-        """
-
-        return YamlFileWriter(path_handler=self.__path_handler, file_handler=self.__file_handler)
-
     def json_file_writer(self) -> JsonFileWriter:
         """
         json_file_writer
@@ -68,7 +60,16 @@ class MainFileWriterCreator(FileWriterCreator):
         @rtype: YamlFileWriter
         """
 
-        return JsonFileWriter(path_handler=self.__path_handler, file_handler=self.__file_handler)
+        return JsonFileWriter(path_obj=self.__path_obj, file_handler=self.__file_handler)
+
+    def raw_file_writer(self) -> RawFileWriter:
+        """
+        raw_file_writer
+        @return: raw_file_writer
+        @rtype: RawFileWriter
+        """
+
+        return RawFileWriter(path_obj=self.__path_obj, file_handler=self.__file_handler)
 
     def text_file_writer(self) -> TextFileWriter:
         """
@@ -77,4 +78,14 @@ class MainFileWriterCreator(FileWriterCreator):
         @rtype: YamlFileWriter
         """
 
-        return TextFileWriter(path_handler=self.__path_handler, file_handler=self.__file_handler)
+        return TextFileWriter(path_obj=self.__path_obj, file_handler=self.__file_handler)
+
+    def yaml_file_writer(self) -> YamlFileWriter:
+        """
+        yaml_file_writer
+        @return: yaml_file_writer
+        @rtype: YamlFileWriter
+        """
+
+        return YamlFileWriter(path_obj=self.__path_obj, file_handler=self.__file_handler)
+

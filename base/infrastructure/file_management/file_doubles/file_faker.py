@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
 
 
-from typing import List
-
-
-# Infrastructure
-from base.infrastructure.file_management.file_validator import FileTypeValidator
-
 # Domain
-from base.domain.file_management.file_handler import BaseFile
+from base.domain.file_management.file_doubles import BaseFile
 
 
-class FakeFile(BaseFile):
+class FileFaker(BaseFile):
     """
-    FakeFile
+    FileFaker
     """
 
     def __init__(self, file_name: str = None, file_type_suffix: str = None, initial_content: str = None):

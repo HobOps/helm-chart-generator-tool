@@ -2,23 +2,23 @@
 
 
 # Infrastructure
-from base.infrastructure.file_management.file_handler import FakeFile
+from base.infrastructure.file_management.file_doubles import FileFaker
 from base.infrastructure.path_management.path_validator import PathFormatValidator
 
 # Domain
 from base.domain.file_management.file_constants import file_type_values
 from base.domain.path_management.path_constants import path_types_values
-from base.domain.path_management.path_handler import BasePath
+from base.domain.path_management.path_doubles import BasePath
 
 
-class FakePath(BasePath):
+class PathFaker(BasePath):
     """
-    FakePath
+    PathFaker
     """
 
-    def __init__(self, target_path: str = None, target_path_type: str = None, fake_file: FakeFile = None):
+    def __init__(self, target_path: str = None, target_path_type: str = None, fake_parent_path: BasePath = None, fake_file: FileFaker = None):
         """
-        FakePath
+        PathFaker
         """
 
         if not isinstance(target_path, (str, type(None))):
@@ -27,7 +27,10 @@ class FakePath(BasePath):
         if not isinstance(target_path_type, (str, type(None))):
             raise ValueError(f"Error target_path_type: {target_path_type} is not str type")
 
-        if not isinstance(fake_file, (FakeFile, type(None))):
+        if not isinstance(fake_parent_path, (BasePath, type(None))):
+            raise ValueError(f"Error fake_parent_path: {fake_parent_path} is not str type")
+
+        if not isinstance(fake_file, (FileFaker, type(None))):
             raise ValueError(f"Error fake_file: {fake_file} is not str type")
 
         valid_target_path = "/"
@@ -38,7 +41,8 @@ class FakePath(BasePath):
         self.__fake_stored_path = dict()
         self.__fake_target_path = valid_target_path
         self.__fake_target_path_type = target_path_type or path_types_values.directory
-        self.__fake_file = fake_file or FakeFile(file_name="fake_file_default", file_type_suffix=file_type_values.text)
+        self.__fake_target_path_parent_path = fake_parent_path
+        self.__fake_file = fake_file or FileFaker(file_name="fake_file_default", file_type_suffix=file_type_values.text)
 
     def as_posix(self):
         """
@@ -85,23 +89,6 @@ class FakePath(BasePath):
 
         return False
 
-    def joinpath(self, relative_path: str):
-        """
-        joinpath
-        @param relative_path: relative_path
-        @type relative_path: str
-        @return: None
-        @rtype: None
-        """
-
-        path_split = relative_path.split(".")
-        valid_file_types = [value for key, value in file_type_values.__dict__.items()]
-        self.__fake_target_path_type = path_types_values.file if f".{path_split[1]}" in valid_file_types else path_types_values.directory
-
-        self.__fake_target_path = f"{self.__fake_target_path}/{relative_path}"
-
-        return self.__fake_target_path
-
     def mkdir(self, parents: bool = None, exist_ok: bool = None):
         """
         mkdir
@@ -113,9 +100,19 @@ class FakePath(BasePath):
         @rtype: None
         """
 
-        if not self.exists():
+        self.__fake_stored_path[self.__fake_target_path] = "dir"
 
-            self.__fake_stored_path[self.__fake_target_path] = "dir"
+        return True
+
+    @property
+    def parent(self):
+        """
+        parent
+        @return: path
+        @rtype: str
+        """
+
+        return self.__fake_target_path_parent_path
 
     def touch(self, exist_ok: bool = None):
         """

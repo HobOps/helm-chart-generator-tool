@@ -1,14 +1,11 @@
 # coding: utf-8 -*-
 
 
-import json
-
-
 # Infrastructure
 from base.infrastructure.file_management.file_handler import FileHandler
 
 # Domain
-from base.domain.common.value_objects import DictValueObject
+from base.domain.common.value_objects import ListValueObject
 from base.domain.file_management.file_constants.file_mode_values import file_mode_values
 from base.domain.file_management.file_constants.file_type_values import file_type_values
 from base.domain.file_management.file_handler import BaseFileHandler
@@ -16,14 +13,14 @@ from base.domain.file_management.file_writer import BaseFileWriter
 from base.domain.path_management.path_doubles import BasePath
 
 
-class JsonFileWriter(BaseFileWriter):
+class RawFileWriter(BaseFileWriter):
     """
-    JsonFileWriter
+    RawFileWriter
     """
 
     def __init__(self, path_obj: BasePath, file_handler: BaseFileHandler = None):
         """
-        JsonFileWriter constructor
+        RawFileWriter constructor
         """
 
         if not isinstance(path_obj, BasePath):
@@ -35,25 +32,23 @@ class JsonFileWriter(BaseFileWriter):
         if not path_obj.exists():
             raise ValueError(f"Error path_obj: {path_obj} doesn't exists in file system")
 
-        if not path_obj.suffix == file_type_values.json:
-            raise ValueError(f"Error path_obj.suffix: {path_obj.suffix} it's not json type")
-
         self.__path_obj = path_obj
         self.__file_handler = file_handler or FileHandler(path_obj=self.__path_obj, file_mode=file_mode_values.write)
 
-    def write_file(self, data: dict):
+    def write_file(self, data: list):
         """
         write_file
         @param data: data
-        @type data: dict
+        @type data: list
         @return: None
         @rtype: None
         """
 
-        if not isinstance(data, dict):
-            raise ValueError(f"Error data: {data} is not dict type")
+        if not isinstance(data, list):
+            raise ValueError(f"Error data: {data} is not list type")
 
-        data_value = DictValueObject(data)
+        data_value = ListValueObject(data)
 
-        with self.__file_handler as json_file_handler:
-            json.dump(data_value.value, json_file_handler, sort_keys=False, indent=4)
+        with self.__file_handler as raw_file_handler:
+            raw_file_handler.writelines('\n'.join(data_value.value))
+
