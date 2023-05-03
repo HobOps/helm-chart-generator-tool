@@ -28,7 +28,7 @@ def test_simple_path_creator_with_valid_params():
     fake_folder_path = PathFaker(target_path=full_path_folder, target_path_type=path_types_values.directory)
     fake_file_path = PathFaker(target_path=full_path_file, target_path_type=path_types_values.file, fake_parent_path=fake_folder_path)
 
-    path_creator = SimplePathCreator(root_path=root_path, target_path=target_path)
+    path_creator = SimplePathCreator(root_path=root_path)
     created_path = path_creator.generate_path(path_obj=fake_file_path)
 
     assert path_creator.root_path == root_path
@@ -51,7 +51,8 @@ def test_simple_path_creator_with_not_valid_params():
     expected_error_message = f"Error target_path: {target_path} is not a valid path format"
 
     with pytest.raises(ValueError) as err:
-        path_creator = SimplePathCreator(root_path=root_path, target_path=target_path)
+        path_creator = SimplePathCreator(root_path=root_path)
+        path_creator.generate_path(target_path=target_path)
 
     assert err.value.args[0] == expected_error_message
 
