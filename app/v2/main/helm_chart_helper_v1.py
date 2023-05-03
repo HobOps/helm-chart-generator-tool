@@ -28,8 +28,8 @@ def write_file_version2(path, values, mode='yaml'):
 
     root_path = settings.get_root_path().as_posix()
 
-    file_path_creator = SimplePathCreator(root_path=root_path, target_path=path)
-    file_path = file_path_creator.generate_path()
+    file_path_creator = SimplePathCreator(root_path=root_path)
+    file_path = file_path_creator.generate_path(target_path=path)
 
     file_writer_creator = FileWriterCreator(path_obj=file_path)
     file_writer = file_writer_creator.create_file_writer(file_type=mode)

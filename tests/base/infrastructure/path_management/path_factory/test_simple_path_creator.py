@@ -26,7 +26,7 @@ def test_simple_path_creator_with_valid_params():
     full_path_file = root_path + target_path
 
     fake_folder_path = PathFaker(target_path=full_path_folder, target_path_type=path_types_values.directory)
-    fake_file_path = PathFaker(target_path=full_path_file, target_path_type=path_types_values.file, fake_parent_path=fake_folder_path)
+    fake_file_path = PathFaker(target_path=full_path_file, target_path_type=path_types_values.file, parent_path=fake_folder_path)
 
     path_creator = SimplePathCreator(root_path=root_path)
     created_path = path_creator.generate_path(path_obj=fake_file_path)

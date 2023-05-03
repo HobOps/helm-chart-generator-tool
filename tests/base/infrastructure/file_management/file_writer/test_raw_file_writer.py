@@ -33,7 +33,7 @@ def test_raw_file_writer_validation_with_valid_params():
     target_path = "/home/user1/project1/folder1"
     target_path = f"{target_path}/{fake_file.name}{fake_file.suffix}"
 
-    fake_path = PathFaker(target_path=target_path, target_path_type=path_types_values.file, fake_file=fake_file)
+    fake_path = PathFaker(target_path=target_path, target_path_type=path_types_values.file, file_obj=fake_file)
     fake_path.touch()
 
     file_handler = FileHandler(path_obj=fake_path, file_obj=fake_file)
@@ -55,7 +55,7 @@ def test_raw_file_writer_validation_with_invalid_path_not_exists():
     target_path = "/home/user1/project1/folder1"
     target_path = f"{target_path}/{fake_file.name}{fake_file.suffix}"
 
-    fake_path = PathFaker(target_path=target_path, target_path_type=path_types_values.file, fake_file=fake_file)
+    fake_path = PathFaker(target_path=target_path, target_path_type=path_types_values.file, file_obj=fake_file)
     file_handler = FileHandler(path_obj=fake_path, file_obj=fake_file)
 
     expected_error_message = f"Error path_obj: {fake_path} doesn't exists in file system"

@@ -11,7 +11,7 @@ def get_root_path():
     @rtype: Path
     """
 
-    root_path = Path(__file__).parent.__str__()
+    root_path = Path(__file__).parent
 
     return root_path
 

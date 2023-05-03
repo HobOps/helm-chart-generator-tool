@@ -49,6 +49,9 @@ class SimplePathCreator(BasePathCreator):
         if not isinstance(path_obj, (BasePath, type(None))):
             raise ValueError(f"Error path_obj: {path_obj} is not an instance of {BasePath}")
 
+        if not path_obj and not target_path:
+            raise ValueError(f"Error path_obj: {path_obj} nor {target_path} has some valid data")
+
         if path_obj is not None:
 
             self.__target_path = path_obj.as_posix()
