@@ -8,21 +8,21 @@ from base.infrastructure.file_management.file_writer import TextFileWriter
 from base.infrastructure.file_management.file_writer import YamlFileWriter
 
 # Domain
-from app.v2.modules.file_manager.domain.services.create import FileWriterCreator
+from app.v2.modules.file_manager.domain.services.create import CoreFileWriterCreator
 from base.domain.file_management.file_constants.file_type_values import file_type_values
 from base.domain.file_management.file_writer import BaseFileWriter
 from base.domain.file_management.file_handler import BaseFileHandler
 from base.domain.path_management.path_doubles import BasePath
 
 
-class MainFileWriterCreator(FileWriterCreator):
+class FileWriterCreator(CoreFileWriterCreator):
     """
-    MainFileWriterCreator
+    FileWriterCreator
     """
 
     def __init__(self, path_obj: BasePath = None, file_handler: BaseFileHandler = None):
         """
-        MainFileWriterCreator constructor
+        FileWriterCreator constructor
         """
 
         if not isinstance(path_obj, (BasePath, type(None))):

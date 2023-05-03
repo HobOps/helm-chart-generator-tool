@@ -2,7 +2,7 @@
 
 
 # Infrastructure
-from app.v2.modules.file_manager.infrastructure.manager import MainFileWriterCreator
+from app.v2.core.infrastructure.file_system import FileWriterCreator
 from base.infrastructure.file_management.file_writer import JsonFileWriter
 from base.infrastructure.file_management.file_writer import RawFileWriter
 from base.infrastructure.file_management.file_writer import TextFileWriter
@@ -54,7 +54,7 @@ def test_file_writer_creator_for_json_file_writer_type():
     created_fake_path = path_creator.generate_path(path_obj=fake_file_path)
     file_handler = FileHandler(path_obj=created_fake_path, file_obj=fake_file, file_mode=file_mode_values.write)
 
-    file_writer_creator = MainFileWriterCreator(path_obj=created_fake_path, file_handler=file_handler)
+    file_writer_creator = FileWriterCreator(path_obj=created_fake_path, file_handler=file_handler)
     file_writer = file_writer_creator.create_file_writer(file_type="json")
 
     assert isinstance(file_writer, JsonFileWriter)
@@ -96,7 +96,7 @@ def test_file_writer_creator_for_text_file_writer_type():
     created_fake_path = path_creator.generate_path(path_obj=fake_file_path)
     file_handler = FileHandler(path_obj=created_fake_path, file_obj=fake_file, file_mode=file_mode_values.write)
 
-    file_writer_creator = MainFileWriterCreator(path_obj=created_fake_path, file_handler=file_handler)
+    file_writer_creator = FileWriterCreator(path_obj=created_fake_path, file_handler=file_handler)
     file_writer = file_writer_creator.create_file_writer(file_type="text")
 
     assert isinstance(file_writer, TextFileWriter)
@@ -138,7 +138,7 @@ def test_file_writer_creator_for_yaml_file_writer_type():
     created_fake_path = path_creator.generate_path(path_obj=fake_file_path)
     file_handler = FileHandler(path_obj=created_fake_path, file_obj=fake_file, file_mode=file_mode_values.write)
 
-    file_writer_creator = MainFileWriterCreator(path_obj=created_fake_path, file_handler=file_handler)
+    file_writer_creator = FileWriterCreator(path_obj=created_fake_path, file_handler=file_handler)
     file_writer = file_writer_creator.create_file_writer(file_type="yaml")
 
     assert isinstance(file_writer, YamlFileWriter)
@@ -183,7 +183,7 @@ def test_file_writer_creator_for_raw_file_writer_type():
     created_fake_path = path_creator.generate_path(path_obj=fake_file_path)
     file_handler = FileHandler(path_obj=created_fake_path, file_obj=fake_file, file_mode=file_mode_values.write)
 
-    file_writer_creator = MainFileWriterCreator(path_obj=created_fake_path, file_handler=file_handler)
+    file_writer_creator = FileWriterCreator(path_obj=created_fake_path, file_handler=file_handler)
     file_writer = file_writer_creator.create_file_writer(file_type="raw")
 
     assert isinstance(file_writer, RawFileWriter)
