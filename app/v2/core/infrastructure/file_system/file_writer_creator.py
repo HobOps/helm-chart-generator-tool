@@ -8,7 +8,7 @@ from base.infrastructure.file_management.file_writer import TextFileWriter
 from base.infrastructure.file_management.file_writer import YamlFileWriter
 
 # Domain
-from app.v2.modules.file_manager.domain.services.create import CoreFileWriterCreator
+from app.v2.core.domain.services.create import CoreFileWriterCreator
 from base.domain.file_management.file_constants.file_type_values import file_type_values
 from base.domain.file_management.file_writer import BaseFileWriter
 from base.domain.file_management.file_handler import BaseFileHandler
