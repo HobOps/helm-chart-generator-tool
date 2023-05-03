@@ -2,13 +2,13 @@
 
 
 # Infrastructure
-from app.v2.core.infrastructure.file_system import FileWriterCreator
+from base.infrastructure.file_management.file_creator import FileWriterCreator
+from base.infrastructure.file_management.file_doubles import FileFaker
+from base.infrastructure.file_management.file_handler import FileHandler
 from base.infrastructure.file_management.file_writer import JsonFileWriter
 from base.infrastructure.file_management.file_writer import RawFileWriter
 from base.infrastructure.file_management.file_writer import TextFileWriter
 from base.infrastructure.file_management.file_writer import YamlFileWriter
-from base.infrastructure.file_management.file_doubles import FileFaker
-from base.infrastructure.file_management.file_handler import FileHandler
 from base.infrastructure.path_management.path_doubles import PathFaker
 from base.infrastructure.path_management.path_factory import PathItemCreator
 

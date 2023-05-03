@@ -8,14 +8,14 @@ from base.infrastructure.file_management.file_writer import TextFileWriter
 from base.infrastructure.file_management.file_writer import YamlFileWriter
 
 # Domain
-from app.v2.core.domain.services.create import CoreFileWriterCreator
 from base.domain.file_management.file_constants.file_type_values import file_type_values
+from base.domain.file_management.file_creator import BaseFileWriterCreator
 from base.domain.file_management.file_writer import BaseFileWriter
 from base.domain.file_management.file_handler import BaseFileHandler
 from base.domain.path_management.path_doubles import BasePath
 
 
-class FileWriterCreator(CoreFileWriterCreator):
+class FileWriterCreator(BaseFileWriterCreator):
     """
     FileWriterCreator
     """
