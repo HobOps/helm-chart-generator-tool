@@ -12,6 +12,7 @@ class BaseConfig(Protocol):
     BaseConfig
     """
 
+    @abstractmethod
     def read(self):
         """
         read
@@ -20,3 +21,14 @@ class BaseConfig(Protocol):
         """
 
         raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
+
+    @abstractmethod
+    def read_file(self):
+        """
+        read_file
+        @return: config_data
+        @rtype: dict
+        """
+
+        raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")
+
