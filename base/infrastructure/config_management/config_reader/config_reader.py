@@ -9,7 +9,6 @@ from base.infrastructure.file_management.file_handler import FileHandler
 
 
 # Domain
-from base.domain.config_management.config_doubles import BaseConfig
 from base.domain.config_management.config_reader import BaseConfigReader
 from base.domain.file_management.file_constants.file_mode_values import file_mode_values
 from base.domain.file_management.file_handler import BaseFileHandler
