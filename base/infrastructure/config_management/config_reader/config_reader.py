@@ -21,7 +21,7 @@ class ConfigReader(BaseConfigReader):
     ConfigReader
     """
 
-    def __init__(self, path_obj: BasePath, file_handler: BaseFileHandler = None, config_obj: BaseConfig = None):
+    def __init__(self, path_obj: BasePath, file_handler: BaseFileHandler = None, config_data: dict = None):
         """
         ConfigReader constructor
         @param path_obj: path_obj
@@ -35,11 +35,11 @@ class ConfigReader(BaseConfigReader):
         if not isinstance(path_obj, BasePath):
             raise ValueError(f"Error path_obj: {path_obj} is not an instance of {BasePath}")
 
-        if not isinstance(file_handler, BaseFileHandler):
+        if not isinstance(file_handler, (BaseFileHandler, type(None))):
             raise ValueError(f"Error file_handler: {file_handler} is not an instance of {BaseFileHandler}")
 
-        if not isinstance(config_obj, BaseConfig):
-            raise ValueError(f"Error config_obj: {config_obj} is not an instance of {BaseConfig}")
+        if not isinstance(config_data, (dict, type(None))):
+            raise ValueError(f"Error config_data: {config_data} is not dict type")
 
         if not path_obj.exists():
             raise ValueError(f"Error path_obj: {path_obj} doesn't exists in the file system")
@@ -48,15 +48,21 @@ class ConfigReader(BaseConfigReader):
             raise ValueError(f"Error path_obj: {path_obj} is not a file path")
 
         self.__stored_path = path_obj
+        self.__config_data = config_data
+        self.__config_parser = configparser.ConfigParser()
         self.__file_handler = file_handler or FileHandler(file_mode=file_mode_values.read, path_obj=path_obj)
-        self.__config_parser = config_obj or configparser.RawConfigParser()
 
-    def read_config_file(self):
+    def read_configuration(self):
         """
         read_config_file
         @return: config_data
         @rtype: dict
         """
+
+        if self.__config_data:
+            self.__config_parser.read_dict(self.__config_data)
+
+            return self.__config_parser
 
         with self.__file_handler as file_handler:
             self.__config_parser.read_file(file_handler)

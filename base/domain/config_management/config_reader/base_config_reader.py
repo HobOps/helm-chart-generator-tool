@@ -13,7 +13,7 @@ class BaseConfigReader(Protocol):
     """
 
     @abstractmethod
-    def read_config_file(self):
+    def read_configuration(self):
         """
         read_config_file
         @return: config_data
