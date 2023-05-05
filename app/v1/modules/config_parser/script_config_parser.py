@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 
+import settings
+
+
 def convert_values(value):
     values = dict(
         configmap='ConfigMap',
@@ -41,7 +44,11 @@ class ScriptConfigParser:
         import configparser
         import os.path
 
+        root_path = settings.get_root_path().as_posix()
+
         config_path = f'config_files/input/configurations/{component_name}.ini'
+        config_path = f"{root_path}/{config_path}"
+
         chart_config = configparser.ConfigParser()
         if os.path.isfile(config_path):
             chart_config.read(config_path)

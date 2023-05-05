@@ -8,12 +8,18 @@ from kubernetes import client
 from kubernetes import config
 
 
+app_version = "version1"
+
+
 def write_file_version1(path, values, mode='yaml'):
     """
     write_file_version1
     """
 
     from app.v1.modules.file_manager import ScriptFileWriterManager
+
+    root_path = settings.get_root_path().as_posix()
+    path = f"{root_path}/{path}"
 
     ScriptFileWriterManager.write_file(path=path, values=values, mode=mode)
 
@@ -41,7 +47,7 @@ def write_file(path, values, mode='yaml'):
     write_file
     """
 
-    app_version = settings.get_app_version()
+    global app_version
 
     if app_version == "version1":
         write_file_version1(path=path, values=values, mode=mode)
@@ -78,11 +84,10 @@ def parse_config_version2(component_name):
     from base.infrastructure.config_management.config_reader import ConfigReader
     from base.infrastructure.path_management.path_factory import SimplePathCreator
 
-    root_path = settings.get_root_path()
+    root_path = settings.get_root_path().as_posix()
     target_path = f"/config_files/input/configurations/{component_name}.ini"
-    target_path = f"{root_path}{target_path}"
 
-    path_creator = SimplePathCreator()
+    path_creator = SimplePathCreator(root_path=root_path)
     created_target_path = path_creator.generate_path(target_path=target_path)
 
     config_reader = ConfigReader(path_obj=created_target_path)
@@ -100,13 +105,17 @@ def parse_config(component_name):
     @rtype: dict
     """
 
-    app_version = settings.get_app_version()
+    global app_version
+
+    config_data = ""
 
     if app_version == "version1":
-        parse_config_version1(component_name=component_name)
+        config_data = parse_config_version1(component_name=component_name)
 
     if app_version == "version2":
-        parse_config_version1(component_name=component_name)
+        config_data = parse_config_version2(component_name=component_name)
+
+    return config_data
 
 
 def load_kubernetes_config(config_settings):
@@ -595,22 +604,22 @@ class AppMainManager:
     AppMainManager
     """
 
-    def __init__(self):
-        """
-        AppMainManager constructor
-        """
-
-        self.__argument_parser = argparse.ArgumentParser(description='Generates a helm charts from components on a kubernetes cluster.')
-
-    def run(self):
+    @staticmethod
+    def run():
         """
         run
         @return: None
         @rtype: None
         """
+
+        global app_version
+
         # Parses program arguments
-        self.__argument_parser.add_argument('--name', action='store', type=str, help="Name of the helm chart")
-        args = self.__argument_parser.parse_args()
+        args_parser = argparse.ArgumentParser(description='Generates a helm charts from components on a kubernetes cluster.')
+        args_parser.add_argument('--name', action='store', type=str, help="Name of the helm chart")
+        args_parser.add_argument('--version', action='store', type=str, help="Version number in script")
+        args = args_parser.parse_args()
+        app_version = args.version
 
         # Loads configuration
         config_settings = parse_config(args.name)
