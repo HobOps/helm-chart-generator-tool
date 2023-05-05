@@ -53,10 +53,14 @@ def test_config_reader_with_valid_params():
     [components]
     ComponentType1:
         component-html
-    ComponentType2:
+    componentType2:
         component-nginx
-    ComponentType3:
-        component-ingress     
+    component-type3:
+        component-ingress
+    componentTypEs4:
+        component-serViceS1
+        component-serViceS2
+        component-serViceS3
     """
 
     config_data = {
@@ -64,7 +68,7 @@ def test_config_reader_with_valid_params():
             'ComponentType1': '\ncomponent-HTML',
             'componentType2': '\ncomponent-NginX',
             'component-type3': '\ncomponent-inGress',
-            'componentTypEs4': '\ncomponent-serViceS',
+            'componentTypEs4': '\ncomponent-serViceS1,    \ncomponent-serViceS2,    \ncomponent-serViceS3,'
         },
     }
 
@@ -88,4 +92,4 @@ def test_config_reader_with_valid_params():
     assert config_data['components']['ComponentType1'] == ['component-HTML']
     assert config_data['components']['componentType2'] == ['component-NginX']
     assert config_data['components']['component-type3'] == ['component-inGress']
-    assert config_data['components']['componentTypEs4'] == ['component-serViceS']
+    assert config_data['components']['componentTypEs4'] == ['component-serViceS1', 'component-serViceS2', 'component-serViceS3']
