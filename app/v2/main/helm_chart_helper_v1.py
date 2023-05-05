@@ -50,55 +50,63 @@ def write_file(path, values, mode='yaml'):
         write_file_version2(path=path, values=values, mode=mode)
 
 
+def parse_config_version1(component_name):
+    """
+    parse_config_version1
+    @param component_name: component_name
+    @type component_name: str
+    @return: result
+    @rtype: dict
+    """
+
+    from app.v1.modules.config_parser import ScriptConfigParser
+
+    result = ScriptConfigParser.parse_config(component_name=component_name)
+
+    return result
+
+
+def parse_config_version2(component_name):
+    """
+    parse_config_version2
+    @param component_name: component_name
+    @type component_name: str
+    @return: result
+    @rtype: dict
+    """
+
+    from base.infrastructure.config_management.config_reader import ConfigReader
+    from base.infrastructure.path_management.path_factory import SimplePathCreator
+
+    root_path = settings.get_root_path()
+    target_path = f"/config_files/input/configurations/{component_name}.ini"
+    target_path = f"{root_path}{target_path}"
+
+    path_creator = SimplePathCreator()
+    created_target_path = path_creator.generate_path(target_path=target_path)
+
+    config_reader = ConfigReader(path_obj=created_target_path)
+    config_data = config_reader.get_config_data()
+
+    return config_data
+
+
 def parse_config(component_name):
-    # Open config file
-    import configparser
-    import os.path
-    config_path = f'config_files/input/configurations/{component_name}.ini'
-    chart_config = configparser.ConfigParser()
-    if os.path.isfile(config_path):
-        chart_config.read(config_path)
-    else:
-        print(f'The configuration file {config_path} does not exist.')
-        exit(1)
+    """
+    parse_config
+    @param component_name: component_name
+    @type component_name: str
+    @return: result
+    @rtype: dict
+    """
 
-    # Parse config file
-    result = dict()
-    for section in chart_config:
-        result[section] = dict()
-        if section == 'kubernetes':
-            result[section]['context'] = chart_config[section]['context']
-            result[section]['namespace'] = chart_config[section]['namespace']
-        elif section == 'flags':
-            result[section]['remove_ingress_suffix'] = chart_config[section]['remove_ingress_suffix']
-        elif section == 'chart':
-            result[section]['apiVersion'] = chart_config[section]['apiVersion']
-            result[section]['name'] = chart_config[section]['name']
-            result[section]['description'] = chart_config[section]['description']
-            result[section]['type'] = chart_config[section]['type']
-            result[section]['version'] = chart_config[section]['version']
-            result[section]['appVersion'] = chart_config[section]['appVersion']
-            result[section]['maintainers'] = parse_config_list(chart_config[section]['maintainers'])
-            result[section]['sources'] = parse_config_list(chart_config[section]['sources'])
-            result[section]['baseChartVersion'] = chart_config[section]['baseChartVersion']
-            result[section]['baseChartName'] = chart_config[section]['baseChartName']
-            result[section]['baseChartRepository'] = chart_config[section]['baseChartRepository']
-        elif section == 'components':
-            for kind in chart_config[section]:
-                result[section][convert_values(kind)] = list()
-                result[section][convert_values(kind)] = parse_config_list(chart_config[section][kind])
-        else:
-            result.pop(section)
-    return result
+    app_version = settings.get_app_version()
 
+    if app_version == "version1":
+        parse_config_version1(component_name=component_name)
 
-def parse_config_list(config_list):
-    import re
-    result = list()
-    for item in re.split('[, \n]', config_list):
-        if item != '':
-            result.append(item)
-    return result
+    if app_version == "version2":
+        parse_config_version1(component_name=component_name)
 
 
 def load_kubernetes_config(config_settings):
@@ -302,18 +310,6 @@ def create_services(services):
                 protocol=service.protocol
             ))
     return result
-
-
-def convert_values(value):
-    values = dict(
-        configmap='ConfigMap',
-        secret='Secret',
-        deployment='Deployment',
-        statefulset='StatefulSet',
-        ingress='Ingress',
-        job='Job'
-    )
-    return values[value]
 
 
 def to_dict(item):
