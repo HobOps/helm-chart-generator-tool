@@ -2,9 +2,11 @@
 
 
 import configparser
+import re
 
 
 # Infrastructure
+from base.infrastructure.config_management.config_mapper import ConfigMapper
 from base.infrastructure.file_management.file_handler import FileHandler
 
 
@@ -27,8 +29,8 @@ class ConfigReader(BaseConfigReader):
         @type path_obj: BasePath
         @param file_handler: file_handler
         @type file_handler: BaseFileHandler
-        @param config_obj: config_obj
-        @type config_obj: config_obj
+        @param config_data: config_data
+        @type config_data: dict
         """
 
         if not isinstance(path_obj, BasePath):
@@ -49,11 +51,12 @@ class ConfigReader(BaseConfigReader):
         self.__stored_path = path_obj
         self.__config_data = config_data
         self.__config_parser = configparser.ConfigParser()
+        self.__config_parser.optionxform = str
         self.__file_handler = file_handler or FileHandler(file_mode=file_mode_values.read, path_obj=path_obj)
 
-    def read_configuration(self):
+    def get_config_data(self):
         """
-        read_config_file
+        get_config_data
         @return: config_data
         @rtype: dict
         """
@@ -61,12 +64,13 @@ class ConfigReader(BaseConfigReader):
         if self.__config_data:
             self.__config_parser.read_dict(self.__config_data)
 
-            return self.__config_parser
+        if not self.__config_data:
+            with self.__file_handler as file_handler:
+                self.__config_parser.read_file(file_handler)
 
-        with self.__file_handler as file_handler:
-            self.__config_parser.read_file(file_handler)
+        config_data = ConfigMapper.map_config_data(self.__config_parser)
 
-        return self.__config_parser
+        return config_data
 
 
 

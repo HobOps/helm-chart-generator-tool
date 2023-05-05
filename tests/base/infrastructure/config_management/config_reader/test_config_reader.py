@@ -29,11 +29,11 @@ def test_config_reader_with_current_params():
     created_path = path_creator.generate_path(target_path=target_path)
 
     config_reader = ConfigReader(path_obj=created_path)
-    config_obj = config_reader.read_configuration()
+    config_data = config_reader.get_config_data()
 
-    assert config_obj['components']['ConfigMap'] == '\nexample-html'
-    assert config_obj['components']['Deployment'] == '\nnginx-deployment'
-    assert config_obj['components']['Ingress'] == '\nnginx-deployment'
+    assert config_data['components']['ConfigMap'] == ['example-html']
+    assert config_data['components']['Deployment'] == ['nginx-deployment']
+    assert config_data['components']['Ingress'] == ['nginx-deployment']
 
 
 def test_config_reader_with_valid_params():
@@ -61,9 +61,10 @@ def test_config_reader_with_valid_params():
 
     config_data = {
         'components': {
-            'ComponentType1': '\ncomponent-html',
-            'ComponentType2': '\ncomponent-nginx',
-            'ComponentType3': '\ncomponent-ingress',
+            'ComponentType1': '\ncomponent-HTML',
+            'componentType2': '\ncomponent-NginX',
+            'component-type3': '\ncomponent-inGress',
+            'componentTypEs4': '\ncomponent-serViceS',
         },
     }
 
@@ -82,8 +83,9 @@ def test_config_reader_with_valid_params():
     file_handler = FileHandler(file_mode=file_mode_values.read, path_obj=fake_file_path, file_obj=fake_file)
 
     config_reader = ConfigReader(path_obj=fake_file_path, file_handler=file_handler, config_data=config_data)
-    config_obj = config_reader.read_configuration()
+    config_data = config_reader.get_config_data()
 
-    assert config_obj['components']['ComponentType1'] == '\ncomponent-html'
-    assert config_obj['components']['ComponentType2'] == '\ncomponent-nginx'
-    assert config_obj['components']['ComponentType3'] == '\ncomponent-ingress'
+    assert config_data['components']['ComponentType1'] == ['component-HTML']
+    assert config_data['components']['componentType2'] == ['component-NginX']
+    assert config_data['components']['component-type3'] == ['component-inGress']
+    assert config_data['components']['componentTypEs4'] == ['component-serViceS']

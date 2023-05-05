@@ -7,15 +7,18 @@ from typing import runtime_checkable
 
 
 @runtime_checkable
-class BaseConfigReader(Protocol):
+class BaseConfigMapper(Protocol):
     """
-    BaseConfigReader
+    BaseConfigMapper
     """
 
+    @staticmethod
     @abstractmethod
-    def get_config_data(self):
+    def map_config_data(config_parser):
         """
-        get_config_data
+        map_config_data
+        @param config_parser: config_parser
+        @type config_parser: configparser
         @return: config_data
         @rtype: dict
         """
