@@ -53,7 +53,7 @@ def write_file(path, values, mode='yaml'):
     if app_version == "version1":
         write_file_version1(path=path, values=values, mode=mode)
 
-    if app_version == "version2":
+    if app_version == "version21":
         write_file_version2(path=path, values=values, mode=mode)
 
 
@@ -113,7 +113,7 @@ def parse_config(component_name):
     if app_version == "version1":
         config_data = parse_config_version1(component_name=component_name)
 
-    if app_version == "version2":
+    if app_version == "version21":
         config_data = parse_config_version2(component_name=component_name)
 
     return config_data
