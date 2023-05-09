@@ -2,7 +2,6 @@
 
 
 import argparse
-from settings import Settings
 
 
 # Application
