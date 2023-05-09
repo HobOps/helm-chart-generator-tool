@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-import settings
+from settings import Settings
 
 
 def convert_values(value):
@@ -44,7 +44,7 @@ class ScriptConfigParser:
         import configparser
         import os.path
 
-        root_path = settings.get_root_path().as_posix()
+        root_path = Settings.get_root_path().as_posix()
 
         config_path = f'config_files/input/configurations/{component_name}.ini'
         config_path = f"{root_path}/{config_path}"

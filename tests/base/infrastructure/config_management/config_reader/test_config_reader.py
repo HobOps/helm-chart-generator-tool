@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-import settings
+from settings import Settings
 
 
 # Infrastructure
@@ -22,7 +22,7 @@ def test_config_reader_with_current_params():
     test_config_reader_with_current_params
     """
 
-    root_path = settings.get_root_path().as_posix()
+    root_path = Settings.get_root_path().as_posix()
     target_path = '/config_files/input/configurations/k3s01-nginx-test.ini'
 
     path_creator = SimplePathCreator(root_path=root_path)

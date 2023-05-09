@@ -2,7 +2,7 @@
 
 import argparse
 import os
-import settings
+from settings import Settings
 
 from kubernetes import client
 from kubernetes import config
@@ -18,7 +18,7 @@ def write_file_version1(path, values, mode='yaml'):
 
     from app.v1.modules.file_manager import ScriptFileWriterManager
 
-    root_path = settings.get_root_path().as_posix()
+    root_path = Settings.get_root_path().as_posix()
     path = f"{root_path}/{path}"
 
     ScriptFileWriterManager.write_file(path=path, values=values, mode=mode)
@@ -32,7 +32,7 @@ def write_file_version2(path, values, mode='yaml'):
     from base.infrastructure.file_management.file_creator import FileWriterCreator
     from base.infrastructure.path_management.path_factory import SimplePathCreator
 
-    root_path = settings.get_root_path().as_posix()
+    root_path = Settings.get_root_path().as_posix()
     target_path = f"/{path}"
 
     file_path_creator = SimplePathCreator(root_path=root_path)
@@ -85,7 +85,7 @@ def parse_config_version2(component_name):
     from base.infrastructure.config_management.config_reader import ConfigReader
     from base.infrastructure.path_management.path_factory import SimplePathCreator
 
-    root_path = settings.get_root_path().as_posix()
+    root_path = Settings.get_root_path().as_posix()
     target_path = f"/config_files/input/configurations/{component_name}.ini"
 
     path_creator = SimplePathCreator(root_path=root_path)
@@ -606,20 +606,16 @@ class AppMainManager:
     """
 
     @staticmethod
-    def run():
+    def run(args):
         """
         run
+        @param args: args
+        @type args: args
         @return: None
         @rtype: None
         """
 
         global app_version
-
-        # Parses program arguments
-        args_parser = argparse.ArgumentParser(description='Generates a helm charts from components on a kubernetes cluster.')
-        args_parser.add_argument('--name', action='store', type=str, help="Name of the helm chart")
-        args_parser.add_argument('--version', action='store', type=str, help="Version number in script")
-        args = args_parser.parse_args()
         app_version = args.version
 
         # Loads configuration
@@ -635,6 +631,3 @@ class AppMainManager:
         create_environment_values_file(config_settings)
 
 
-if __name__ == '__main__':
-    main = AppMainManager()
-    main.run()

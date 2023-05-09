@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-import settings
+from settings import Settings
 
 
 # Infrastructure
@@ -59,7 +59,7 @@ def test_file_handler_validation_read():
 
     expected_data = '# Test\n\nLet see what happen\ngood luck\ncheers\n\n'
 
-    root_path = settings.get_root_path().as_posix()
+    root_path = Settings.get_root_path().as_posix()
     target_path = '/config_files/input/configurations/my_read_test.txt'
 
     path_creator = SimplePathCreator(root_path=root_path)
@@ -78,7 +78,7 @@ def test_file_handler_validation_write():
 
     expected_data = '# Test\n\nLet see what happen\ngood luck\ncheers\n\n'
 
-    root_path = settings.get_root_path().as_posix()
+    root_path = Settings.get_root_path().as_posix()
     target_path = '/config_files/input/configurations/my_write_test.txt'
 
     path_creator = SimplePathCreator(root_path=root_path)
@@ -100,7 +100,7 @@ def test_file_handler_validation_create_and_write():
 
     expected_data = '# Test\n\nLet see what happen\ngood luck\ncheers\n\n'
 
-    root_path = settings.get_root_path().as_posix()
+    root_path = Settings.get_root_path().as_posix()
     target_path = '/config_files/input/configurations/my_write_test.txt'
 
     path_creator = SimplePathCreator(root_path=root_path)
