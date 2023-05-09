@@ -38,13 +38,13 @@ Chose version according as follows:
 python app/v1/script/helm-chart-helper_v1.py --name test
 
 # v2.1 - current refactor
-python app/v2/main/helm-chart-helper_v1.py --name test --version version1 # or version21
+python helm_chart_helper_manager.py --name test --version version21
 
 # v2.2 - future modular solution
-python app/v2/main/helm-chart-helper_v2.py --name test --version version22 # not implemented yet
+python helm_chart_helper_manager.py --name test --version version22 # not implemented yet
 
 # v2.3 - automatic config detection
-python app/v2/main/helm-chart-helper_v3.py --name test --version version23 # not implemented yet
+python helm_chart_helper_manager.py --name test --version version23 # not implemented yet
 
 # Testings
 pytest -v
