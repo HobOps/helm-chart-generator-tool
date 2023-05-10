@@ -24,7 +24,7 @@ def write_file_version1(path, values, mode='yaml'):
     ScriptFileWriterManager.write_file(path=path, values=values, mode=mode)
 
 
-def write_file_version2(path, values, mode='yaml'):
+def write_file_version21(path, values, mode='yaml'):
     """
     write_file_version2
     """
@@ -54,7 +54,7 @@ def write_file(path, values, mode='yaml'):
         write_file_version1(path=path, values=values, mode=mode)
 
     if app_version == "version21":
-        write_file_version2(path=path, values=values, mode=mode)
+        write_file_version21(path=path, values=values, mode=mode)
 
 
 def parse_config_version1(component_name):
@@ -73,7 +73,7 @@ def parse_config_version1(component_name):
     return result
 
 
-def parse_config_version2(component_name):
+def parse_config_version21(component_name):
     """
     parse_config_version2
     @param component_name: component_name
@@ -133,7 +133,7 @@ def parse_config(component_name):
         config_data = parse_config_version1(component_name=component_name)
 
     if app_version == "version21":
-        config_data = parse_config_version2(component_name=component_name)
+        config_data = parse_config_version21(component_name=component_name)
 
     return config_data
 
@@ -648,5 +648,3 @@ class AppMainManager:
         # Creates helm chart files
         create_helm_chart(config_settings)
         create_environment_values_file(config_settings)
-
-

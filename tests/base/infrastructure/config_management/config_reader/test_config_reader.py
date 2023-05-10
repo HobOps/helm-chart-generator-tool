@@ -5,6 +5,7 @@ from settings import Settings
 
 
 # Infrastructure
+from base.infrastructure.config_management.config_mapper import ConfigMapper
 from base.infrastructure.config_management.config_reader import ConfigReader
 from base.infrastructure.file_management.file_doubles import FileFaker
 from base.infrastructure.file_management.file_handler import FileHandler
@@ -22,6 +23,9 @@ def test_config_reader_with_current_params():
     test_config_reader_with_current_params
     """
 
+    custom_sections = ['components']
+    custom_options = []
+
     root_path = Settings.get_root_path().as_posix()
     target_path = '/config_files/input/configurations/k3s01-nginx-test.ini'
 
@@ -29,7 +33,14 @@ def test_config_reader_with_current_params():
     created_path = path_creator.generate_path(target_path=target_path)
 
     config_reader = ConfigReader(path_obj=created_path)
-    config_data = config_reader.get_config_parser()
+    config_parser = config_reader.get_config_parser()
+
+    config_mapper = ConfigMapper(
+        config_parser=config_parser,
+        custom_sections=custom_sections,
+        custom_options=custom_options,
+    )
+    config_data = config_mapper.map_config_data()
 
     assert config_data['components']['ConfigMap'] == ['example-html']
     assert config_data['components']['Deployment'] == ['nginx-deployment']
@@ -40,6 +51,9 @@ def test_config_reader_with_valid_params():
     """
     test_config_reader_with_valid_params
     """
+
+    custom_sections = ['components']
+    custom_options = []
 
     file_name = "config_file"
 
@@ -87,7 +101,14 @@ def test_config_reader_with_valid_params():
     file_handler = FileHandler(file_mode=file_mode_values.read, path_obj=fake_file_path, file_obj=fake_file)
 
     config_reader = ConfigReader(path_obj=fake_file_path, file_handler=file_handler, config_data=config_data)
-    config_data = config_reader.get_config_parser()
+    config_parser = config_reader.get_config_parser()
+
+    config_mapper = ConfigMapper(
+        config_parser=config_parser,
+        custom_sections=custom_sections,
+        custom_options=custom_options,
+    )
+    config_data = config_mapper.map_config_data()
 
     assert config_data['components']['ComponentType1'] == ['component-HTML']
     assert config_data['components']['componentType2'] == ['component-NginX']
