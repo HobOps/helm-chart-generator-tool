@@ -2,7 +2,6 @@
 
 
 import configparser
-import re
 
 
 # Infrastructure
