@@ -2,6 +2,7 @@
 
 
 from abc import abstractmethod
+from configparser import ConfigParser
 from typing import Protocol
 from typing import runtime_checkable
 
@@ -13,11 +14,11 @@ class BaseConfigReader(Protocol):
     """
 
     @abstractmethod
-    def get_config_data(self):
+    def get_config_parser(self) -> ConfigParser:
         """
         get_config_data
-        @return: config_data
-        @rtype: dict
+        @return: config_parser
+        @rtype: ConfigParser
         """
 
         raise NotImplementedError(f"{self.__class__.__name__} Interface Missing Implementation")

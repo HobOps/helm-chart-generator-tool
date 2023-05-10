@@ -82,6 +82,7 @@ def parse_config_version2(component_name):
     @rtype: dict
     """
 
+    from base.infrastructure.config_management.config_mapper import ConfigMapper
     from base.infrastructure.config_management.config_reader import ConfigReader
     from base.infrastructure.path_management.path_factory import SimplePathCreator
 
@@ -91,8 +92,26 @@ def parse_config_version2(component_name):
     path_creator = SimplePathCreator(root_path=root_path)
     created_target_path = path_creator.generate_path(target_path=target_path)
 
+    custom_sections = [
+        'kubernetes',
+        'flags',
+        'chart',
+        'components',
+    ]
+
+    custom_options = [
+        'maintainers',
+        'sources'
+    ]
+
     config_reader = ConfigReader(path_obj=created_target_path)
-    config_data = config_reader.get_config_data()
+    config_parser = config_reader.get_config_parser()
+    config_mapper = ConfigMapper(
+        config_parser=config_parser,
+        custom_sections=custom_sections,
+        custom_options=custom_options,
+    )
+    config_data = config_mapper.map_config_data()
 
     return config_data
 

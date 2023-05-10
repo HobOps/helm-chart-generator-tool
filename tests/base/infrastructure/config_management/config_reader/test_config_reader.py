@@ -29,7 +29,7 @@ def test_config_reader_with_current_params():
     created_path = path_creator.generate_path(target_path=target_path)
 
     config_reader = ConfigReader(path_obj=created_path)
-    config_data = config_reader.get_config_data()
+    config_data = config_reader.get_config_parser()
 
     assert config_data['components']['ConfigMap'] == ['example-html']
     assert config_data['components']['Deployment'] == ['nginx-deployment']
@@ -87,7 +87,7 @@ def test_config_reader_with_valid_params():
     file_handler = FileHandler(file_mode=file_mode_values.read, path_obj=fake_file_path, file_obj=fake_file)
 
     config_reader = ConfigReader(path_obj=fake_file_path, file_handler=file_handler, config_data=config_data)
-    config_data = config_reader.get_config_data()
+    config_data = config_reader.get_config_parser()
 
     assert config_data['components']['ComponentType1'] == ['component-HTML']
     assert config_data['components']['componentType2'] == ['component-NginX']

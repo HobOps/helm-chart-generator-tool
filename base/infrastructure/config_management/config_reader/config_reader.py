@@ -53,11 +53,11 @@ class ConfigReader(BaseConfigReader):
         self.__config_parser.optionxform = str
         self.__file_handler = file_handler or FileHandler(file_mode=file_mode_values.read, path_obj=path_obj)
 
-    def get_config_data(self):
+    def get_config_parser(self):
         """
-        get_config_data
-        @return: config_data
-        @rtype: dict
+        get_config_parser
+        @return: config_parser
+        @rtype: configparser.ConfigParser
         """
 
         if self.__config_data:
@@ -67,9 +67,7 @@ class ConfigReader(BaseConfigReader):
             with self.__file_handler as file_handler:
                 self.__config_parser.read_file(file_handler)
 
-        config_data = ConfigMapper.map_config_data(self.__config_parser)
-
-        return config_data
+        return self.__config_parser
 
 
 

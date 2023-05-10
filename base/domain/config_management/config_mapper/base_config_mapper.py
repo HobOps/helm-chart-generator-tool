@@ -12,13 +12,10 @@ class BaseConfigMapper(Protocol):
     BaseConfigMapper
     """
 
-    @staticmethod
     @abstractmethod
-    def map_config_data(config_parser):
+    def map_config_data(self):
         """
         map_config_data
-        @param config_parser: config_parser
-        @type config_parser: configparser
         @return: config_data
         @rtype: dict
         """
