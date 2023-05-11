@@ -23,8 +23,7 @@ def test_config_reader_with_current_params():
     test_config_reader_with_current_params
     """
 
-    custom_sections = ['components']
-    custom_options = []
+    filter_sections = ['DEFAULT']
 
     root_path = Settings.get_root_path().as_posix()
     target_path = '/config_files/input/configurations/k3s01-nginx-test.ini'
@@ -37,8 +36,7 @@ def test_config_reader_with_current_params():
 
     config_mapper = ConfigMapper(
         config_parser=config_parser,
-        custom_sections=custom_sections,
-        custom_options=custom_options,
+        filter_sections=filter_sections,
     )
     config_data = config_mapper.map_config_data()
 
@@ -52,11 +50,9 @@ def test_config_reader_with_valid_params():
     test_config_reader_with_valid_params
     """
 
-    custom_sections = ['components']
-    custom_options = []
+    filter_sections = ['DEFAULT']
 
     file_name = "config_file"
-
     root_path = '/home/user1'
     path_folder = '/project1/folder1'
     path_file = f'/{file_name}.ini'
@@ -105,8 +101,7 @@ def test_config_reader_with_valid_params():
 
     config_mapper = ConfigMapper(
         config_parser=config_parser,
-        custom_sections=custom_sections,
-        custom_options=custom_options,
+        filter_sections=filter_sections,
     )
     config_data = config_mapper.map_config_data()
 

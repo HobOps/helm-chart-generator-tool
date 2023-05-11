@@ -13,29 +13,23 @@ class ConfigMapper(BaseConfigMapper):
     ConfigMapper
     """
 
-    def __init__(self, config_parser, custom_sections: list = None, custom_options: list = None):
+    def __init__(self, config_parser, filter_sections: list = None):
         """
         ConfigMapper constructor
         @param config_parser: config_parser
         @type config_parser: config_parser
-        @param custom_sections: custom_sections
-        @type custom_sections: list
-        @param custom_options: custom_options
-        @type custom_options: list
+        @param filter_sections: custom_sections
+        @type filter_sections: list
         """
 
         if type(config_parser) != configparser.ConfigParser:
             raise ValueError(f"Error config_parser: {config_parser} is not {configparser.ConfigParser}")
 
-        if not isinstance(custom_sections, (list, type(None))):
-            raise ValueError(f"Error custom_sections: {custom_sections} is not list type")
-
-        if not isinstance(custom_options, (list, type(None))):
-            raise ValueError(f"Error custom_options: {custom_options} is not list type")
+        if not isinstance(filter_sections, (list, type(None))):
+            raise ValueError(f"Error filter_sections: {filter_sections} is not list type")
 
         self.__config_parser = config_parser
-        self.__custom_sections = custom_sections
-        self.__custom_options = custom_options
+        self.__filter_sections = filter_sections
 
     def map_config_data(self):
         """
@@ -48,17 +42,14 @@ class ConfigMapper(BaseConfigMapper):
 
         for section, option in self.__config_parser.items():
 
-            if section in self.__custom_sections:
+            if section not in self.__filter_sections:
 
                 config_data[section] = {}
 
                 for config, parameter in option.items():
 
                     is_list_format = True if re.match('[, \n]', parameter) else False
-                    is_custom_options = True if config in self.__custom_options else False
-                    is_list = is_list_format or is_custom_options
-
-                    parameter_items = [item for item in re.split('[, \n]', parameter) if item != ''] if is_list else parameter
+                    parameter_items = [item for item in re.split('[, \n]', parameter) if item != ''] if is_list_format else parameter
 
                     config_data[section][config] = parameter_items
 
