@@ -177,161 +177,6 @@ def load_kubernetes_data(conf):
     pass
 
 
-def create_vars_file(conf):
-    field = dict(
-        ConfigMap='data',
-        Secret='stringData'
-    )
-    for kind in conf['kubernetes']['values']:
-        if kind in ['ConfigMap', 'Secret']:
-            for item in conf['kubernetes']['values'][kind]:
-                write_file(
-                    f"config_files/output/vars/{conf['chart']['name']}/{item}.json",
-                    remove_empty_from_dict(conf['kubernetes']['values'][kind][item][field[kind]]),
-                    mode='json'
-                )
-    pass
-
-
-def create_helmignore_file(conf):
-    data = [
-        '# Patterns to ignore when building packages.',
-        '# This supports shell glob matching, relative path matching, and',
-        '# negation (prefixed with !). Only one pattern per line.',
-        '.DS_Store',
-        '# Common VCS dirs',
-        '.git/',
-        '.gitignore',
-        '.bzr/',
-        '.bzrignore',
-        '.hg/',
-        '.hgignore',
-        '.svn/',
-        '# Common backup files',
-        '*.swp',
-        '*.bak',
-        '*.tmp',
-        '*.orig',
-        '*~',
-        '# Various IDEs',
-        '.project',
-        '.idea/',
-        '*.tmproj',
-        '.vscode/',
-        ''
-    ]
-    write_file(f"config_files/output/charts/{conf['chart']['name']}/.helmignore", data, mode='raw')
-    pass
-
-
-def create_chart_file(conf):
-    # Render Chart maintainers
-    maintainers = list()
-    for item in conf['chart']['maintainers']:
-        maintainers.append(dict(name=item))
-    conf['chart']['maintainers'] = maintainers
-
-    # Render dependencies
-    conf['chart']['dependencies'] = [dict(
-        name=conf['chart']['baseChartName'],
-        version=conf['chart']['baseChartVersion'],
-        repository=conf['chart']['baseChartRepository'],
-    )]
-    # Remove unnecessary keys from dictionary
-    for item in ['baseChartVersion', 'baseChartName', 'baseChartRepository']:
-        conf['chart'].pop(item)
-    write_file(f"config_files/output/charts/{conf['chart']['name']}/Chart.yaml", conf['chart'])
-    pass
-
-
-def create_values_file(conf):
-    values = dict()
-    values['common-library'] = dict()
-    for kind in conf['kubernetes']['values']:
-        values['common-library'][kind] = dict()
-        for item in conf['kubernetes']['values'][kind]:
-            values['common-library'][kind][item] = conf['kubernetes']['values'][kind][item]
-            # Remove variables from "values.yaml" file
-            # if kind == 'ConfigMap':
-            #     values['common-library'][kind][item]['data'] = {}
-            # elif kind == 'Secret':
-            #     values['common-library'][kind][item]['data'] = {}
-            #     values['common-library'][kind][item]['stringData'] = {}
-    write_file(f"config_files/output/charts/{conf['chart']['name']}/values.yaml", remove_empty_from_dict(values))
-    pass
-
-
-def create_helm_chart(conf):
-    create_helmignore_file(conf)
-    create_chart_file(conf)
-    create_values_file(conf)
-    pass
-
-
-def create_environment_values_file(conf):
-    file = f"config_files/output/environments/{conf['chart']['name']}/{conf['chart']['name']}.values.yaml.gotmpl"
-    data = list()
-    data.append('# Load global and environment settings')
-    data.append('{{ readFile "../../include/values.global.yaml" }}')
-    data.append('{{ readFile "values.environment.yaml" }}')
-    data.append('')
-    for kind in conf['kubernetes']['values'].keys():
-        if kind == 'ConfigMap':
-            data.append(f'### {kind}')
-            for component in conf['kubernetes']['values'][kind]:
-                data.append(f'{component}:')
-                data.append(f'  data: {{}}')
-                # Save variables to file
-                data.append(f'')
-                pass
-        elif kind == 'Secret':
-            data.append(f'### {kind}')
-            for component in conf['kubernetes']['values'][kind]:
-                data.append(f'{component}:')
-                data.append(f'  stringData: {{}}')
-                data.append(f'')
-                pass
-        elif kind in ['Deployment', 'StatefulSet']:
-            data.append(f'### {kind}')
-            for component in conf['kubernetes']['values'][kind]:
-                data.append(f'{component}:')
-                data.append(f'  <<: *default-environment')
-                data.append(f'  <<: *default-global-resources-nolimit')
-                data.append(f"  replicaCount: {conf['kubernetes']['values'][kind][component]['replicas']}")
-                data.append(f"  image:")
-                data.append(f"    repository: {conf['kubernetes']['values'][kind][component]['image']['repository']}")
-                data.append(f"    tag: {conf['kubernetes']['values'][kind][component]['image']['tag']}")
-                data.append(f'')
-                pass
-        elif kind == 'Ingress':
-            data.append(f'### {kind}')
-            for component in conf['kubernetes']['values'][kind]:
-                data.append(f'{component}:')
-                if conf['kubernetes']['values'][kind][component]['annotations']:
-                    data.append(f'  annotations:')
-                    for key, value in conf['kubernetes']['values'][kind][component]['annotations'].items():
-                        data.append(f"    {key}: {value}")
-                data.append(f"  host: {conf['kubernetes']['values'][kind][component]['rules'][0]['host']}")
-                pass
-            data.append('')
-    write_file(file, data, mode='raw')
-    pass
-
-
-def create_services(services):
-    result = list()
-    if type(services) is list:
-        for service in services:
-            result.append(dict(
-                name=service.name,
-                port=service.container_port,
-                hostIp=service.host_ip,
-                hostPort=service.host_port,
-                protocol=service.protocol
-            ))
-    return result
-
-
 def to_dict(item):
     if type(item) in [
         client.V1ConfigMapEnvSource,
@@ -511,27 +356,17 @@ def read_host_aliases(host_aliases):
     return result
 
 
-def create_configmap_or_secret(kind, name, k8s_client, namespace):
-    import base64
-    v1 = k8s_client.CoreV1Api()
-    result = dict()
-    print(name)
-    ret = ''
-    if kind == "ConfigMap":
-        ret = v1.list_namespaced_config_map(
-            field_selector="metadata.name={name}".format(name=name),
-            namespace=namespace,
-        )
-        result['data'] = ret.items[0].data
-    elif kind == "Secret":
-        ret = v1.list_namespaced_secret(
-            field_selector="metadata.name={name}".format(name=name),
-            namespace=namespace,
-        )
-        string_data = dict()
-        for item in ret.items[0].data:
-            string_data[item] = base64.b64decode(ret.items[0].data[item]).decode("utf-8")
-        result['stringData'] = string_data
+def create_services(services):
+    result = list()
+    if type(services) is list:
+        for service in services:
+            result.append(dict(
+                name=service.name,
+                port=service.container_port,
+                hostIp=service.host_ip,
+                hostPort=service.host_port,
+                protocol=service.protocol
+            ))
     return result
 
 
@@ -567,6 +402,30 @@ def create_workload_template(ret, name):
         # resources
         # security_context
     )
+
+
+def create_configmap_or_secret(kind, name, k8s_client, namespace):
+    import base64
+    v1 = k8s_client.CoreV1Api()
+    result = dict()
+    print(name)
+    ret = ''
+    if kind == "ConfigMap":
+        ret = v1.list_namespaced_config_map(
+            field_selector="metadata.name={name}".format(name=name),
+            namespace=namespace,
+        )
+        result['data'] = ret.items[0].data
+    elif kind == "Secret":
+        ret = v1.list_namespaced_secret(
+            field_selector="metadata.name={name}".format(name=name),
+            namespace=namespace,
+        )
+        string_data = dict()
+        for item in ret.items[0].data:
+            string_data[item] = base64.b64decode(ret.items[0].data[item]).decode("utf-8")
+        result['stringData'] = string_data
+    return result
 
 
 def create_workload(kind, name, k8s_client, namespace):
@@ -608,6 +467,147 @@ def create_ingress(name: str, k8s_client, namespace, name_suffix=''):
         rules=read_ingress_rules(ret.items[0].spec.rules),
         tls=read_ingress_tls(ret.items[0].spec.tls)
     )
+
+
+def create_vars_file(conf):
+    field = dict(
+        ConfigMap='data',
+        Secret='stringData'
+    )
+    for kind in conf['kubernetes']['values']:
+        if kind in ['ConfigMap', 'Secret']:
+            for item in conf['kubernetes']['values'][kind]:
+                write_file(
+                    f"config_files/output/vars/{conf['chart']['name']}/{item}.json",
+                    remove_empty_from_dict(conf['kubernetes']['values'][kind][item][field[kind]]),
+                    mode='json'
+                )
+    pass
+
+
+def create_helmignore_file(conf):
+    data = [
+        '# Patterns to ignore when building packages.',
+        '# This supports shell glob matching, relative path matching, and',
+        '# negation (prefixed with !). Only one pattern per line.',
+        '.DS_Store',
+        '# Common VCS dirs',
+        '.git/',
+        '.gitignore',
+        '.bzr/',
+        '.bzrignore',
+        '.hg/',
+        '.hgignore',
+        '.svn/',
+        '# Common backup files',
+        '*.swp',
+        '*.bak',
+        '*.tmp',
+        '*.orig',
+        '*~',
+        '# Various IDEs',
+        '.project',
+        '.idea/',
+        '*.tmproj',
+        '.vscode/',
+        ''
+    ]
+    write_file(f"config_files/output/charts/{conf['chart']['name']}/.helmignore", data, mode='raw')
+    pass
+
+
+def create_chart_file(conf):
+    # Render Chart maintainers
+    maintainers = list()
+    for item in conf['chart']['maintainers']:
+        maintainers.append(dict(name=item))
+    conf['chart']['maintainers'] = maintainers
+
+    # Render dependencies
+    conf['chart']['dependencies'] = [dict(
+        name=conf['chart']['baseChartName'],
+        version=conf['chart']['baseChartVersion'],
+        repository=conf['chart']['baseChartRepository'],
+    )]
+    # Remove unnecessary keys from dictionary
+    for item in ['baseChartVersion', 'baseChartName', 'baseChartRepository']:
+        conf['chart'].pop(item)
+    write_file(f"config_files/output/charts/{conf['chart']['name']}/Chart.yaml", conf['chart'])
+    pass
+
+
+def create_values_file(conf):
+    values = dict()
+    values['common-library'] = dict()
+    for kind in conf['kubernetes']['values']:
+        values['common-library'][kind] = dict()
+        for item in conf['kubernetes']['values'][kind]:
+            values['common-library'][kind][item] = conf['kubernetes']['values'][kind][item]
+            # Remove variables from "values.yaml" file
+            # if kind == 'ConfigMap':
+            #     values['common-library'][kind][item]['data'] = {}
+            # elif kind == 'Secret':
+            #     values['common-library'][kind][item]['data'] = {}
+            #     values['common-library'][kind][item]['stringData'] = {}
+    write_file(f"config_files/output/charts/{conf['chart']['name']}/values.yaml", remove_empty_from_dict(values))
+    pass
+
+
+def create_helm_chart(conf):
+    create_helmignore_file(conf)
+    create_chart_file(conf)
+    create_values_file(conf)
+    pass
+
+
+def create_environment_values_file(conf):
+    file = f"config_files/output/environments/{conf['chart']['name']}/{conf['chart']['name']}.values.yaml.gotmpl"
+    data = list()
+    data.append('# Load global and environment settings')
+    data.append('{{ readFile "../../include/values.global.yaml" }}')
+    data.append('{{ readFile "values.environment.yaml" }}')
+    data.append('')
+    for kind in conf['kubernetes']['values'].keys():
+        if kind == 'ConfigMap':
+            data.append(f'### {kind}')
+            for component in conf['kubernetes']['values'][kind]:
+                data.append(f'{component}:')
+                data.append(f'  data: {{}}')
+                # Save variables to file
+                data.append(f'')
+                pass
+        elif kind == 'Secret':
+            data.append(f'### {kind}')
+            for component in conf['kubernetes']['values'][kind]:
+                data.append(f'{component}:')
+                data.append(f'  stringData: {{}}')
+                data.append(f'')
+                pass
+        elif kind in ['Deployment', 'StatefulSet']:
+            data.append(f'### {kind}')
+            for component in conf['kubernetes']['values'][kind]:
+                data.append(f'{component}:')
+                data.append(f'  <<: *default-environment')
+                data.append(f'  <<: *default-global-resources-nolimit')
+                data.append(f"  replicaCount: {conf['kubernetes']['values'][kind][component]['replicas']}")
+                data.append(f"  image:")
+                data.append(f"    repository: {conf['kubernetes']['values'][kind][component]['image']['repository']}")
+                data.append(f"    tag: {conf['kubernetes']['values'][kind][component]['image']['tag']}")
+                data.append(f'')
+                pass
+        elif kind == 'Ingress':
+            data.append(f'### {kind}')
+            for component in conf['kubernetes']['values'][kind]:
+                data.append(f'{component}:')
+                if conf['kubernetes']['values'][kind][component]['annotations']:
+                    data.append(f'  annotations:')
+                    for key, value in conf['kubernetes']['values'][kind][component]['annotations'].items():
+                        data.append(f"    {key}: {value}")
+                data.append(f"  host: {conf['kubernetes']['values'][kind][component]['rules'][0]['host']}")
+                pass
+            data.append('')
+    write_file(file, data, mode='raw')
+    pass
 
 
 class AppMainManager:
