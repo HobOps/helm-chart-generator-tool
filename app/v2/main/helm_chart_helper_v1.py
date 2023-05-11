@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
-import argparse
+
 import os
-import settings
+from settings import Settings
 
 from kubernetes import client
 from kubernetes import config
+
+
+app_version = "version1"
 
 
 def write_file_version1(path, values, mode='yaml'):
@@ -15,18 +18,29 @@ def write_file_version1(path, values, mode='yaml'):
 
     from app.v1.modules.file_manager import ScriptFileWriterManager
 
+    root_path = Settings.get_root_path().as_posix()
+    path = f"{root_path}/{path}"
+
     ScriptFileWriterManager.write_file(path=path, values=values, mode=mode)
 
 
-def write_file_version2(path, values, mode='yaml'):
+def write_file_version21(path, values, mode='yaml'):
     """
     write_file_version2
     """
 
-    from app.v2.modules.file_manager.infrastructure.manager import MainFileWriterManager
+    from base.infrastructure.file_management.file_creator import FileWriterCreator
+    from base.infrastructure.path_management.path_factory import SimplePathCreator
 
-    file_writer_manager = MainFileWriterManager()
-    file_writer_manager.write_file(path=path, values=values, mode=mode)
+    root_path = Settings.get_root_path().as_posix()
+    target_path = f"/{path}"
+
+    file_path_creator = SimplePathCreator(root_path=root_path)
+    file_path = file_path_creator.generate_path(target_path=target_path)
+
+    file_writer_creator = FileWriterCreator(path_obj=file_path)
+    file_writer = file_writer_creator.create_file_writer(file_type=mode)
+    file_writer.write_file(data=values)
 
 
 def write_file(path, values, mode='yaml'):
@@ -34,64 +48,85 @@ def write_file(path, values, mode='yaml'):
     write_file
     """
 
-    app_version = settings.get_app_version()
+    global app_version
 
     if app_version == "version1":
         write_file_version1(path=path, values=values, mode=mode)
 
-    if app_version == "version2":
-        write_file_version2(path=path, values=values, mode=mode)
+    if app_version == "version21":
+        write_file_version21(path=path, values=values, mode=mode)
+
+
+def parse_config_version1(component_name):
+    """
+    parse_config_version1
+    @param component_name: component_name
+    @type component_name: str
+    @return: result
+    @rtype: dict
+    """
+
+    from app.v1.modules.config_parser import ScriptConfigParser
+
+    result = ScriptConfigParser.parse_config(component_name=component_name)
+
+    return result
+
+
+def parse_config_version21(component_name):
+    """
+    parse_config_version2
+    @param component_name: component_name
+    @type component_name: str
+    @return: result
+    @rtype: dict
+    """
+
+    from base.infrastructure.config_management.config_mapper import ConfigMapper
+    from base.infrastructure.config_management.config_reader import ConfigReader
+    from base.infrastructure.path_management.path_factory import SimplePathCreator
+
+    root_path = Settings.get_root_path().as_posix()
+    target_path = f"/config_files/input/configurations/{component_name}.ini"
+
+    path_creator = SimplePathCreator(root_path=root_path)
+    created_target_path = path_creator.generate_path(target_path=target_path)
+
+    filter_sections = [
+        'DEFAULT',
+    ]
+
+    config_reader = ConfigReader(path_obj=created_target_path)
+    config_parser = config_reader.get_config_parser()
+    config_mapper = ConfigMapper(
+        config_parser=config_parser,
+        filter_sections=filter_sections,
+    )
+    config_data = config_mapper.map_config_data()
+
+    return config_data
 
 
 def parse_config(component_name):
-    # Open config file
-    import configparser
-    import os.path
-    config_path = f'config_files/input/configurations/{component_name}.ini'
-    chart_config = configparser.ConfigParser()
-    if os.path.isfile(config_path):
-        chart_config.read(config_path)
-    else:
-        print(f'The configuration file {config_path} does not exist.')
-        exit(1)
+    """
+    parse_config
+    @param component_name: component_name
+    @type component_name: str
+    @return: result
+    @rtype: dict
+    """
 
-    # Parse config file
-    result = dict()
-    for section in chart_config:
-        result[section] = dict()
-        if section == 'kubernetes':
-            result[section]['context'] = chart_config[section]['context']
-            result[section]['namespace'] = chart_config[section]['namespace']
-        elif section == 'flags':
-            result[section]['remove_ingress_suffix'] = chart_config[section]['remove_ingress_suffix']
-        elif section == 'chart':
-            result[section]['apiVersion'] = chart_config[section]['apiVersion']
-            result[section]['name'] = chart_config[section]['name']
-            result[section]['description'] = chart_config[section]['description']
-            result[section]['type'] = chart_config[section]['type']
-            result[section]['version'] = chart_config[section]['version']
-            result[section]['appVersion'] = chart_config[section]['appVersion']
-            result[section]['maintainers'] = parse_config_list(chart_config[section]['maintainers'])
-            result[section]['sources'] = parse_config_list(chart_config[section]['sources'])
-            result[section]['baseChartVersion'] = chart_config[section]['baseChartVersion']
-            result[section]['baseChartName'] = chart_config[section]['baseChartName']
-            result[section]['baseChartRepository'] = chart_config[section]['baseChartRepository']
-        elif section == 'components':
-            for kind in chart_config[section]:
-                result[section][convert_values(kind)] = list()
-                result[section][convert_values(kind)] = parse_config_list(chart_config[section][kind])
-        else:
-            result.pop(section)
-    return result
+    global app_version
 
+    config_data = ""
 
-def parse_config_list(config_list):
-    import re
-    result = list()
-    for item in re.split('[, \n]', config_list):
-        if item != '':
-            result.append(item)
-    return result
+    if app_version == "version1":
+        config_data = parse_config_version1(component_name=component_name)
+
+    if app_version == "version21":
+        config_data = parse_config_version21(component_name=component_name)
+
+    return config_data
 
 
 def load_kubernetes_config(config_settings):
@@ -295,18 +330,6 @@ def create_services(services):
                 protocol=service.protocol
             ))
     return result
-
-
-def convert_values(value):
-    values = dict(
-        configmap='ConfigMap',
-        secret='Secret',
-        deployment='Deployment',
-        statefulset='StatefulSet',
-        ingress='Ingress',
-        job='Job'
-    )
-    return values[value]
 
 
 def to_dict(item):
@@ -587,24 +610,32 @@ def create_ingress(name: str, k8s_client, namespace, name_suffix=''):
     )
 
 
-def main():
-    # Parses program arguments
-    parser = argparse.ArgumentParser(description='Generates a helm charts from components on a kubernetes cluster.')
-    parser.add_argument('--name', action='store', type=str, help="Name of the helm chart")
-    args = parser.parse_args()
+class AppMainManager:
+    """
+    AppMainManager
+    """
 
-    # Loads configuration
-    config_settings = parse_config(args.name)
-    load_kubernetes_config(config_settings)
-    load_kubernetes_data(config_settings)
+    @staticmethod
+    def run(args):
+        """
+        run
+        @param args: args
+        @type args: args
+        @return: None
+        @rtype: None
+        """
 
-    # Create env vars in JSON file
-    create_vars_file(config_settings)
+        global app_version
+        app_version = args.version
 
-    # Creates helm chart files
-    create_helm_chart(config_settings)
-    create_environment_values_file(config_settings)
+        # Loads configuration
+        config_settings = parse_config(args.name)
+        load_kubernetes_config(config_settings)
+        load_kubernetes_data(config_settings)
 
+        # Create env vars in JSON file
+        create_vars_file(config_settings)
 
-if __name__ == '__main__':
-    main()
+        # Creates helm chart files
+        create_helm_chart(config_settings)
+        create_environment_values_file(config_settings)

@@ -17,9 +17,11 @@ class BasePathCreator(Protocol):
     """
 
     @abstractmethod
-    def generate_path(self, path_obj: BasePath) -> BasePath:
+    def generate_path(self, target_path: str, path_obj: BasePath) -> BasePath:
         """
         generate_path
+        @param target_path: target_path
+        @type target_path: str
         @param path_obj: path_obj
         @type path_obj: BasePath
         @return: path

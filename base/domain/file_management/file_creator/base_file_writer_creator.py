@@ -11,9 +11,9 @@ from base.domain.file_management.file_writer import BaseFileWriter
 
 
 @runtime_checkable
-class FileWriterCreator(Protocol):
+class BaseFileWriterCreator(Protocol):
     """
-    FileWriterCreator
+    BaseFileWriterCreator
     """
 
     @abstractmethod

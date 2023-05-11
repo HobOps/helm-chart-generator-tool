@@ -2,15 +2,15 @@
 
 
 # Infrastructure
-from app.v2.modules.file_manager.infrastructure.manager import MainFileWriterCreator
+from base.infrastructure.file_management.file_creator import FileWriterCreator
+from base.infrastructure.file_management.file_doubles import FileFaker
+from base.infrastructure.file_management.file_handler import FileHandler
 from base.infrastructure.file_management.file_writer import JsonFileWriter
 from base.infrastructure.file_management.file_writer import RawFileWriter
 from base.infrastructure.file_management.file_writer import TextFileWriter
 from base.infrastructure.file_management.file_writer import YamlFileWriter
-from base.infrastructure.file_management.file_doubles import FileFaker
-from base.infrastructure.file_management.file_handler import FileHandler
 from base.infrastructure.path_management.path_doubles import PathFaker
-from base.infrastructure.path_management.path_factory import PathItemCreator
+from base.infrastructure.path_management.path_factory import SimplePathCreator
 
 # Domain
 from base.domain.file_management.file_constants.file_mode_values import file_mode_values
@@ -39,22 +39,16 @@ def test_file_writer_creator_for_json_file_writer_type():
     fake_file_path = PathFaker(
         target_path=target_file_path,
         target_path_type=path_types_values.file,
-        fake_parent_path=fake_folder_path,
-        fake_file=fake_file,
+        parent_path=fake_folder_path,
+        file_obj=fake_file,
     )
 
-    path_creator = PathItemCreator(
-        root_path=root_path,
-        project_path=project_path,
-        folder_path=folder_path,
-        file_name=file_name,
-        file_type_suffix=file_type_suffix,
-    )
-
+    path_creator = SimplePathCreator(root_path=root_path)
     created_fake_path = path_creator.generate_path(path_obj=fake_file_path)
+
     file_handler = FileHandler(path_obj=created_fake_path, file_obj=fake_file, file_mode=file_mode_values.write)
 
-    file_writer_creator = MainFileWriterCreator(path_obj=created_fake_path, file_handler=file_handler)
+    file_writer_creator = FileWriterCreator(path_obj=created_fake_path, file_handler=file_handler)
     file_writer = file_writer_creator.create_file_writer(file_type="json")
 
     assert isinstance(file_writer, JsonFileWriter)
@@ -81,22 +75,16 @@ def test_file_writer_creator_for_text_file_writer_type():
     fake_file_path = PathFaker(
         target_path=target_file_path,
         target_path_type=path_types_values.file,
-        fake_parent_path=fake_folder_path,
-        fake_file=fake_file,
+        parent_path=fake_folder_path,
+        file_obj=fake_file,
     )
 
-    path_creator = PathItemCreator(
-        root_path=root_path,
-        project_path=project_path,
-        folder_path=folder_path,
-        file_name=file_name,
-        file_type_suffix=file_type_suffix,
-    )
-
+    path_creator = SimplePathCreator(root_path=root_path)
     created_fake_path = path_creator.generate_path(path_obj=fake_file_path)
+
     file_handler = FileHandler(path_obj=created_fake_path, file_obj=fake_file, file_mode=file_mode_values.write)
 
-    file_writer_creator = MainFileWriterCreator(path_obj=created_fake_path, file_handler=file_handler)
+    file_writer_creator = FileWriterCreator(path_obj=created_fake_path, file_handler=file_handler)
     file_writer = file_writer_creator.create_file_writer(file_type="text")
 
     assert isinstance(file_writer, TextFileWriter)
@@ -123,22 +111,16 @@ def test_file_writer_creator_for_yaml_file_writer_type():
     fake_file_path = PathFaker(
         target_path=target_file_path,
         target_path_type=path_types_values.file,
-        fake_parent_path=fake_folder_path,
-        fake_file=fake_file,
+        parent_path=fake_folder_path,
+        file_obj=fake_file,
     )
 
-    path_creator = PathItemCreator(
-        root_path=root_path,
-        project_path=project_path,
-        folder_path=folder_path,
-        file_name=file_name,
-        file_type_suffix=file_type_suffix,
-    )
-
+    path_creator = SimplePathCreator(root_path=root_path)
     created_fake_path = path_creator.generate_path(path_obj=fake_file_path)
+
     file_handler = FileHandler(path_obj=created_fake_path, file_obj=fake_file, file_mode=file_mode_values.write)
 
-    file_writer_creator = MainFileWriterCreator(path_obj=created_fake_path, file_handler=file_handler)
+    file_writer_creator = FileWriterCreator(path_obj=created_fake_path, file_handler=file_handler)
     file_writer = file_writer_creator.create_file_writer(file_type="yaml")
 
     assert isinstance(file_writer, YamlFileWriter)
@@ -166,24 +148,16 @@ def test_file_writer_creator_for_raw_file_writer_type():
     fake_file_path = PathFaker(
         target_path=target_file_path,
         target_path_type=path_types_values.file,
-        fake_parent_path=fake_folder_path,
-        fake_file=fake_file,
+        parent_path=fake_folder_path,
+        file_obj=fake_file,
     )
 
-    path_creator = PathItemCreator(
-        root_path=root_path,
-        project_path=project_path,
-        folder_path=folder_path,
-        file_name=file_name,
-        file_type_suffix=file_type_suffix,
-        file_raw_enabled=True,
-        file_raw_custom_suffix=file_raw_custom_suffix,
-    )
-
+    path_creator = SimplePathCreator(root_path=root_path)
     created_fake_path = path_creator.generate_path(path_obj=fake_file_path)
+
     file_handler = FileHandler(path_obj=created_fake_path, file_obj=fake_file, file_mode=file_mode_values.write)
 
-    file_writer_creator = MainFileWriterCreator(path_obj=created_fake_path, file_handler=file_handler)
+    file_writer_creator = FileWriterCreator(path_obj=created_fake_path, file_handler=file_handler)
     file_writer = file_writer_creator.create_file_writer(file_type="raw")
 
     assert isinstance(file_writer, RawFileWriter)
