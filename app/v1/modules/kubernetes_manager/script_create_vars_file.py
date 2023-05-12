@@ -6,9 +6,9 @@ from app.v1.modules.file_manager import ScriptFileWriterManager
 from app.v1.modules.util_manager import ScriptUtilDictCleaner
 
 
-class ScriptCreateVarsFile:
+class ScriptVarsFileCreator:
     """
-    ScriptCreateVarsFile
+    ScriptVarsFileCreator
     """
 
     @staticmethod
