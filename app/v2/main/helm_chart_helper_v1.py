@@ -8,6 +8,7 @@ from kubernetes import client
 from kubernetes import config
 
 # Refactor Imports
+from app.v1.modules.kubernetes_services import ScriptAnnotationsReaderservice
 from app.v1.modules.kubernetes_services import ScriptEnvironReaderService
 from app.v1.modules.kubernetes_services import ScriptEnvironReaderFromService
 from app.v1.modules.kubernetes_services import ScriptVolumesReaderService
@@ -184,23 +185,6 @@ def load_kubernetes_data(conf):
     pass
 
 
-def read_annotations(annotations: dict):
-    result = annotations
-    annotations_to_remove = [
-        'deployment.kubernetes.io/revision',
-        'field.cattle.io/publicEndpoints',
-        'meta.helm.sh/release-name',
-        'meta.helm.sh/release-namespace',
-        'objectset.rio.cattle.io/applied',
-        'objectset.rio.cattle.io/id',
-        'kubectl.kubernetes.io/last-applied-configuration',
-        'kubernetes.io/change-cause',
-    ]
-    for item in annotations_to_remove:
-        result.pop(item, None)
-    return result
-
-
 def read_ingress_rules(rules):
     result = list()
     for item in rules:
@@ -267,7 +251,7 @@ def create_services(services):
 
 def create_workload_template(ret, name):
     return dict(
-        annotations=read_annotations(ret.items[0].metadata.annotations),
+        annotations=ScriptAnnotationsReaderservice.read_annotations(ret.items[0].metadata.annotations),
         selectorLabels=dict(
             app=name
         ),
@@ -358,7 +342,7 @@ def create_ingress(name: str, k8s_client, namespace, name_suffix=''):
     )
     print(ingress_name)
     return dict(
-        annotations=read_annotations(ret.items[0].metadata.annotations),
+        annotations=ScriptAnnotationsReaderservice.read_annotations(ret.items[0].metadata.annotations),
         rules=read_ingress_rules(ret.items[0].spec.rules),
         tls=read_ingress_tls(ret.items[0].spec.tls)
     )
