@@ -8,6 +8,7 @@ from kubernetes import client
 from kubernetes import config
 
 # Refactor Imports
+from app.v1.modules.kubernetes_services import ScriptEnvironReaderService
 from app.v1.modules.kubernetes_services import ScriptToDictParserService
 
 # Global variable
@@ -180,41 +181,6 @@ def load_kubernetes_data(conf):
     pass
 
 
-def remove_empty_from_dict(d):
-    """efficient way to remove keys with empty strings from a dict
-    Ref: https://stackoverflow.com/questions/12118695/efficient-way-to-remove-keys-with-empty-strings-from-a-dict"""
-    if type(d) is dict:
-        return dict((k, remove_empty_from_dict(v)) for k, v in d.items() if v and remove_empty_from_dict(v))
-    elif type(d) is list:
-        return [remove_empty_from_dict(v) for v in d if v and remove_empty_from_dict(v)]
-    else:
-        return d
-
-
-def read_env(items):
-    variables_to_remove = [
-        'FOO'
-    ]
-    # TODO: Refactor this section
-    prefixes_to_remove = [
-        'STAKATER_',
-    ]
-    env = list()
-    if type(items) is list:
-        for item in items:
-            # Remove variables based on prefixes_to_remove
-            if os.path.commonprefix([prefixes_to_remove[0], item.name]) == prefixes_to_remove[0]:
-                continue
-            elif item.name in variables_to_remove:
-                continue
-            env.append(dict(
-                name=item.name,
-                value=item.value,
-                valueFrom=ScriptToDictParserService.to_dict(item.value_from)
-            ))
-    return env
-
-
 def read_env_from(items):
     env_from = list()
     if type(items) is list:
@@ -348,7 +314,7 @@ def create_workload_template(ret, name):
         ),
         command=ret.items[0].spec.template.spec.containers[0].command,
         args=ret.items[0].spec.template.spec.containers[0].args,
-        env=read_env(ret.items[0].spec.template.spec.containers[0].env),
+        env=ScriptEnvironReaderService.read_env(ret.items[0].spec.template.spec.containers[0].env),
         envFrom=read_env_from(ret.items[0].spec.template.spec.containers[0].env_from),
         service=dict(
             ports=create_services(ret.items[0].spec.template.spec.containers[0].ports)
