@@ -11,6 +11,7 @@ from kubernetes import config
 from app.v1.modules.kubernetes_services import ScriptEnvironReaderService
 from app.v1.modules.kubernetes_services import ScriptEnvironReaderFromService
 from app.v1.modules.kubernetes_services import ScriptVolumesReaderService
+from app.v1.modules.kubernetes_services import ScriptVolumeMountsReaderService
 from app.v1.modules.kubernetes_services import ScriptToDictParserService
 
 # Global variable
@@ -183,21 +184,6 @@ def load_kubernetes_data(conf):
     pass
 
 
-def read_volume_mounts(items):
-    values = list()
-    if type(items) is list:
-        for item in items:
-            values.append(dict(
-                mountPath=item.mount_path,
-                mountPropagation=item.mount_propagation,
-                name=item.name,
-                readOnly=item.read_only,
-                subPath=item.sub_path,
-                subPathExpr=item.sub_path_expr
-            ))
-    return values
-
-
 def read_annotations(annotations: dict):
     result = annotations
     annotations_to_remove = [
@@ -297,7 +283,7 @@ def create_workload_template(ret, name):
             ports=create_services(ret.items[0].spec.template.spec.containers[0].ports)
         ),
         volumes=ScriptVolumesReaderService.read_volumes(ret.items[0].spec.template.spec.volumes),
-        volumeMounts=read_volume_mounts(ret.items[0].spec.template.spec.containers[0].volume_mounts),
+        volumeMounts=ScriptVolumeMountsReaderService.read_volume_mounts(ret.items[0].spec.template.spec.containers[0].volume_mounts),
         serviceAccount=(ret.items[0].spec.template.spec.service_account, None)[
             ret.items[0].spec.template.spec.service_account == 'default'
         ],
