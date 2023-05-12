@@ -7,7 +7,10 @@ from settings import Settings
 from kubernetes import client
 from kubernetes import config
 
+# Refactor Imports
+from app.v1.modules.kubernetes_services import ScriptToDictParserService
 
+# Global variable
 app_version = "version1"
 
 
@@ -177,43 +180,6 @@ def load_kubernetes_data(conf):
     pass
 
 
-def to_dict(item):
-    if type(item) in [
-        client.V1ConfigMapEnvSource,
-        client.V1ContainerPort,
-        client.V1EnvFromSource,
-        client.V1EnvVarSource,
-        client.V1SecretEnvSource,
-        client.V1ConfigMapVolumeSource,
-        client.V1SecretVolumeSource,
-        client.V1VolumeMount,
-        client.V1Probe
-    ]:
-        # This section converts dictionary keys from underscore to camel case
-        values = item.to_dict()
-        if type(item) is client.V1EnvVarSource:
-            values['configMapKeyRef'] = values.pop('config_map_key_ref')
-        elif type(item) is client.V1ConfigMapVolumeSource:
-            values['defaultMode'] = values.pop('default_mode')
-        elif type(item) is client.V1SecretVolumeSource:
-            values['defaultMode'] = values.pop('default_mode')
-            values['secretName'] = values.pop('secret_name')
-        elif type(item) is client.V1Probe:
-            values['failureThreshold'] = values.pop('failure_threshold')
-            values['httpGet'] = values.pop('http_get')
-            values['initialDelaySeconds'] = values.pop('initial_delay_seconds')
-            values['periodSeconds'] = values.pop('period_seconds')
-            values['successThreshold'] = values.pop('success_threshold')
-            values['tcpSocket'] = values.pop('tcp_socket')
-            values['terminationGracePeriodSeconds'] = values.pop('termination_grace_period_seconds')
-            values['timeoutSeconds'] = values.pop('timeout_seconds')
-        else:
-            values = item.to_dict()
-        return values
-    else:
-        return None
-
-
 def remove_empty_from_dict(d):
     """efficient way to remove keys with empty strings from a dict
     Ref: https://stackoverflow.com/questions/12118695/efficient-way-to-remove-keys-with-empty-strings-from-a-dict"""
@@ -244,7 +210,7 @@ def read_env(items):
             env.append(dict(
                 name=item.name,
                 value=item.value,
-                valueFrom=to_dict(item.value_from)
+                valueFrom=ScriptToDictParserService.to_dict(item.value_from)
             ))
     return env
 
@@ -254,8 +220,8 @@ def read_env_from(items):
     if type(items) is list:
         for item in items:
             env_from.append(dict(
-                configMapRef=to_dict(item.config_map_ref),
-                secretRef=to_dict(item.secret_ref),
+                configMapRef=ScriptToDictParserService.to_dict(item.config_map_ref),
+                secretRef=ScriptToDictParserService.to_dict(item.secret_ref),
                 prefix=item.prefix
             ))
     return env_from
@@ -267,9 +233,9 @@ def read_volumes(items):
         for item in items:
             values.append(dict(
                 name=item.name,
-                configMap=to_dict(item.config_map),
-                secret=to_dict(item.secret),
-                hostPath=to_dict(item.host_path)
+                configMap=ScriptToDictParserService.to_dict(item.config_map),
+                secret=ScriptToDictParserService.to_dict(item.secret),
+                hostPath=ScriptToDictParserService.to_dict(item.host_path)
             ))
     return values
 
@@ -394,8 +360,8 @@ def create_workload_template(ret, name):
         ],
         imagePullSecrets=read_image_pull_secrets(ret.items[0].spec.template.spec.image_pull_secrets),
         hostAliases=read_host_aliases(ret.items[0].spec.template.spec.host_aliases),
-        readinessProbe=to_dict(ret.items[0].spec.template.spec.containers[0].readiness_probe),
-        livenessProbe=to_dict(ret.items[0].spec.template.spec.containers[0].liveness_probe),
+        readinessProbe=ScriptToDictParserService.to_dict(ret.items[0].spec.template.spec.containers[0].readiness_probe),
+        livenessProbe=ScriptToDictParserService.to_dict(ret.items[0].spec.template.spec.containers[0].liveness_probe),
         # TODO: Add missing resources
         # securityContext=to_dict(ret.items[0].spec.template.spec.containers[0].security_context),
         # strategy
