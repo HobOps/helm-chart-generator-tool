@@ -18,6 +18,59 @@ as the main methodology.
 That means we are going to create the testing in first place then we are going to 
 refactor until the code meets the test specification.
 
+## Pyenv
+Due to we are going to work with different packages and versions its required to protect our environment
+for this reason it's recommended to have installed pyenv
+
+```
+# Validate pyenv its installed
+pyenv versions
+```
+
+Once Pyenv it's installed please install the python version according to the current project 
+dependencies usage
+
+```
+# Install a protected version of python into Pyenv
+pyenv install -v 3.9.0
+```
+
+Then its necessary to create a Virtual Environment to our project please generate as follow
+```
+# Create a Python Virtual Environment
+pyenv virtualenv 3.9.0 helm_chart_helper_environ 
+```
+
+Once its created please go inside to the project folder and activate the environment in order
+to be useful, otherwise project folder won't be protected
+
+```
+# Change to project directory
+cd helm-chart-generator-tool
+
+# Activate generated virtual environment
+pyenv local helm_chart_helper_environ
+```
+
+Finally you are able to work with python and it's dependencies safely 
+
+
+## Warning !!
+Before to meet our requirements pyenv must be installed, avoiding
+this recommendation project may can not run properly in other cases system's 
+python dependencies can be affected causing malfunction in local machine
+
+## Requirements
+
+In order to run properly its necessary to be up-to-date with requirements, to do that please perform
+the following command in console.
+
+```
+# update project dependencies
+pip install -r requirements.txt
+```
+
+
 ## Project Versions
 In order to keep the project clean we are going to separate the current solution into different
 version. This its going to help us to distinguish between the original solution and the incoming
@@ -35,10 +88,10 @@ Current version plan:
 Chose version according as follows:
 ```
 # v1.0 - original
-python app/v1/script/helm-chart-helper_v1.py --name test
+python app/v1/script/helm-chart-helper_v1.py --name test # To be deprecated
 
 # v2.1 - current refactor
-python helm_chart_helper_manager.py --name test --version version21
+python helm_chart_helper_manager.py --name test --version version21 # Current
 
 # v2.2 - future modular solution
 python helm_chart_helper_manager.py --name test --version version22 # not implemented yet
@@ -46,7 +99,7 @@ python helm_chart_helper_manager.py --name test --version version22 # not implem
 # v2.3 - automatic config detection
 python helm_chart_helper_manager.py --name test --version version23 # not implemented yet
 
-# Testings
+# Run Testings
 pytest -v
 ```
 
@@ -98,14 +151,7 @@ us to:
 - ensure our code its modular enough in order to be testable
 - document the functionality of our solution
 
-## helm-chart-helper (v1.0)
-Script for creating helm charts form an existing deployment
-- Original version
-
-### Example
-- Create configuration file
-- Execute the following command:
 ```
-# Deprecated
-python helm-chart-helper.py --name test
+# Run Testings
+pytest -v
 ```
