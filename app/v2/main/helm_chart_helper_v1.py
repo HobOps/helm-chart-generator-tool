@@ -66,7 +66,7 @@ def parse_config_version1(component_name):
     @rtype: dict
     """
 
-    from app.v1.modules.config_parser import ScriptConfigParser
+    from app.v1.modules.config_manager import ScriptConfigParser
 
     result = ScriptConfigParser.parse_config(component_name=component_name)
 
