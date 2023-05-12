@@ -485,72 +485,76 @@ def create_vars_file(conf):
     pass
 
 
+def create_helmignore_file_version1(conf):
+    """
+    create_helmignore_file_version1
+    """
+
+    from app.v1.modules.helm_manager import ScriptHelmIgnoreCreator
+
+    ScriptHelmIgnoreCreator.create_helmignore_file(conf)
+
+
 def create_helmignore_file(conf):
-    data = [
-        '# Patterns to ignore when building packages.',
-        '# This supports shell glob matching, relative path matching, and',
-        '# negation (prefixed with !). Only one pattern per line.',
-        '.DS_Store',
-        '# Common VCS dirs',
-        '.git/',
-        '.gitignore',
-        '.bzr/',
-        '.bzrignore',
-        '.hg/',
-        '.hgignore',
-        '.svn/',
-        '# Common backup files',
-        '*.swp',
-        '*.bak',
-        '*.tmp',
-        '*.orig',
-        '*~',
-        '# Various IDEs',
-        '.project',
-        '.idea/',
-        '*.tmproj',
-        '.vscode/',
-        ''
-    ]
-    write_file(f"config_files/output/charts/{conf['chart']['name']}/.helmignore", data, mode='raw')
-    pass
+    """
+    create_helmignore_file
+    """
+
+    global app_version
+
+    if app_version == "version1":
+        create_helmignore_file_version1(conf)
+
+    if app_version == "version21":
+        create_helmignore_file_version1(conf)
+
+
+def create_chart_file_version1(conf):
+    """
+    create_chart_file_version1
+    """
+
+    from app.v1.modules.helm_manager import ScriptHelmChartCreator
+
+    ScriptHelmChartCreator.create_chart_file(conf)
 
 
 def create_chart_file(conf):
-    # Render Chart maintainers
-    maintainers = list()
-    for item in conf['chart']['maintainers']:
-        maintainers.append(dict(name=item))
-    conf['chart']['maintainers'] = maintainers
+    """
+    create_chart_file
+    """
 
-    # Render dependencies
-    conf['chart']['dependencies'] = [dict(
-        name=conf['chart']['baseChartName'],
-        version=conf['chart']['baseChartVersion'],
-        repository=conf['chart']['baseChartRepository'],
-    )]
-    # Remove unnecessary keys from dictionary
-    for item in ['baseChartVersion', 'baseChartName', 'baseChartRepository']:
-        conf['chart'].pop(item)
-    write_file(f"config_files/output/charts/{conf['chart']['name']}/Chart.yaml", conf['chart'])
-    pass
+    global app_version
+
+    if app_version == "version1":
+        create_chart_file_version1(conf)
+
+    if app_version == "version21":
+        create_chart_file_version1(conf)
+
+
+def create_values_file_version1(conf):
+    """
+    create_values_file_version1
+    """
+
+    from app.v1.modules.helm_manager import ScriptHelmValuesCreator
+
+    ScriptHelmValuesCreator.create_values_file(conf)
 
 
 def create_values_file(conf):
-    values = dict()
-    values['common-library'] = dict()
-    for kind in conf['kubernetes']['values']:
-        values['common-library'][kind] = dict()
-        for item in conf['kubernetes']['values'][kind]:
-            values['common-library'][kind][item] = conf['kubernetes']['values'][kind][item]
-            # Remove variables from "values.yaml" file
-            # if kind == 'ConfigMap':
-            #     values['common-library'][kind][item]['data'] = {}
-            # elif kind == 'Secret':
-            #     values['common-library'][kind][item]['data'] = {}
-            #     values['common-library'][kind][item]['stringData'] = {}
-    write_file(f"config_files/output/charts/{conf['chart']['name']}/values.yaml", remove_empty_from_dict(values))
-    pass
+    """
+    create_values_file
+    """
+
+    global app_version
+
+    if app_version == "version1":
+        create_values_file_version1(conf)
+
+    if app_version == "version21":
+        create_values_file_version1(conf)
 
 
 def create_helm_chart(conf):
