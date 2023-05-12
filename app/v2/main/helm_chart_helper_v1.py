@@ -9,6 +9,7 @@ from kubernetes import config
 
 # Refactor Imports
 from app.v1.modules.kubernetes_services import ScriptEnvironReaderService
+from app.v1.modules.kubernetes_services import ScriptEnvironReaderFromService
 from app.v1.modules.kubernetes_services import ScriptToDictParserService
 
 # Global variable
@@ -181,18 +182,6 @@ def load_kubernetes_data(conf):
     pass
 
 
-def read_env_from(items):
-    env_from = list()
-    if type(items) is list:
-        for item in items:
-            env_from.append(dict(
-                configMapRef=ScriptToDictParserService.to_dict(item.config_map_ref),
-                secretRef=ScriptToDictParserService.to_dict(item.secret_ref),
-                prefix=item.prefix
-            ))
-    return env_from
-
-
 def read_volumes(items):
     values = list()
     if type(items) is list:
@@ -315,7 +304,7 @@ def create_workload_template(ret, name):
         command=ret.items[0].spec.template.spec.containers[0].command,
         args=ret.items[0].spec.template.spec.containers[0].args,
         env=ScriptEnvironReaderService.read_env(ret.items[0].spec.template.spec.containers[0].env),
-        envFrom=read_env_from(ret.items[0].spec.template.spec.containers[0].env_from),
+        envFrom=ScriptEnvironReaderFromService.read_env_from(ret.items[0].spec.template.spec.containers[0].env_from),
         service=dict(
             ports=create_services(ret.items[0].spec.template.spec.containers[0].ports)
         ),
