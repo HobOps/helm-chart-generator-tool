@@ -8,9 +8,10 @@ from kubernetes import client
 from kubernetes import config
 
 # Refactor Imports
-from app.v1.modules.kubernetes_services import ScriptAnnotationsReaderservice
+from app.v1.modules.kubernetes_services import ScriptAnnotationsReaderService
 from app.v1.modules.kubernetes_services import ScriptEnvironReaderService
 from app.v1.modules.kubernetes_services import ScriptEnvironReaderFromService
+from app.v1.modules.kubernetes_services import ScriptIngressRulesReaderService
 from app.v1.modules.kubernetes_services import ScriptVolumesReaderService
 from app.v1.modules.kubernetes_services import ScriptVolumeMountsReaderService
 from app.v1.modules.kubernetes_services import ScriptToDictParserService
@@ -185,24 +186,6 @@ def load_kubernetes_data(conf):
     pass
 
 
-def read_ingress_rules(rules):
-    result = list()
-    for item in rules:
-        rule = dict()
-        rule['host'] = item.host
-        rule['http'] = dict(
-            paths=list()
-        )
-        for path in item.http.paths:
-            rule['http']['paths'].append(dict(
-                path=path.path,
-                backend=path.backend.to_dict(),
-                pathType=path.path_type
-            ))
-        result.append(rule)
-    return result
-
-
 def read_ingress_tls(tls):
     result = list()
     if type(tls) is list:
@@ -251,7 +234,7 @@ def create_services(services):
 
 def create_workload_template(ret, name):
     return dict(
-        annotations=ScriptAnnotationsReaderservice.read_annotations(ret.items[0].metadata.annotations),
+        annotations=ScriptAnnotationsReaderService.read_annotations(ret.items[0].metadata.annotations),
         selectorLabels=dict(
             app=name
         ),
@@ -342,8 +325,8 @@ def create_ingress(name: str, k8s_client, namespace, name_suffix=''):
     )
     print(ingress_name)
     return dict(
-        annotations=ScriptAnnotationsReaderservice.read_annotations(ret.items[0].metadata.annotations),
-        rules=read_ingress_rules(ret.items[0].spec.rules),
+        annotations=ScriptAnnotationsReaderService.read_annotations(ret.items[0].metadata.annotations),
+        rules=ScriptIngressRulesReaderService.read_ingress_rules(ret.items[0].spec.rules),
         tls=read_ingress_tls(ret.items[0].spec.tls)
     )
 

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 
-class ScriptAnnotationsReaderservice:
+class ScriptAnnotationsReaderService:
     """
-    ScriptAnnotationsReaderservice
+    ScriptAnnotationsReaderService
     """
 
     @staticmethod
