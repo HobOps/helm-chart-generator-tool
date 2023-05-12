@@ -10,6 +10,7 @@ from kubernetes import config
 # Refactor Imports
 from app.v1.modules.kubernetes_services import ScriptEnvironReaderService
 from app.v1.modules.kubernetes_services import ScriptEnvironReaderFromService
+from app.v1.modules.kubernetes_services import ScriptVolumesReaderService
 from app.v1.modules.kubernetes_services import ScriptToDictParserService
 
 # Global variable
@@ -182,19 +183,6 @@ def load_kubernetes_data(conf):
     pass
 
 
-def read_volumes(items):
-    values = list()
-    if type(items) is list:
-        for item in items:
-            values.append(dict(
-                name=item.name,
-                configMap=ScriptToDictParserService.to_dict(item.config_map),
-                secret=ScriptToDictParserService.to_dict(item.secret),
-                hostPath=ScriptToDictParserService.to_dict(item.host_path)
-            ))
-    return values
-
-
 def read_volume_mounts(items):
     values = list()
     if type(items) is list:
@@ -308,7 +296,7 @@ def create_workload_template(ret, name):
         service=dict(
             ports=create_services(ret.items[0].spec.template.spec.containers[0].ports)
         ),
-        volumes=read_volumes(ret.items[0].spec.template.spec.volumes),
+        volumes=ScriptVolumesReaderService.read_volumes(ret.items[0].spec.template.spec.volumes),
         volumeMounts=read_volume_mounts(ret.items[0].spec.template.spec.containers[0].volume_mounts),
         serviceAccount=(ret.items[0].spec.template.spec.service_account, None)[
             ret.items[0].spec.template.spec.service_account == 'default'
