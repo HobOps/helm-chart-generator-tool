@@ -469,20 +469,28 @@ def create_ingress(name: str, k8s_client, namespace, name_suffix=''):
     )
 
 
-def create_vars_file(conf):
-    field = dict(
-        ConfigMap='data',
-        Secret='stringData'
-    )
-    for kind in conf['kubernetes']['values']:
-        if kind in ['ConfigMap', 'Secret']:
-            for item in conf['kubernetes']['values'][kind]:
-                write_file(
-                    f"config_files/output/vars/{conf['chart']['name']}/{item}.json",
-                    remove_empty_from_dict(conf['kubernetes']['values'][kind][item][field[kind]]),
-                    mode='json'
-                )
-    pass
+def create_vars_file_version1(conf):
+    """
+    create_vars_file_version1
+    """
+
+    from app.v1.modules.kubernetes_manager import ScriptCreateVarsFile
+
+    ScriptCreateVarsFile.create_vars_file(conf)
+
+
+def create_vars_file(config_settings):
+    """
+    create_vars_file
+    """
+
+    global app_version
+
+    if app_version == "version1":
+        create_vars_file_version1(config_settings)
+
+    if app_version == "version21":
+        create_vars_file_version1(config_settings)
 
 
 def create_helmignore_file_version1(conf):
@@ -557,10 +565,10 @@ def create_values_file(conf):
         create_values_file_version1(conf)
 
 
-def create_helm_chart(conf):
-    create_helmignore_file(conf)
-    create_chart_file(conf)
-    create_values_file(conf)
+def create_helm_chart(config_settings):
+    create_helmignore_file(config_settings)
+    create_chart_file(config_settings)
+    create_values_file(config_settings)
     pass
 
 
