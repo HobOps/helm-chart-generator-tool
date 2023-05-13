@@ -11,7 +11,7 @@ from .script_read_image_pull_secrets import ScriptImagePullSecretsReaderService
 from .script_read_ingress_rules import ScriptIngressRulesReaderService
 from .script_read_ingress_tls import ScriptIngressTlsReaderService
 from .script_read_volumes_mounts import ScriptVolumeMountsReaderService
-
+from .script_create_services import ScriptServicesCreatorService
 
 __all__ = [
     "ScriptAnnotationsReaderService",
@@ -23,5 +23,6 @@ __all__ = [
     "ScriptImagePullSecretsReaderService",
     "ScriptIngressRulesReaderService",
     "ScriptIngressTlsReaderService",
+    "ScriptServicesCreatorService",
     "ScriptVolumeMountsReaderService",
 ]

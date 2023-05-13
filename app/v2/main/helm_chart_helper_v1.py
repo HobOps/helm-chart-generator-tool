@@ -15,9 +15,10 @@ from app.v1.modules.kubernetes_services import ScriptHostAliasesReaderService
 from app.v1.modules.kubernetes_services import ScriptImagePullSecretsReaderService
 from app.v1.modules.kubernetes_services import ScriptIngressRulesReaderService
 from app.v1.modules.kubernetes_services import ScriptIngressTlsReaderService
+from app.v1.modules.kubernetes_services import ScriptServicesCreatorService
+from app.v1.modules.kubernetes_services import ScriptToDictParserService
 from app.v1.modules.kubernetes_services import ScriptVolumesReaderService
 from app.v1.modules.kubernetes_services import ScriptVolumeMountsReaderService
-from app.v1.modules.kubernetes_services import ScriptToDictParserService
 
 # Global variable
 app_version = "version1"
@@ -189,20 +190,6 @@ def load_kubernetes_data(conf):
     pass
 
 
-def create_services(services):
-    result = list()
-    if type(services) is list:
-        for service in services:
-            result.append(dict(
-                name=service.name,
-                port=service.container_port,
-                hostIp=service.host_ip,
-                hostPort=service.host_port,
-                protocol=service.protocol
-            ))
-    return result
-
-
 def create_workload_template(ret, name):
     return dict(
         annotations=ScriptAnnotationsReaderService.read_annotations(ret.items[0].metadata.annotations),
@@ -218,7 +205,7 @@ def create_workload_template(ret, name):
         env=ScriptEnvironReaderService.read_env(ret.items[0].spec.template.spec.containers[0].env),
         envFrom=ScriptEnvironReaderFromService.read_env_from(ret.items[0].spec.template.spec.containers[0].env_from),
         service=dict(
-            ports=create_services(ret.items[0].spec.template.spec.containers[0].ports)
+            ports=ScriptServicesCreatorService.create_services(ret.items[0].spec.template.spec.containers[0].ports)
         ),
         volumes=ScriptVolumesReaderService.read_volumes(ret.items[0].spec.template.spec.volumes),
         volumeMounts=ScriptVolumeMountsReaderService.read_volume_mounts(ret.items[0].spec.template.spec.containers[0].volume_mounts),
