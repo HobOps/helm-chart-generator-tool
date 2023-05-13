@@ -11,6 +11,7 @@ from kubernetes import config
 from app.v1.modules.kubernetes_services import ScriptAnnotationsReaderService
 from app.v1.modules.kubernetes_services import ScriptEnvironReaderService
 from app.v1.modules.kubernetes_services import ScriptEnvironReaderFromService
+from app.v1.modules.kubernetes_services import ScriptImagePullSecretsReaderService
 from app.v1.modules.kubernetes_services import ScriptIngressRulesReaderService
 from app.v1.modules.kubernetes_services import ScriptIngressTlsReaderService
 from app.v1.modules.kubernetes_services import ScriptVolumesReaderService
@@ -187,17 +188,6 @@ def load_kubernetes_data(conf):
     pass
 
 
-
-def read_image_pull_secrets(image_pull_secrets):
-    result = list()
-    if type(image_pull_secrets) is list:
-        for item in image_pull_secrets:
-            result.append(dict(
-                name=item.name
-            ))
-    return result
-
-
 def read_host_aliases(host_aliases):
     result = list()
     if type(host_aliases) is list:
@@ -245,7 +235,7 @@ def create_workload_template(ret, name):
         serviceAccount=(ret.items[0].spec.template.spec.service_account, None)[
             ret.items[0].spec.template.spec.service_account == 'default'
         ],
-        imagePullSecrets=read_image_pull_secrets(ret.items[0].spec.template.spec.image_pull_secrets),
+        imagePullSecrets=ScriptImagePullSecretsReaderService.read_image_pull_secrets(ret.items[0].spec.template.spec.image_pull_secrets),
         hostAliases=read_host_aliases(ret.items[0].spec.template.spec.host_aliases),
         readinessProbe=ScriptToDictParserService.to_dict(ret.items[0].spec.template.spec.containers[0].readiness_probe),
         livenessProbe=ScriptToDictParserService.to_dict(ret.items[0].spec.template.spec.containers[0].liveness_probe),
