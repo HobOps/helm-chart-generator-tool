@@ -1,16 +1,8 @@
 # -*- coding: utf-8 -*-
 
 
-import os
 from settings import Settings
 
-from kubernetes import client
-
-# Refactor Imports
-from app.v1.modules.kubernetes_manager import ScriptConfigMapSecretCreator
-from app.v1.modules.kubernetes_manager import ScriptIngressCreator
-from app.v1.modules.kubernetes_manager import ScriptWorkloadCreator
-from app.v1.modules.kubernetes_manager import ScriptKubernetesConfigLoader
 
 # Global variable
 app_version = "version1"
@@ -158,44 +150,28 @@ def load_kubernetes_config(config_settings):
         load_kubernetes_config_version1(config_settings)
 
 
-def load_kubernetes_data(conf):
-    conf['kubernetes']['values'] = dict()
-    for kind in conf['components'].keys():
-        print("==== " + kind)
-        values = dict()
-        if kind in ['ConfigMap', 'Secret']:
-            for component in conf['components'][kind]:
-                values[component] = ScriptConfigMapSecretCreator.create_configmap_or_secret(
-                    kind=kind,
-                    name=component,
-                    k8s_client=client,
-                    namespace=conf['kubernetes']['namespace']
-                )
-                pass
-        elif kind in ['Job', 'Deployment', 'StatefulSet']:
-            for component in conf['components'][kind]:
-                values[component] = ScriptWorkloadCreator.create_workload(
-                    kind=kind,
-                    name=component,
-                    k8s_client=client,
-                    namespace=conf['kubernetes']['namespace']
-                )
-                pass
-        elif kind == 'Ingress':
-            try:
-                name_suffix = conf['flags']['remove_ingress_suffix']
-            except KeyError:
-                name_suffix = ''
-            for component in conf['components'][kind]:
-                values[component] = ScriptIngressCreator.create_ingress(
-                    name=component,
-                    name_suffix=name_suffix,
-                    k8s_client=client,
-                    namespace=conf['kubernetes']['namespace'],
-                )
-                pass
-        conf['kubernetes']['values'][kind] = values
-    pass
+def load_kubernetes_data_version1(config_settings):
+    """
+    load_kubernetes_data_version1
+    """
+
+    from app.v1.modules.kubernetes_manager import ScriptKubernetesDataLoader
+
+    ScriptKubernetesDataLoader.load_kubernetes_data(config_settings)
+
+
+def load_kubernetes_data(config_settings):
+    """
+    load_kubernetes_data
+    """
+
+    global app_version
+
+    if app_version == "version1":
+        load_kubernetes_data_version1(config_settings=config_settings)
+
+    if app_version == "version21":
+        load_kubernetes_data_version1(config_settings=config_settings)
 
 
 def create_vars_file_version1(conf):
