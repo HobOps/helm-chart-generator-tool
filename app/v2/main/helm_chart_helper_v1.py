@@ -8,6 +8,7 @@ from kubernetes import client
 from kubernetes import config
 
 # Refactor Imports
+from app.v1.modules.kubernetes_manager import ScriptConfigMapSecretCreator
 from app.v1.modules.kubernetes_manager import ScriptWorkloadCreator
 from app.v1.modules.kubernetes_services import ScriptAnnotationsReaderService
 from app.v1.modules.kubernetes_services import ScriptIngressRulesReaderService
@@ -150,7 +151,7 @@ def load_kubernetes_data(conf):
         values = dict()
         if kind in ['ConfigMap', 'Secret']:
             for component in conf['components'][kind]:
-                values[component] = create_configmap_or_secret(
+                values[component] = ScriptConfigMapSecretCreator.create_configmap_or_secret(
                     kind=kind,
                     name=component,
                     k8s_client=client,
@@ -181,30 +182,6 @@ def load_kubernetes_data(conf):
                 pass
         conf['kubernetes']['values'][kind] = values
     pass
-
-
-def create_configmap_or_secret(kind, name, k8s_client, namespace):
-    import base64
-    v1 = k8s_client.CoreV1Api()
-    result = dict()
-    print(name)
-    ret = ''
-    if kind == "ConfigMap":
-        ret = v1.list_namespaced_config_map(
-            field_selector="metadata.name={name}".format(name=name),
-            namespace=namespace,
-        )
-        result['data'] = ret.items[0].data
-    elif kind == "Secret":
-        ret = v1.list_namespaced_secret(
-            field_selector="metadata.name={name}".format(name=name),
-            namespace=namespace,
-        )
-        string_data = dict()
-        for item in ret.items[0].data:
-            string_data[item] = base64.b64decode(ret.items[0].data[item]).decode("utf-8")
-        result['stringData'] = string_data
-    return result
 
 
 def create_ingress(name: str, k8s_client, namespace, name_suffix=''):
