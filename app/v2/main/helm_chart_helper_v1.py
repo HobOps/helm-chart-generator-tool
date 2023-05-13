@@ -5,12 +5,12 @@ import os
 from settings import Settings
 
 from kubernetes import client
-from kubernetes import config
 
 # Refactor Imports
 from app.v1.modules.kubernetes_manager import ScriptConfigMapSecretCreator
 from app.v1.modules.kubernetes_manager import ScriptIngressCreator
 from app.v1.modules.kubernetes_manager import ScriptWorkloadCreator
+from app.v1.modules.kubernetes_manager import ScriptKubernetesConfigLoader
 
 # Global variable
 app_version = "version1"
@@ -134,12 +134,28 @@ def parse_config(component_name):
     return config_data
 
 
+def load_kubernetes_config_version1(config_settings):
+    """
+    load_kubernetes_config_version1
+    """
+
+    from app.v1.modules.kubernetes_manager import ScriptKubernetesConfigLoader
+
+    ScriptKubernetesConfigLoader.load_kubernetes_config(config_settings=config_settings)
+
+
 def load_kubernetes_config(config_settings):
-    contexts, active_context = config.list_kube_config_contexts()
-    if not contexts:
-        print("Cannot find any context in kube-config file.")
-        exit(1)
-    return config.load_kube_config(context=config_settings['kubernetes']['context'])
+    """
+    load_kubernetes_config
+    """
+
+    global app_version
+
+    if app_version == "version1":
+        load_kubernetes_config_version1(config_settings)
+
+    if app_version == "version21":
+        load_kubernetes_config_version1(config_settings)
 
 
 def load_kubernetes_data(conf):

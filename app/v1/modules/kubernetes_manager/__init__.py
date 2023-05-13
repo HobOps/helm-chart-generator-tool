@@ -7,6 +7,7 @@ from .script_create_ingress import ScriptIngressCreator
 from .script_create_vars_file import ScriptVarsFileCreator
 from .script_create_workload_template import ScriptWorkloadTemplateCreator
 from .script_create_workload import ScriptWorkloadCreator
+from .script_load_kubernetes_config import ScriptKubernetesConfigLoader
 
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "ScriptVarsFileCreator",
     "ScriptWorkloadTemplateCreator",
     "ScriptWorkloadCreator",
+    "ScriptKubernetesConfigLoader",
 ]
