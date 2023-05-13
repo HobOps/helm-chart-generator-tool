@@ -11,6 +11,7 @@ from kubernetes import config
 from app.v1.modules.kubernetes_services import ScriptAnnotationsReaderService
 from app.v1.modules.kubernetes_services import ScriptEnvironReaderService
 from app.v1.modules.kubernetes_services import ScriptEnvironReaderFromService
+from app.v1.modules.kubernetes_services import ScriptHostAliasesReaderService
 from app.v1.modules.kubernetes_services import ScriptImagePullSecretsReaderService
 from app.v1.modules.kubernetes_services import ScriptIngressRulesReaderService
 from app.v1.modules.kubernetes_services import ScriptIngressTlsReaderService
@@ -188,17 +189,6 @@ def load_kubernetes_data(conf):
     pass
 
 
-def read_host_aliases(host_aliases):
-    result = list()
-    if type(host_aliases) is list:
-        for item in host_aliases:
-            result.append(dict(
-                ip=item.ip,
-                hostnames=item.hostnames,
-            ))
-    return result
-
-
 def create_services(services):
     result = list()
     if type(services) is list:
@@ -236,7 +226,7 @@ def create_workload_template(ret, name):
             ret.items[0].spec.template.spec.service_account == 'default'
         ],
         imagePullSecrets=ScriptImagePullSecretsReaderService.read_image_pull_secrets(ret.items[0].spec.template.spec.image_pull_secrets),
-        hostAliases=read_host_aliases(ret.items[0].spec.template.spec.host_aliases),
+        hostAliases=ScriptHostAliasesReaderService.read_host_aliases(ret.items[0].spec.template.spec.host_aliases),
         readinessProbe=ScriptToDictParserService.to_dict(ret.items[0].spec.template.spec.containers[0].readiness_probe),
         livenessProbe=ScriptToDictParserService.to_dict(ret.items[0].spec.template.spec.containers[0].liveness_probe),
         # TODO: Add missing resources
