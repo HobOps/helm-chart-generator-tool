@@ -9,10 +9,8 @@ from kubernetes import config
 
 # Refactor Imports
 from app.v1.modules.kubernetes_manager import ScriptConfigMapSecretCreator
+from app.v1.modules.kubernetes_manager import ScriptIngressCreator
 from app.v1.modules.kubernetes_manager import ScriptWorkloadCreator
-from app.v1.modules.kubernetes_services import ScriptAnnotationsReaderService
-from app.v1.modules.kubernetes_services import ScriptIngressRulesReaderService
-from app.v1.modules.kubernetes_services import ScriptIngressTlsReaderService
 
 # Global variable
 app_version = "version1"
@@ -173,7 +171,7 @@ def load_kubernetes_data(conf):
             except KeyError:
                 name_suffix = ''
             for component in conf['components'][kind]:
-                values[component] = create_ingress(
+                values[component] = ScriptIngressCreator.create_ingress(
                     name=component,
                     name_suffix=name_suffix,
                     k8s_client=client,
@@ -182,21 +180,6 @@ def load_kubernetes_data(conf):
                 pass
         conf['kubernetes']['values'][kind] = values
     pass
-
-
-def create_ingress(name: str, k8s_client, namespace, name_suffix=''):
-    ingress_name = name.replace(name_suffix, '')
-    v1 = k8s_client.NetworkingV1Api()
-    ret = v1.list_namespaced_ingress(
-        field_selector="metadata.name={name}".format(name=ingress_name),
-        namespace=namespace
-    )
-    print(ingress_name)
-    return dict(
-        annotations=ScriptAnnotationsReaderService.read_annotations(ret.items[0].metadata.annotations),
-        rules=ScriptIngressRulesReaderService.read_ingress_rules(ret.items[0].spec.rules),
-        tls=ScriptIngressTlsReaderService.read_ingress_tls(ret.items[0].spec.tls)
-    )
 
 
 def create_vars_file_version1(conf):
