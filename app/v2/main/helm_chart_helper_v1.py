@@ -12,6 +12,7 @@ from app.v1.modules.kubernetes_services import ScriptAnnotationsReaderService
 from app.v1.modules.kubernetes_services import ScriptEnvironReaderService
 from app.v1.modules.kubernetes_services import ScriptEnvironReaderFromService
 from app.v1.modules.kubernetes_services import ScriptIngressRulesReaderService
+from app.v1.modules.kubernetes_services import ScriptIngressTlsReaderService
 from app.v1.modules.kubernetes_services import ScriptVolumesReaderService
 from app.v1.modules.kubernetes_services import ScriptVolumeMountsReaderService
 from app.v1.modules.kubernetes_services import ScriptToDictParserService
@@ -186,16 +187,6 @@ def load_kubernetes_data(conf):
     pass
 
 
-def read_ingress_tls(tls):
-    result = list()
-    if type(tls) is list:
-        for item in tls:
-            result.append(dict(
-                secretName=item.secret_name,
-                hosts=item.hosts
-            ))
-    return result
-
 
 def read_image_pull_secrets(image_pull_secrets):
     result = list()
@@ -327,7 +318,7 @@ def create_ingress(name: str, k8s_client, namespace, name_suffix=''):
     return dict(
         annotations=ScriptAnnotationsReaderService.read_annotations(ret.items[0].metadata.annotations),
         rules=ScriptIngressRulesReaderService.read_ingress_rules(ret.items[0].spec.rules),
-        tls=read_ingress_tls(ret.items[0].spec.tls)
+        tls=ScriptIngressTlsReaderService.read_ingress_tls(ret.items[0].spec.tls)
     )
 
 
