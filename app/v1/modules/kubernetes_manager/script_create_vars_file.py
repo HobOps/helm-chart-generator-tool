@@ -3,7 +3,7 @@
 
 # Application
 from app.v1.modules.file_manager import ScriptFileWriterManager
-from app.v1.modules.util_manager import ScriptUtilDictCleaner
+from app.v1.modules.utility_services import ScriptUtilDictCleaner
 
 
 class ScriptVarsFileCreator:
