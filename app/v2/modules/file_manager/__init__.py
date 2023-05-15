@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from .AppFileManager import AppFileManager
+from .app_file_manager import AppFileManager
 
 
 __all__ = [

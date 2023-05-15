@@ -19,6 +19,12 @@ class AppFileManager:
     def write_file(path: str, values: Any, mode: str):
         """
         write_file
+        @param path: path
+        @type path: str
+        @param values: values
+        @type values: Any
+        @param mode: mode
+        @type mode: str
         @return: None
         @rtype: None
         """

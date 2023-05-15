@@ -70,27 +70,9 @@ def parse_config_version21(component_name):
     @rtype: dict
     """
 
-    from base.infrastructure.config_management.config_mapper import ConfigMapper
-    from base.infrastructure.config_management.config_reader import ConfigReader
-    from base.infrastructure.path_management.path_factory import SimplePathCreator
+    from app.v2.modules.config_manager import AppConfigManager
 
-    root_path = Settings.get_root_path().as_posix()
-    target_path = f"/config_files/input/configurations/{component_name}.ini"
-
-    path_creator = SimplePathCreator(root_path=root_path)
-    created_target_path = path_creator.generate_path(target_path=target_path)
-
-    filter_sections = [
-        'DEFAULT',
-    ]
-
-    config_reader = ConfigReader(path_obj=created_target_path)
-    config_parser = config_reader.get_config_parser()
-    config_mapper = ConfigMapper(
-        config_parser=config_parser,
-        filter_sections=filter_sections,
-    )
-    config_data = config_mapper.map_config_data()
+    config_data = AppConfigManager.parse_config(component_name=component_name)
 
     return config_data
 
