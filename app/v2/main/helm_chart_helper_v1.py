@@ -26,18 +26,9 @@ def write_file_version21(path, values, mode='yaml'):
     write_file_version2
     """
 
-    from base.infrastructure.file_management.file_creator import FileWriterCreator
-    from base.infrastructure.path_management.path_factory import SimplePathCreator
+    from app.v2.modules.file_manager import AppFileManager
 
-    root_path = Settings.get_root_path().as_posix()
-    target_path = f"/{path}"
-
-    file_path_creator = SimplePathCreator(root_path=root_path)
-    file_path = file_path_creator.generate_path(target_path=target_path)
-
-    file_writer_creator = FileWriterCreator(path_obj=file_path)
-    file_writer = file_writer_creator.create_file_writer(file_type=mode)
-    file_writer.write_file(data=values)
+    AppFileManager.write_file(path=path, values=values, mode=mode)
 
 
 def write_file(path, values, mode='yaml'):
