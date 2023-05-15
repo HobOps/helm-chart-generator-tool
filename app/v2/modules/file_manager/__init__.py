@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 
-from .app_file_manager import AppFileManager
+from .app_file_writer_manager import AppFileWriterManager
 
 
 __all__ = [
-    "AppFileManager",
+    "AppFileWriterManager",
 ]

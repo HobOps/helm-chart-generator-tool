@@ -26,9 +26,10 @@ def write_file_version21(path, values, mode='yaml'):
     write_file_version2
     """
 
-    from app.v2.modules.file_manager import AppFileManager
+    from app.v2.modules.file_manager import AppFileWriterManager
 
-    AppFileManager.write_file(path=path, values=values, mode=mode)
+    file_writer = AppFileWriterManager()
+    file_writer.write_file(path=path, values=values, mode=mode)
 
 
 def write_file(path, values, mode='yaml'):
