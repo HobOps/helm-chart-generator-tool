@@ -5,7 +5,6 @@ import configparser
 
 
 # Infrastructure
-from base.infrastructure.config_management.config_mapper import ConfigMapper
 from base.infrastructure.file_management.file_handler import FileHandler
 
 
@@ -68,6 +67,4 @@ class ConfigReader(BaseConfigReader):
                 self.__config_parser.read_file(file_handler)
 
         return self.__config_parser
-
-
 

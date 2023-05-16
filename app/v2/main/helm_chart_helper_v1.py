@@ -76,7 +76,9 @@ def parse_config_version21(component_name):
 
     from app.v2.modules.config_manager import AppConfigManager
 
-    config_manager = AppConfigManager()
+    root_path = Settings.get_root_path().as_posix()
+
+    config_manager = AppConfigManager(root_path=root_path)
     config_data = config_manager.parse_config(component_name=component_name)
 
     return config_data
