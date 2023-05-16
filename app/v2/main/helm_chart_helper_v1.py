@@ -26,18 +26,13 @@ def write_file_version21(path, values, mode='yaml'):
     write_file_version2
     """
 
-    from base.infrastructure.file_management.file_creator import FileWriterCreator
-    from base.infrastructure.path_management.path_factory import SimplePathCreator
+    from app.v2.modules.file_manager import AppFileWriterManager
 
     root_path = Settings.get_root_path().as_posix()
-    target_path = f"/{path}"
+    path = f"/{path}"
 
-    file_path_creator = SimplePathCreator(root_path=root_path)
-    file_path = file_path_creator.generate_path(target_path=target_path)
-
-    file_writer_creator = FileWriterCreator(path_obj=file_path)
-    file_writer = file_writer_creator.create_file_writer(file_type=mode)
-    file_writer.write_file(data=values)
+    file_writer = AppFileWriterManager(root_path=root_path)
+    file_writer.write_file(path=path, values=values, mode=mode)
 
 
 def write_file(path, values, mode='yaml'):
@@ -79,27 +74,12 @@ def parse_config_version21(component_name):
     @rtype: dict
     """
 
-    from base.infrastructure.config_management.config_mapper import ConfigMapper
-    from base.infrastructure.config_management.config_reader import ConfigReader
-    from base.infrastructure.path_management.path_factory import SimplePathCreator
+    from app.v2.modules.config_manager import AppConfigManager
 
     root_path = Settings.get_root_path().as_posix()
-    target_path = f"/config_files/input/configurations/{component_name}.ini"
 
-    path_creator = SimplePathCreator(root_path=root_path)
-    created_target_path = path_creator.generate_path(target_path=target_path)
-
-    filter_sections = [
-        'DEFAULT',
-    ]
-
-    config_reader = ConfigReader(path_obj=created_target_path)
-    config_parser = config_reader.get_config_parser()
-    config_mapper = ConfigMapper(
-        config_parser=config_parser,
-        filter_sections=filter_sections,
-    )
-    config_data = config_mapper.map_config_data()
+    config_manager = AppConfigManager(root_path=root_path)
+    config_data = config_manager.parse_config(component_name=component_name)
 
     return config_data
 
