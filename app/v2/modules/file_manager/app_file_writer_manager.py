@@ -19,7 +19,7 @@ class AppFileWriterManager:
     AppFileWriterManager
     """
 
-    def __init__(self, path_obj: BasePath = None, file_handler: BaseFileHandler = None):
+    def __init__(self, root_path: str = None, path_obj: BasePath = None, file_handler: BaseFileHandler = None):
         """
         AppFileWriterManager constructor
         @param path_obj: path_obj
@@ -28,12 +28,16 @@ class AppFileWriterManager:
         @type file_handler: BaseFileHandler
         """
 
+        if not isinstance(root_path, (str, type(None))):
+            raise ValueError(f"Error root_path: {root_path} is not str type")
+
         if not isinstance(path_obj, (BasePath, type(None))):
             raise ValueError(f"Error path_obj: {path_obj} is not an instance of {BasePath}")
 
         if not isinstance(file_handler, (BaseFileHandler, type(None))):
             raise ValueError(f"Error file_handler: {file_handler} is not an instance of {BaseFileHandler}")
 
+        self.__root_path = root_path
         self.__path_obj = path_obj
         self.__file_handler = file_handler
 
@@ -56,11 +60,11 @@ class AppFileWriterManager:
         if not isinstance(mode, str):
             raise ValueError(f"Error mode: {mode} is not str type")
 
-        root_path = Settings.get_root_path().as_posix()
-        target_path = f"/{path}"
+        if values is None:
+            raise ValueError(f"Error values: {values} can't be None")
 
-        file_path_creator = SimplePathCreator(root_path=root_path)
-        file_path = file_path_creator.generate_path(target_path=target_path, path_obj=self.__path_obj)
+        file_path_creator = SimplePathCreator(root_path=self.__root_path)
+        file_path = file_path_creator.generate_path(target_path=path, path_obj=self.__path_obj)
 
         file_writer_creator = FileWriterCreator(path_obj=file_path, file_handler=self.__file_handler)
         file_writer = file_writer_creator.create_file_writer(file_type=mode)

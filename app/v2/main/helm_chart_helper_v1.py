@@ -28,7 +28,10 @@ def write_file_version21(path, values, mode='yaml'):
 
     from app.v2.modules.file_manager import AppFileWriterManager
 
-    file_writer = AppFileWriterManager()
+    root_path = Settings.get_root_path().as_posix()
+    path = f"/{path}"
+
+    file_writer = AppFileWriterManager(root_path=root_path)
     file_writer.write_file(path=path, values=values, mode=mode)
 
 
