@@ -5,7 +5,8 @@ import argparse
 
 
 # Application
-from app.v2.main import AppMainManager
+from app.v1.script import AppMainManager1
+from app.v2.main import AppMainManager2
 
 
 class HelmChartHelperManager:
@@ -27,8 +28,13 @@ class HelmChartHelperManager:
         args_parser.add_argument('--version', action='store', type=str, help="Version number in script")
         args = args_parser.parse_args()
 
-        app_main = AppMainManager()
-        app_main.run(args)
+        if int(args.version) == 10:
+            app_main1 = AppMainManager1()
+            app_main1.run(args)
+
+        if 20 < int(args.version) < 23:
+            app_main2 = AppMainManager2()
+            app_main2.run(args)
 
 
 if __name__ == "__main__":
