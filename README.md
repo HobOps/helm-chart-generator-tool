@@ -112,16 +112,16 @@ Current version plan:
 Chose version according as follows:
 ```
 # v1.0 - original
-python app/v1/script/helm-chart-helper_v1.py --name test # Original
+python helm_chart_helper_manager.py --name test --version 10 # Original 
 
 # v2.1 - current refactor
-python helm_chart_helper_manager.py --name test --version version21 # Current
+python helm_chart_helper_manager.py --name test --version 21 # Modular
 
 # v2.2 - future modular solution
-python helm_chart_helper_manager.py --name test --version version22 # Current
+python helm_chart_helper_manager.py --name test --version 22 # Current
 
 # v2.3 - automatic config detection
-python helm_chart_helper_manager.py --name test --version version23 # not implemented yet
+python helm_chart_helper_manager.py --name test --version 23 # not implemented yet
 
 # Run Testings
 pytest -v

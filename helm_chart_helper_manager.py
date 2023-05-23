@@ -32,7 +32,7 @@ class HelmChartHelperManager:
             app_main1 = AppMainManager1()
             app_main1.run(args)
 
-        if 20 < int(args.version) < 30:
+        if 20 < int(args.version) < 23:
             app_main2 = AppMainManager2()
             app_main2.run(args)
 
