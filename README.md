@@ -52,7 +52,7 @@ cd helm-chart-generator-tool
 pyenv local helm_chart_helper_environ
 ```
 
-Finally you are able to work with python and it's dependencies safely 
+Then finally you are able to work with python and it's dependencies safely 
 
 
 ## Warning !!
@@ -70,11 +70,35 @@ the following command in console.
 pip install -r requirements.txt
 ```
 
+## Config .ini
+
+In order to improve and decouple the original syntax from a config file that could have several
+use cases, we have used semantics in order to define a new convention and keep the config .ini file 
+the most agnostic possible.
+
+For example:
+```
+# Semantics says its plural, so by convention format will change like this:
+
+mainteners:
+    DevOps
+```
+
+Automatically every parameter with indentation it's going to be taken as a item of a list of parameters
+and the result will be like this:
+
+```python
+# Same output format
+
+config['mainteners'] = ['DevOps']
+```
+
+
 
 ## Project Versions
 In order to keep the project clean we are going to separate the current solution into different
-version. This its going to help us to distinguish between the original solution and the incoming
-refactor. The same way for every release maybe its going to be a different version, this pursue the
+version. This it's going to help us to distinguish between the original solution and the incoming
+refactor. The same way for every release maybe it's going to be a different version, this pursue the
 fact to keep the project iterable and add features in a controlled way,
 
 Current version plan:
@@ -88,13 +112,13 @@ Current version plan:
 Chose version according as follows:
 ```
 # v1.0 - original
-python app/v1/script/helm-chart-helper_v1.py --name test # To be deprecated
+python app/v1/script/helm-chart-helper_v1.py --name test # Original
 
 # v2.1 - current refactor
 python helm_chart_helper_manager.py --name test --version version21 # Current
 
 # v2.2 - future modular solution
-python helm_chart_helper_manager.py --name test --version version22 # not implemented yet
+python helm_chart_helper_manager.py --name test --version version22 # Current
 
 # v2.3 - automatic config detection
 python helm_chart_helper_manager.py --name test --version version23 # not implemented yet
