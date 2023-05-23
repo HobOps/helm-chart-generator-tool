@@ -5,12 +5,12 @@ from settings import Settings
 
 
 # Global variable
-app_version = "version1"
+app_version = "version21"
 
 
-def write_file_version1(path, values, mode='yaml'):
+def write_file_version21(path, values, mode='yaml'):
     """
-    write_file_version1
+    write_file_version21
     """
 
     from app.v1.modules.file_manager import ScriptFileWriterManager
@@ -21,9 +21,9 @@ def write_file_version1(path, values, mode='yaml'):
     ScriptFileWriterManager.write_file(path=path, values=values, mode=mode)
 
 
-def write_file_version21(path, values, mode='yaml'):
+def write_file_version22(path, values, mode='yaml'):
     """
-    write_file_version2
+    write_file_version22
     """
 
     from app.v2.modules.file_manager import AppFileWriterManager
@@ -42,11 +42,11 @@ def write_file(path, values, mode='yaml'):
 
     global app_version
 
-    if app_version == "version1":
-        write_file_version1(path=path, values=values, mode=mode)
-
     if app_version == "version21":
         write_file_version21(path=path, values=values, mode=mode)
+
+    if app_version == "version22":
+        write_file_version22(path=path, values=values, mode=mode)
 
 
 def parse_config_version1(component_name):
@@ -97,10 +97,10 @@ def parse_config(component_name):
 
     config_data = ""
 
-    if app_version == "version1":
+    if app_version == "version21":
         config_data = parse_config_version1(component_name=component_name)
 
-    if app_version == "version21":
+    if app_version == "version22":
         config_data = parse_config_version21(component_name=component_name)
 
     return config_data
@@ -123,10 +123,10 @@ def load_kubernetes_config(config_settings):
 
     global app_version
 
-    if app_version == "version1":
+    if app_version == "version21":
         load_kubernetes_config_version1(config_settings)
 
-    if app_version == "version21":
+    if app_version == "version22":
         load_kubernetes_config_version1(config_settings)
 
 
@@ -147,10 +147,10 @@ def load_kubernetes_data(config_settings):
 
     global app_version
 
-    if app_version == "version1":
+    if app_version == "version21":
         load_kubernetes_data_version1(config_settings=config_settings)
 
-    if app_version == "version21":
+    if app_version == "version22":
         load_kubernetes_data_version1(config_settings=config_settings)
 
 
@@ -171,10 +171,10 @@ def create_vars_file(config_settings):
 
     global app_version
 
-    if app_version == "version1":
+    if app_version == "version21":
         create_vars_file_version1(config_settings)
 
-    if app_version == "version21":
+    if app_version == "version22":
         create_vars_file_version1(config_settings)
 
 
@@ -195,10 +195,10 @@ def create_helmignore_file(conf):
 
     global app_version
 
-    if app_version == "version1":
+    if app_version == "version21":
         create_helmignore_file_version1(conf)
 
-    if app_version == "version21":
+    if app_version == "version22":
         create_helmignore_file_version1(conf)
 
 
@@ -219,10 +219,10 @@ def create_chart_file(conf):
 
     global app_version
 
-    if app_version == "version1":
+    if app_version == "version21":
         create_chart_file_version1(conf)
 
-    if app_version == "version21":
+    if app_version == "version22":
         create_chart_file_version1(conf)
 
 
@@ -243,10 +243,10 @@ def create_values_file(conf):
 
     global app_version
 
-    if app_version == "version1":
+    if app_version == "version21":
         create_values_file_version1(conf)
 
-    if app_version == "version21":
+    if app_version == "version22":
         create_values_file_version1(conf)
 
 
@@ -274,16 +274,16 @@ def create_environment_values_file(config_settings):
 
     global app_version
 
-    if app_version == "version1":
-        create_environment_values_file_version1(config_settings)
-
     if app_version == "version21":
         create_environment_values_file_version1(config_settings)
 
+    if app_version == "version22":
+        create_environment_values_file_version1(config_settings)
 
-class AppMainManager:
+
+class AppMainManager2:
     """
-    AppMainManager
+    AppMainManager2
     """
 
     @staticmethod
@@ -297,7 +297,10 @@ class AppMainManager:
         """
 
         global app_version
-        app_version = args.version
+        app_version = f"version{args.version}"
+
+        # Print version
+        print(f"Working Version {args.version}")
 
         # Loads configuration
         config_settings = parse_config(args.name)

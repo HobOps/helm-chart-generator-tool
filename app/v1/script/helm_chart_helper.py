@@ -581,24 +581,27 @@ def create_ingress(name: str, k8s_client, namespace, name_suffix=''):
     )
 
 
-def main():
-    # Parses program arguments
-    parser = argparse.ArgumentParser(description='Generates a helm charts from components on a kubernetes cluster.')
-    parser.add_argument('--name', action='store', type=str, help="Name of the helm chart")
-    args = parser.parse_args()
+class AppMainManager1:
+    """
+    AppMainManager1
+    """
 
-    # Loads configuration
-    config_settings = parse_config(args.name)
-    load_kubernetes_config(config_settings)
-    load_kubernetes_data(config_settings)
+    @staticmethod
+    def run(args):
 
-    # Create env vars in JSON file
-    create_vars_file(config_settings)
+        # Print version
+        print(f"Working Version {args.version}")
 
-    # Creates helm chart files
-    create_helm_chart(config_settings)
-    create_environment_values_file(config_settings)
+        # Loads configuration
+        config_settings = parse_config(args.name)
+        load_kubernetes_config(config_settings)
+        load_kubernetes_data(config_settings)
+
+        # Create env vars in JSON file
+        create_vars_file(config_settings)
+
+        # Creates helm chart files
+        create_helm_chart(config_settings)
+        create_environment_values_file(config_settings)
 
 
-if __name__ == '__main__':
-    main()
