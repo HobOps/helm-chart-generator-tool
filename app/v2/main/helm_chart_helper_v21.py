@@ -4,6 +4,11 @@
 from settings import Settings
 
 
+# Application
+from app.app_management import AppManagerBase
+from app.app_management import ArgumentData
+
+
 def write_file(path, values, mode='yaml'):
     """
     write_file
@@ -109,19 +114,19 @@ def create_environment_values_file(config_settings):
     ScriptEnvironValuesFileCreator.create_environment_values_file(conf=config_settings)
 
 
-class AppMainManagerV21:
+class AppMainManagerV21(AppManagerBase):
     """
     AppMainManagerV21
     """
 
     @staticmethod
-    def run(args):
+    def run(args: ArgumentData):
         """
         run
         @param args: args
-        @type args: args
-        @return: None
-        @rtype: None
+        @type args: ArgumentData
+        @return: version
+        @rtype: str
         """
 
         # Print version
@@ -138,3 +143,5 @@ class AppMainManagerV21:
         # Creates helm chart files
         create_helm_chart(config_settings)
         create_environment_values_file(config_settings)
+
+        return "21"

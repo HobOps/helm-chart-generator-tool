@@ -1,6 +1,13 @@
-import argparse
+# -*- coding: utf-8 -*-
+
+
+# Infrastructure
 import os
 from kubernetes import client, config
+
+# Application
+from app.app_management import AppManagerBase
+from app.app_management import ArgumentData
 
 
 def write_file(path, values, mode='yaml'):
@@ -581,13 +588,20 @@ def create_ingress(name: str, k8s_client, namespace, name_suffix=''):
     )
 
 
-class AppMainManagerV10:
+class AppMainManagerV10(AppManagerBase):
     """
     AppMainManagerV10
     """
 
     @staticmethod
-    def run(args):
+    def run(args: ArgumentData):
+        """
+        run
+        @param args: args
+        @type args: ArgumentData
+        @return: version
+        @rtype: str
+        """
 
         # Print version
         print(f"Working Version {args.version}")
@@ -604,4 +618,4 @@ class AppMainManagerV10:
         create_helm_chart(config_settings)
         create_environment_values_file(config_settings)
 
-
+        return "10"
