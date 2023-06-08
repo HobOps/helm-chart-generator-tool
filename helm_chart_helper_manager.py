@@ -45,4 +45,3 @@ class HelmChartHelperManager:
 if __name__ == "__main__":
     helper_manager = HelmChartHelperManager()
     helper_manager.run()
-

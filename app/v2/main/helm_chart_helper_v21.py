@@ -124,9 +124,6 @@ class AppMainManagerV21:
         @rtype: None
         """
 
-        global app_version
-        app_version = f"version{args.version}"
-
         # Print version
         print(f"Working Version {args.version}")
 
