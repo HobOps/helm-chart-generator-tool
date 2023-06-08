@@ -5,6 +5,7 @@ import argparse
 
 
 # Application
+from app.app_management import AppVersionCreator
 from app.app_management import ArgumentData
 from app.v1.script import AppMainManagerV10
 from app.v2.main import AppMainManagerV21
@@ -40,17 +41,9 @@ class HelmChartHelperManager:
 
         args = argument_data or ArgumentData(name=arguments.name, version=arguments.version)
 
-        if int(args.version) == 10:
-            app_main10 = AppMainManagerV10()
-            app_main10.run(args)
-
-        if int(args.version) == 21:
-            app_main21 = AppMainManagerV21()
-            app_main21.run(args)
-
-        if int(args.version) == 22:
-            app_main22 = AppMainManagerV22()
-            app_main22.run(args)
+        app_version_factory = AppVersionCreator()
+        app_manager = app_version_factory.create_app(args.version)
+        app_manager.run(args=args)
 
 
 if __name__ == "__main__":
