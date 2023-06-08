@@ -54,7 +54,7 @@ def load_kubernetes_data(config_settings):
 
     from app.v1.modules.kubernetes_manager import ScriptKubernetesDataLoader
 
-    ScriptKubernetesDataLoader.load_kubernetes_data(config_settings)
+    ScriptKubernetesDataLoader.load_kubernetes_data(conf=config_settings)
 
 
 def create_vars_file(config_settings):
@@ -64,7 +64,7 @@ def create_vars_file(config_settings):
 
     from app.v1.modules.kubernetes_manager import ScriptVarsFileCreator
 
-    ScriptVarsFileCreator.create_vars_file(config_settings)
+    ScriptVarsFileCreator.create_vars_file(conf=config_settings)
 
 
 def create_helmignore_file(config_settings):
@@ -74,7 +74,7 @@ def create_helmignore_file(config_settings):
 
     from app.v1.modules.helm_manager import ScriptHelmIgnoreCreator
 
-    ScriptHelmIgnoreCreator.create_helmignore_file(config_settings)
+    ScriptHelmIgnoreCreator.create_helmignore_file(conf=config_settings)
 
 
 def create_chart_file(config_settings):
@@ -84,7 +84,7 @@ def create_chart_file(config_settings):
 
     from app.v1.modules.helm_manager import ScriptHelmChartCreator
 
-    ScriptHelmChartCreator.create_chart_file(config_settings)
+    ScriptHelmChartCreator.create_chart_file(conf=config_settings)
 
 
 def create_values_file(config_settings):
@@ -94,23 +94,23 @@ def create_values_file(config_settings):
 
     from app.v1.modules.helm_manager import ScriptHelmValuesCreator
 
-    ScriptHelmValuesCreator.create_values_file(config_settings)
+    ScriptHelmValuesCreator.create_values_file(conf=config_settings)
 
 
 def create_helm_chart(config_settings):
-    create_helmignore_file(config_settings)
-    create_chart_file(config_settings)
-    create_values_file(config_settings)
+    create_helmignore_file(config_settings=config_settings)
+    create_chart_file(config_settings=config_settings)
+    create_values_file(config_settings=config_settings)
 
 
-def create_environment_values_file(conf):
+def create_environment_values_file(config_settings):
     """
     create_environment_values_file
     """
 
     from app.v1.modules.kubernetes_manager import ScriptEnvironValuesFileCreator
 
-    ScriptEnvironValuesFileCreator.create_environment_values_file(conf)
+    ScriptEnvironValuesFileCreator.create_environment_values_file(conf=config_settings)
 
 
 class AppMainManagerV22:

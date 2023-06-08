@@ -30,16 +30,16 @@ class HelmChartHelperManager:
         args = args_parser.parse_args()
 
         if int(args.version) == 10:
-            app_main1 = AppMainManagerV10()
-            app_main1.run(args)
+            app_main10 = AppMainManagerV10()
+            app_main10.run(args)
 
         if int(args.version) == 21:
-            app_main1 = AppMainManagerV21()
-            app_main1.run(args)
+            app_main21 = AppMainManagerV21()
+            app_main21.run(args)
 
         if int(args.version) == 22:
-            app_main1 = AppMainManagerV22()
-            app_main1.run(args)
+            app_main22 = AppMainManagerV22()
+            app_main22.run(args)
 
 
 if __name__ == "__main__":
