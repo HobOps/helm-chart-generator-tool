@@ -581,9 +581,9 @@ def create_ingress(name: str, k8s_client, namespace, name_suffix=''):
     )
 
 
-class AppMainManager1:
+class AppMainManagerV10:
     """
-    AppMainManager1
+    AppMainManagerV10
     """
 
     @staticmethod

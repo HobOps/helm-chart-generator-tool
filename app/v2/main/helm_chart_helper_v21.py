@@ -281,9 +281,9 @@ def create_environment_values_file(config_settings):
         create_environment_values_file_version1(config_settings)
 
 
-class AppMainManager2:
+class AppMainManagerV21:
     """
-    AppMainManager2
+    AppMainManagerV21
     """
 
     @staticmethod
