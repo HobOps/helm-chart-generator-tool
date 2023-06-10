@@ -2,13 +2,14 @@
 
 
 # Application
+from app.app_management import AppVersionCreatorBase
 from app.app_management import AppManagerBase
 from app.v1.script import AppMainManagerV10
 from app.v2.main import AppMainManagerV21
 from app.v2.main import AppMainManagerV22
 
 
-class AppVersionCreator:
+class AppVersionCreator(AppVersionCreatorBase):
     """
     AppVersionCreator
     """
