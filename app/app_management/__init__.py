@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 
+from .argument_data import ArgumentData
 from .app_manager_base import AppManagerBase
 from .app_version_creator import AppVersionCreator
-from .argument_data import ArgumentData
 
 
 __all__ = [
+    "ArgumentData",
     "AppManagerBase",
     "AppVersionCreator",
-    "ArgumentData",
 ]

@@ -27,7 +27,7 @@ class AppVersionCreator:
 
         app_manager = getattr(self, f"app_version_{app_version}")
 
-        return app_manager
+        return app_manager()
 
     @staticmethod
     def app_version_10():
