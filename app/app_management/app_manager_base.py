@@ -4,6 +4,8 @@
 from abc import abstractmethod
 from typing import Protocol
 from typing import runtime_checkable
+
+# Domain
 from app.app_management.argument_data import ArgumentData
 
 
