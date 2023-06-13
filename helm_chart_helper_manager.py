@@ -52,6 +52,8 @@ class HelmChartHelperManager:
 
         args = ArgumentData(name=arguments['name'], version=arguments['version'])
 
+        print(args)
+
         app_manager: AppManagerBase = self.__app_version_factory.create_app(args.version)
         app_version = app_manager.run(args=args)
 
