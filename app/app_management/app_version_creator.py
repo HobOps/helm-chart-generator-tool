@@ -7,6 +7,7 @@ from app.app_management import AppManagerBase
 from app.v1.script import AppMainManagerV10
 from app.v2.main import AppMainManagerV21
 from app.v2.main import AppMainManagerV22
+from app.v2.main import AppMainManagerV23
 
 
 class AppVersionCreator(AppVersionCreatorBase):
@@ -59,4 +60,15 @@ class AppVersionCreator(AppVersionCreatorBase):
         """
 
         return AppMainManagerV22()
+
+    @staticmethod
+    def app_version_23():
+        """
+        app_version_23
+        @return: AppMainManagerV23
+        @rtype: AppManagerBase
+        """
+
+        return AppMainManagerV23()
+
 
