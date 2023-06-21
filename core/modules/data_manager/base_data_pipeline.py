@@ -6,7 +6,7 @@ from typing import Protocol
 from typing import runtime_checkable
 
 
-from app.v2.modules.data_manager import BaseDataFilter
+from core.modules.data_manager import BaseDataFilter
 
 
 @runtime_checkable

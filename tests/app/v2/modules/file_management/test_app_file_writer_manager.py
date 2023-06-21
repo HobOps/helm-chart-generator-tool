@@ -10,7 +10,7 @@ from base.infrastructure.file_management.file_handler import FileHandler
 from base.infrastructure.path_management.path_doubles import PathFaker
 
 # Application
-from app.v2.modules.file_manager import AppFileWriterManager
+from core.modules.file_manager import AppFileWriterManager
 
 # Domain
 from base.domain.file_management.file_constants.file_type_values import file_type_values

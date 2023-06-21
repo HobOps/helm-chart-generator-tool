@@ -14,7 +14,7 @@ def write_file(path, values, mode='yaml'):
     write_file
     """
 
-    from app.v2.modules.file_manager import AppFileWriterManager
+    from core.modules.file_manager import AppFileWriterManager
 
     root_path = Settings.get_root_path().as_posix()
     path = f"/{path}"
@@ -32,7 +32,7 @@ def parse_config(component_name):
     @rtype: dict
     """
 
-    from app.v2.modules.config_manager import AppConfigManager
+    from core.modules.config_manager import AppConfigManager
 
     root_path = Settings.get_root_path().as_posix()
 
