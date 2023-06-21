@@ -6,7 +6,7 @@ from typing import Protocol
 from typing import runtime_checkable
 
 
-from core.modules.data_manager import BaseDataFilter
+from core.modules.data_manager import BaseDataHandler
 
 
 @runtime_checkable
@@ -16,11 +16,11 @@ class BaseDataPipeline(Protocol):
     """
 
     @abstractmethod
-    def add_filter(self, data_filter: BaseDataFilter):
+    def add_handler(self, data_handler: BaseDataHandler):
         """
-        add_filter
-        @param data_filter: data_filter
-        @type data_filter: BaseDataFilter
+        add_handler
+        @param data_handler: data_handler
+        @type data_handler: BaseDataHandler
         @return: data_pipeline
         @rtype: BaseDataPipeline
         """

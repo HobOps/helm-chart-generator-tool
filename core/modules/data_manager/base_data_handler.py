@@ -7,9 +7,9 @@ from typing import runtime_checkable
 
 
 @runtime_checkable
-class BaseDataFilter(Protocol):
+class BaseDataHandler(Protocol):
     """
-    BaseDataFilter
+    BaseDataHandler
     """
 
     @abstractmethod
