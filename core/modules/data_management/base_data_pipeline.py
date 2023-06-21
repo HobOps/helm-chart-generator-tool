@@ -6,7 +6,7 @@ from typing import Protocol
 from typing import runtime_checkable
 
 
-from core.modules.data_manager import BaseDataHandler
+from core.modules.data_management import BaseDataHandler
 
 
 @runtime_checkable

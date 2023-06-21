@@ -10,7 +10,7 @@ from base.infrastructure.file_management.file_handler import FileHandler
 from base.infrastructure.path_management.path_doubles import PathFaker
 
 # Application
-from core.modules.config_manager import AppConfigManager
+from core.modules.config_management import AppConfigManager
 
 # Domain
 from base.domain.file_management.file_constants.file_mode_values import file_mode_values
