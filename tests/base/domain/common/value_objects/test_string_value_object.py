@@ -4,7 +4,7 @@
 import pytest
 
 
-from base.domain.common.value_objects import StringValueObject
+from framework.base.domain.common.value_objects import StringValueObject
 
 
 def test_string_value_object_validation_pass():

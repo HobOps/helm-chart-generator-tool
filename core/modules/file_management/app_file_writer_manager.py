@@ -5,12 +5,12 @@ from typing import Any
 
 
 # Infrastructure
-from base.infrastructure.file_management.file_creator import FileWriterCreator
-from base.infrastructure.path_management.path_factory import SimplePathCreator
+from framework.base.infrastructure.file_management.file_creator import FileWriterCreator
+from framework.base.infrastructure.path_management.path_factory import SimplePathCreator
 
 # Domain
-from base.domain.path_management.path_doubles import BasePath
-from base.domain.file_management.file_handler import BaseFileHandler
+from framework.base.domain.path_management.path_doubles import BasePath
+from framework.base.domain.file_management.file_handler import BaseFileHandler
 
 
 class AppFileWriterManager:

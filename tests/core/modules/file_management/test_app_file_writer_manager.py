@@ -5,16 +5,16 @@ import pytest
 
 
 # Infrastructure
-from base.infrastructure.file_management.file_doubles import FileFaker
-from base.infrastructure.file_management.file_handler import FileHandler
-from base.infrastructure.path_management.path_doubles import PathFaker
+from framework.base.infrastructure.file_management.file_doubles import FileFaker
+from framework.base.infrastructure.file_management.file_handler import FileHandler
+from framework.base.infrastructure.path_management.path_doubles import PathFaker
 
 # Application
 from core.modules.file_management import AppFileWriterManager
 
 # Domain
-from base.domain.file_management.file_constants.file_type_values import file_type_values
-from base.domain.path_management.path_constants.path_type_values import path_types_values
+from framework.base.domain.file_management.file_constants.file_type_values import file_type_values
+from framework.base.domain.path_management.path_constants.path_type_values import path_types_values
 
 
 def test_app_file_writer_manager_with_valid_params():

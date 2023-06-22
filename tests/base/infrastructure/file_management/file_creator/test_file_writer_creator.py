@@ -2,20 +2,20 @@
 
 
 # Infrastructure
-from base.infrastructure.file_management.file_creator import FileWriterCreator
-from base.infrastructure.file_management.file_doubles import FileFaker
-from base.infrastructure.file_management.file_handler import FileHandler
-from base.infrastructure.file_management.file_writer import JsonFileWriter
-from base.infrastructure.file_management.file_writer import RawFileWriter
-from base.infrastructure.file_management.file_writer import TextFileWriter
-from base.infrastructure.file_management.file_writer import YamlFileWriter
-from base.infrastructure.path_management.path_doubles import PathFaker
-from base.infrastructure.path_management.path_factory import SimplePathCreator
+from framework.base.infrastructure.file_management.file_creator import FileWriterCreator
+from framework.base.infrastructure.file_management.file_doubles import FileFaker
+from framework.base.infrastructure.file_management.file_handler import FileHandler
+from framework.base.infrastructure.file_management.file_writer import JsonFileWriter
+from framework.base.infrastructure.file_management.file_writer import RawFileWriter
+from framework.base.infrastructure.file_management.file_writer import TextFileWriter
+from framework.base.infrastructure.file_management.file_writer import YamlFileWriter
+from framework.base.infrastructure.path_management.path_doubles import PathFaker
+from framework.base.infrastructure.path_management.path_factory import SimplePathCreator
 
 # Domain
-from base.domain.file_management.file_constants.file_mode_values import file_mode_values
-from base.domain.file_management.file_constants.file_type_values import file_type_values
-from base.domain.path_management.path_constants.path_type_values import path_types_values
+from framework.base.domain.file_management.file_constants.file_mode_values import file_mode_values
+from framework.base.domain.file_management.file_constants.file_type_values import file_type_values
+from framework.base.domain.path_management.path_constants import path_types_values
 
 
 def test_file_writer_creator_for_json_file_writer_type():

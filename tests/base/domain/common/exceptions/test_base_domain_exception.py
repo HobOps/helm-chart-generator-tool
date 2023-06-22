@@ -3,7 +3,7 @@
 
 import pytest
 
-from base.domain.common.exceptions import BaseDomainException
+from framework.base.domain.common.exceptions import BaseDomainException
 
 
 def test_base_domain_exception_full_validation():

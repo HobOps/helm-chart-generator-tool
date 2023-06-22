@@ -5,11 +5,11 @@ import pytest
 
 
 # Infrastructure
-from base.infrastructure.path_management.path_doubles import PathFaker
-from base.infrastructure.path_management.path_factory import SimplePathCreator
+from framework.base.infrastructure.path_management.path_doubles import PathFaker
+from framework.base.infrastructure.path_management.path_factory import SimplePathCreator
 
 # Domain
-from base.domain.path_management.path_constants.path_type_values import path_types_values
+from framework.base.domain.path_management.path_constants import path_types_values
 
 
 def test_simple_path_creator_with_valid_params():

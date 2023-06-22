@@ -2,11 +2,9 @@
 
 
 import argparse
-from unittest.mock import Mock
-
 
 # Infrastructure
-from base.infrastructure.cli_management.argument_parser import ArgumentParser
+from framework.base.infrastructure.cli_management.argument_parser import ArgumentParser
 
 
 def test_argument_parser_with_valid_params():

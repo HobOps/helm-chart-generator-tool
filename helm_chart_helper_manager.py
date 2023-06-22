@@ -2,7 +2,7 @@
 
 
 # Infrastructure
-from base.infrastructure.cli_management.argument_parser import ArgumentParser
+from framework.base.infrastructure.cli_management.argument_parser import ArgumentParser
 
 # Application
 from app.app_management import AppVersionCreator
@@ -11,7 +11,7 @@ from app.app_management import AppManagerBase
 from app.app_management import AppVersionCreatorBase
 
 # Domain
-from base.domain.cli_management.argument_parser import BaseArgumentParser
+from framework.base.domain.cli_management.argument_parser import BaseArgumentParser
 
 
 class HelmChartHelperManager:

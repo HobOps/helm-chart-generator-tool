@@ -2,13 +2,13 @@
 
 
 # Infrastructure
-from base.infrastructure.config_management.config_mapper import ConfigMapper
-from base.infrastructure.config_management.config_reader import ConfigReader
-from base.infrastructure.path_management.path_factory import SimplePathCreator
+from framework.base.infrastructure.config_management.config_mapper import ConfigMapper
+from framework.base.infrastructure.config_management.config_reader import ConfigReader
+from framework.base.infrastructure.path_management.path_factory import SimplePathCreator
 
 # Domain
-from base.domain.path_management.path_doubles import BasePath
-from base.domain.file_management.file_handler import BaseFileHandler
+from framework.base.domain.path_management.path_doubles import BasePath
+from framework.base.domain.file_management.file_handler import BaseFileHandler
 
 
 class AppConfigManager:
