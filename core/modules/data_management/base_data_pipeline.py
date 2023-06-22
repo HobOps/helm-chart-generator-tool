@@ -21,7 +21,7 @@ class BaseDataPipeline(Protocol):
         add_handler
         @param data_handler: data_handler
         @type data_handler: BaseDataHandler
-        @return: data_pipeline
+        @return: self
         @rtype: BaseDataPipeline
         """
 
