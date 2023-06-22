@@ -6,14 +6,14 @@ from copy import deepcopy
 from core.modules.data_management.base_data_handler import BaseDataHandler
 
 
-class HelmValuesRemoveDataFilter(BaseDataHandler):
+class DummyValuesRemoveDataFilter(BaseDataHandler):
     """
-    HelmValuesRemoveDataFilter
+    DummyValuesRemoveDataFilter
     """
 
     def __init__(self, config_data: str):
         """
-        HelmValuesRemoveDataFilter
+        DummyValuesRemoveDataFilter
         @param config_data: config_data
         @type config_data: str
         """

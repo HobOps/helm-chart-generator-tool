@@ -4,14 +4,14 @@
 from core.modules.data_management.base_data_handler import BaseDataHandler
 
 
-class HelmValuesExtractDataFilter(BaseDataHandler):
+class DummyValuesExtractDataFilter(BaseDataHandler):
     """
-    HelmValuesExtractDataFilter
+    DummyValuesExtractDataFilter
     """
 
     def __init__(self, config_data: str):
         """
-        HelmValuesExtractDataFilter constructor
+        DummyValuesExtractDataFilter constructor
         @param config_data: config_data
         @type config_data: str
         """

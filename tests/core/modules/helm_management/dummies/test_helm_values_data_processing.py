@@ -2,13 +2,13 @@
 
 
 from core.modules.helm_management import HelmValuesDataProcessing
-from core.modules.helm_management import HelmValuesExtractDataFilter
-from core.modules.helm_management import HelmValuesRemoveDataFilter
+from .dummy_values_extract_data_filter import DummyValuesExtractDataFilter
+from .dummy_values_remove_data_filter import DummyValuesRemoveDataFilter
 
 
-def test_helm_values_data_processing_with_valid_params():
+def test_helm_values_data_processing_with_valid_dummies():
     """
-    test_helm_values_data_processing_with_valid_params
+    test_helm_values_data_processing_with_valid_dummies
     """
 
     input_data = {
@@ -38,8 +38,8 @@ def test_helm_values_data_processing_with_valid_params():
     config_data1 = "valid_key"
     config_data2 = "not_good_key"
 
-    first_filter = HelmValuesExtractDataFilter(config_data=config_data1)
-    second_filter = HelmValuesRemoveDataFilter(config_data=config_data2)
+    first_filter = DummyValuesExtractDataFilter(config_data=config_data1)
+    second_filter = DummyValuesRemoveDataFilter(config_data=config_data2)
 
     helm_pipeline = HelmValuesDataProcessing().add_handler(first_filter).add_handler(second_filter)
     output_data = helm_pipeline.execute(input_data=input_data)
