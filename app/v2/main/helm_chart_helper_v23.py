@@ -97,9 +97,9 @@ def create_values_file(config_settings):
     create_values_file
     """
 
-    from app.v1.modules.helm_manager import ScriptHelmValuesCreator
+    from core.modules.helm_management import HelmValuesChartCreator
 
-    ScriptHelmValuesCreator.create_values_file(conf=config_settings)
+    HelmValuesChartCreator.create_values_file(conf=config_settings)
 
 
 def create_helm_chart(config_settings):
