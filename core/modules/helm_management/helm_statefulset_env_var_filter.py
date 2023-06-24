@@ -8,14 +8,14 @@ from copy import deepcopy
 from core.modules.data_management import BaseDataHandler
 
 
-class HelmDeployEnvVarsFilter(BaseDataHandler):
+class HelmStatefulSetEnvVarsFilter(BaseDataHandler):
     """
-    HelmDeployEnvVarsFilter
+    HelmStatefulSetEnvVarsFilter
     """
 
     def __init__(self, config_data: str):
         """
-        HelmDeployEnvVarsFilter constructor
+        HelmStatefulsetEnvVarsFilter constructor
         @param config_data: config_data
         @type config_data: str
         """
@@ -37,15 +37,15 @@ class HelmDeployEnvVarsFilter(BaseDataHandler):
         if not isinstance(conf, dict):
             raise ValueError(f"Error conf: {conf} is not dict type")
 
-        deployment_resources = conf["common-library"].get("Deployment")
+        statefulset_resources = conf["common-library"].get("StatefulSet")
 
-        if not deployment_resources:
+        if not statefulset_resources:
             return conf
 
-        for component in deployment_resources:
+        for component in statefulset_resources:
 
-            component_env_vars: list = deployment_resources[component]["env"]
+            component_env_vars: list = statefulset_resources[component]["env"]
             filtered_env_ars = [item for item in component_env_vars if re.search(self.__config_data, item['value'])]
-            deployment_resources[component]["env"] = filtered_env_ars
+            statefulset_resources[component]["env"] = filtered_env_ars
 
-        return deployment_resources
+        return statefulset_resources
