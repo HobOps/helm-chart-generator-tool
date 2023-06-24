@@ -37,19 +37,12 @@ class HelmDeployEnvVarsFilter(BaseDataHandler):
         if not isinstance(conf, dict):
             raise ValueError(f"Error conf: {conf} is not dict type")
 
-        deployment_resources = deepcopy(conf["common-library"]["Deployment"])
+        deployment_resources = conf["common-library"]["Deployment"]
 
         for component in deployment_resources:
 
-            component_env_vars: list = deployment_resources["common-library"]["Deployment"][component]["env"]
-            counter = 0
+            component_env_vars: list = deployment_resources[component]["env"]
+            filtered_env_ars = [item for item in component_env_vars if re.search(self.__config_data, item['value'])]
+            deployment_resources[component]["env"] = filtered_env_ars
 
-            for env in component_env_vars:
-                search_env = re.search(self.__config_data, env["value"])
-
-                if not search_env:
-                    conf["common-library"]["Deployment"][component]["env"].pop(counter)
-
-                counter += 1
-
-        return conf
+        return deployment_resources
