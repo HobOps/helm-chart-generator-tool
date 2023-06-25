@@ -99,7 +99,8 @@ def create_values_file(config_settings):
 
     from core.modules.helm_management import HelmValuesChartCreator
 
-    HelmValuesChartCreator.create_values_file(conf=config_settings)
+    helm_values_chart_creator = HelmValuesChartCreator()
+    helm_values_chart_creator.create_values_file(conf=config_settings)
 
 
 def create_helm_chart(config_settings):

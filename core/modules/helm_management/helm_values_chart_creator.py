@@ -21,7 +21,7 @@ class HelmValuesChartCreator:
         HelmValuesChartCreator constructor
         """
 
-        if not isinstance(env_var_pattern, str):
+        if not isinstance(env_var_pattern, (str, type(None))):
             raise ValueError(f"Error env_var_pattern: {env_var_pattern} is not str type")
 
         env_var_pattern = env_var_pattern or self.DEFAULT_ENV_VAR_PATTERN
