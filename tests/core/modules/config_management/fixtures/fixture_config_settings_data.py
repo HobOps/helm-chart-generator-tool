@@ -4,8 +4,10 @@
 import pytest
 
 
+# -------------------------------
 # Fixture for testings purposes
 # Based on current k3s01 config
+# -------------------------------
 
 @pytest.fixture()
 def fixture_config_settings_data():
