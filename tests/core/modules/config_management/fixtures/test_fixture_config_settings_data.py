@@ -2,7 +2,7 @@
 
 
 # fixtures
-from tests.core.modules.helm_management.fixtures import fixture_config_settings_data
+from tests.core.modules.config_management.fixtures import fixture_config_settings_data
 
 
 def test_fixture_config_settings_data_call(fixture_config_settings_data):
