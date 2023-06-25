@@ -45,10 +45,10 @@ class HelmValuesChartCreator:
 
         helm_values_pipeline = (
             HelmValuesDataProcessing()
+            .add_handler(self.__remove_empty_from_dict)
             .add_handler(self.__helm_values_filter)
             .add_handler(self.__deployment_env_var_filter)
             .add_handler(self.__statefulset_env_var_filter)
-            .add_handler(self.__remove_empty_from_dict)
         )
         output_data = helm_values_pipeline.execute(input_data=conf)
 
