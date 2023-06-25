@@ -16,15 +16,15 @@ class HelmValuesChartCreator:
 
     DEFAULT_ENV_VAR_PATTERN = r'\$\(.*?\)'
 
-    def __init__(self, env_var_pattern: str = None):
+    def __init__(self, config_data: str = None):
         """
         HelmValuesChartCreator constructor
         """
 
-        if not isinstance(env_var_pattern, (str, type(None))):
-            raise ValueError(f"Error env_var_pattern: {env_var_pattern} is not str type")
+        if not isinstance(config_data, (str, type(None))):
+            raise ValueError(f"Error config_data: {config_data} is not str type")
 
-        env_var_pattern = env_var_pattern or self.DEFAULT_ENV_VAR_PATTERN
+        env_var_pattern = config_data or self.DEFAULT_ENV_VAR_PATTERN
 
         self.__helm_values_filter = HelmConfigValuesFilter()
         self.__remove_empty_from_dict = DictCleanerDataUtility()

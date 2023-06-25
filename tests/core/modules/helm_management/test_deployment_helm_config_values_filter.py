@@ -2,8 +2,8 @@
 
 
 # Fixtures
-from tests.core.modules.helm_management.fixture import fixture_filtered_deployment_helm_values_config_data
-from tests.core.modules.helm_management.fixture import fixture_filtered_helm_values_config_data
+from tests.core.modules.helm_management.fixtures import fixture_filtered_deployment_helm_values_config_data
+from tests.core.modules.helm_management.fixtures import fixture_filtered_helm_values_config_data
 
 # Domain
 from core.modules.helm_management import HelmDeployEnvVarsFilter
