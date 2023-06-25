@@ -27,4 +27,3 @@ def test_helm_values_chart_creaator_with_valid_params(
     output_data = helm_values_chart_creator.create_values_file(conf=fixture_config_settings_data)
 
     assert output_data == fixture_filtered_statefulset_helm_values_config_data
-    
