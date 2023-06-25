@@ -2,8 +2,8 @@
 
 
 from core.modules.helm_management import HelmValuesDataProcessing
-from .dummy_values_extract_data_filter import DummyValuesExtractDataFilter
-from .dummy_values_remove_data_filter import DummyValuesRemoveDataFilter
+from tests.core.modules.helm_management.dummies.dummy_values_extract_data_filter import DummyValuesExtractDataFilter
+from tests.core.modules.helm_management.dummies.dummy_values_remove_data_filter import DummyValuesRemoveDataFilter
 
 
 def test_helm_values_data_processing_with_valid_dummies():
