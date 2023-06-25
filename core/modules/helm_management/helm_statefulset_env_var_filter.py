@@ -13,17 +13,19 @@ class HelmStatefulSetEnvVarsFilter(BaseDataHandler):
     HelmStatefulSetEnvVarsFilter
     """
 
-    def __init__(self, config_data: str):
+    DEFAULT_ENV_VAR_PATTERN = r'\$\(.*?\)'
+
+    def __init__(self, config_data: str = None):
         """
         HelmStatefulsetEnvVarsFilter constructor
         @param config_data: config_data
         @type config_data: str
         """
 
-        if not isinstance(config_data, str):
+        if not isinstance(config_data, (str, type(None))):
             raise ValueError(f"Error config_data: {config_data} is not str type")
 
-        self.__config_data = config_data
+        self.__config_data = config_data or self.DEFAULT_ENV_VAR_PATTERN
 
     def process(self, conf: dict):
         """
@@ -48,4 +50,6 @@ class HelmStatefulSetEnvVarsFilter(BaseDataHandler):
             filtered_env_ars = [item for item in component_env_vars if re.search(self.__config_data, item['value'])]
             statefulset_resources[component]["env"] = filtered_env_ars
 
-        return statefulset_resources
+        conf["common-library"]["Deployment"] = statefulset_resources
+
+        return conf
