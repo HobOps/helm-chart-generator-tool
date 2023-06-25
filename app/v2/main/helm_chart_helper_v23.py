@@ -97,7 +97,7 @@ def create_values_file(config_settings):
     create_values_file
     """
 
-    from core.modules.helm_management import HelmValuesChartCreator
+    from core.modules.helm_management.helm_values_chart_management import HelmValuesChartCreator
 
     helm_values_file_path = f"config_files/output/charts/{config_settings['chart']['name']}/values.yaml"
 
