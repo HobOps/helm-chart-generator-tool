@@ -6,7 +6,7 @@ from tests.core.modules.config_management.fixtures import fixture_config_setting
 from tests.core.modules.helm_management.fixtures import fixture_filtered_helm_values_config_data
 
 # Domain
-from core.modules.helm_management import HelmConfigValuesFilter
+from core.modules.helm_management.helm_values_chart_management import HelmConfigValuesFilter
 
 
 def test_helm_config_values_filter(fixture_config_settings_clean_data, fixture_filtered_helm_values_config_data):

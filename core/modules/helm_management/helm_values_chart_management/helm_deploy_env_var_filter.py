@@ -2,7 +2,7 @@
 
 
 import re
-from copy import deepcopy
+
 
 # Domain
 from core.modules.data_management import BaseDataHandler

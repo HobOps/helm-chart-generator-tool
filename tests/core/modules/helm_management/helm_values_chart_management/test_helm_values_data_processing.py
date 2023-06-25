@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from core.modules.helm_management import HelmValuesDataProcessing
+from core.modules.helm_management .helm_values_chart_management import HelmValuesDataProcessing
 from tests.core.modules.helm_management.dummies.dummy_values_extract_data_filter import DummyValuesExtractDataFilter
 from tests.core.modules.helm_management.dummies.dummy_values_remove_data_filter import DummyValuesRemoveDataFilter
 
