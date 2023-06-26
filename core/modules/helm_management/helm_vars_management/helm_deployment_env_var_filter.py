@@ -38,6 +38,6 @@ class HelmDeploymentEnvVarsFilter(BaseDataHandler):
         deployment_env_vars = {}
 
         for component in deployment_resources:
-            deployment_env_vars[component] = component["env"]
+            deployment_env_vars[component] = {"env": deployment_resources[component].get("env")}
 
-        return conf
+        return deployment_env_vars
