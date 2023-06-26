@@ -71,6 +71,15 @@ def create_vars_file(config_settings):
 
     ScriptVarsFileCreator.create_vars_file(conf=config_settings)
 
+    from core.modules.helm_management.helm_vars_management import HelmDeploymentVarsCreator
+
+    helm_deployment_vars_creator = HelmDeploymentVarsCreator()
+    helm_deployment_vars = helm_deployment_vars_creator.create_vars_data(conf=config_settings)
+
+    if helm_deployment_vars:
+        path = f"config_files/output/vars/{config_settings['chart']['name']}/deployment_vars.json"
+        write_file(path=path, values=helm_deployment_vars, mode="json")
+
 
 def create_helmignore_file(config_settings):
     """
