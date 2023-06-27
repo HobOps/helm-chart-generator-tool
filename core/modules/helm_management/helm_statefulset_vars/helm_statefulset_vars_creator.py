@@ -4,7 +4,7 @@
 # Domain
 from core.modules.helm_management.helm_values_chart import HelmConfigValuesFilter
 from core.modules.helm_management.helm_statefulset_vars import HelmStatefulSetEnvVarsFilter
-from core.modules.helm_management.helm_statefulset_vars import HelmVarsDataProcessing
+from core.modules.helm_management.helm_statefulset_vars import HelmStatefulSetVarsDataProcessing
 from core.modules.utility_services import DictCleanerDataUtility
 
 
@@ -39,7 +39,7 @@ class HelmStatefulSetVarsCreator:
             raise ValueError(f"Error conf: {conf} is not dict type")
 
         helm_values_pipeline = (
-            HelmVarsDataProcessing()
+            HelmStatefulSetVarsDataProcessing()
             .add_handler(self.__remove_empty_from_dict)
             .add_handler(self.__helm_config_values_filter)
             .add_handler(self.__helm_deployment_env_vars_filter)

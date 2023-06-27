@@ -46,10 +46,12 @@ class HelmStatefulSetEnvVarsFilter(BaseDataHandler):
 
         for component in statefulset_resources:
 
-            component_env_vars: list = statefulset_resources[component]["env"]
-            filtered_env_ars = [item for item in component_env_vars if re.search(self.__config_data, item['value'])]
-            statefulset_resources[component]["env"] = filtered_env_ars
+            component_env_vars: list = statefulset_resources[component].get("env")
 
-        conf["common-library"]["Deployment"] = statefulset_resources
+            if component_env_vars:
+                filtered_env_ars = [item for item in component_env_vars if re.search(self.__config_data, item['value'])]
+                statefulset_resources[component]["env"] = filtered_env_ars
+
+        conf["common-library"]["StatefulSet"] = statefulset_resources
 
         return conf

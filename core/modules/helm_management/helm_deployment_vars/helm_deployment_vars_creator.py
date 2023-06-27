@@ -4,7 +4,7 @@
 # Domain
 from core.modules.helm_management.helm_values_chart import HelmConfigValuesFilter
 from core.modules.helm_management.helm_deployment_vars import HelmDeploymentEnvVarsFilter
-from core.modules.helm_management.helm_deployment_vars import HelmVarsDataProcessing
+from core.modules.helm_management.helm_deployment_vars import HelmDeploymentVarsDataProcessing
 from core.modules.utility_services import DictCleanerDataUtility
 
 
@@ -39,7 +39,7 @@ class HelmDeploymentVarsCreator:
             raise ValueError(f"Error conf: {conf} is not dict type")
 
         helm_values_pipeline = (
-            HelmVarsDataProcessing()
+            HelmDeploymentVarsDataProcessing()
             .add_handler(self.__remove_empty_from_dict)
             .add_handler(self.__helm_config_values_filter)
             .add_handler(self.__helm_deployment_env_vars_filter)

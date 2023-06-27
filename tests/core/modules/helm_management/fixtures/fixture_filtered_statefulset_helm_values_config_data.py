@@ -142,6 +142,43 @@ def fixture_filtered_statefulset_helm_values_config_data():
                         }
                     ]
                 }
+            },
+            'StatefulSet': {
+                'web-statefulset': {
+                    'env': [
+                        {
+                            'name': 'FOO_VARIABLE6',
+                            'value': '$(FOO_VARIABLE5)',
+                        },
+                        {
+                            'name': 'FOO_VARIABLE8',
+                            'value': '$(FOO_VARIABLE7)',
+                        }
+                    ],
+                    'image': {
+                        'repository': 'registry.k8s.io/nginx-slim',
+                        'tag': '0.8'
+                    },
+                    'replicas': 2,
+                    'selectorLabels': {
+                        'app': 'web-statefulset'
+                    },
+                    'service': {
+                        'ports': [
+                            {
+                                'name': 'web-statefulset',
+                                'port': 80,
+                                'protocol': 'TCP'
+                            }
+                        ]
+                    },
+                    'volumeMounts': [
+                        {
+                            'mountPath': '/usr/share/nginx/html',
+                            'name': 'www',
+                        }
+                    ],
+                }
             }
         }
     }

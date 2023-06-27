@@ -8,14 +8,14 @@ from core.modules.data_management import BaseDataHandler
 from core.modules.data_management import BaseDataPipeline
 
 
-class HelmVarsDataProcessing(BaseDataPipeline):
+class HelmStatefulSetVarsDataProcessing(BaseDataPipeline):
     """
-    HelmVarsDataProcessing
+    HelmStatefulSetVarsDataProcessing
     """
 
     def __init__(self):
         """
-        HelmVarsDataProcessing constructor
+        HelmStatefulSetVarsDataProcessing constructor
         """
 
         self.__data_handlers = []

@@ -46,9 +46,11 @@ class HelmDeployEnvVarsFilter(BaseDataHandler):
 
         for component in deployment_resources:
 
-            component_env_vars: list = deployment_resources[component]["env"]
-            filtered_env_ars = [item for item in component_env_vars if re.search(self.__config_data, item['value'])]
-            deployment_resources[component]["env"] = filtered_env_ars
+            component_env_vars: list = deployment_resources[component].get("env")
+
+            if component_env_vars:
+                filtered_env_ars = [item for item in component_env_vars if re.search(self.__config_data, item['value'])]
+                deployment_resources[component]["env"] = filtered_env_ars
 
         conf["common-library"]["Deployment"] = deployment_resources
 
