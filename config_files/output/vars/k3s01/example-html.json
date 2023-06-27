@@ -1,3 +1,0 @@
-{
-    "index.html": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Example HTML Page</title>\n</head>\n<body>\n  <h1>Welcome to the Example HTML Page!</h1>\n  <p>This is an example HTML page that will be mounted as the default page in an Nginx container.</p>\n</body>\n</html>\n"
-}
