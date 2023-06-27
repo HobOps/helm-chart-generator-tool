@@ -6,7 +6,7 @@ from tests.core.modules.helm_management.fixtures import fixture_filtered_deploym
 from tests.core.modules.helm_management.fixtures import fixture_filtered_statefulset_helm_values_config_data
 
 # Domain
-from core.modules.helm_management.helm_values_chart_management import HelmStatefulSetEnvVarsFilter
+from core.modules.helm_management.helm_values_chart import HelmStatefulSetEnvVarsFilter
 
 
 def test_deployment_helm_config_values_filter(fixture_filtered_deployment_helm_values_config_data, fixture_filtered_statefulset_helm_values_config_data):

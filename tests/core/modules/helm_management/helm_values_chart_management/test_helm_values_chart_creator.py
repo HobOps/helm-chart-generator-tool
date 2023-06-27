@@ -6,7 +6,7 @@ from tests.core.modules.config_management.fixtures import fixture_config_setting
 from tests.core.modules.helm_management.fixtures import fixture_filtered_statefulset_helm_values_config_data
 
 # Domain
-from core.modules.helm_management.helm_values_chart_management import HelmValuesChartCreator
+from core.modules.helm_management.helm_values_chart import HelmValuesChartCreator
 
 
 def test_helm_values_chart_creaator_with_valid_params(

@@ -2,9 +2,9 @@
 
 
 # Domain
-from core.modules.helm_management.helm_values_chart_management import HelmConfigValuesFilter
-from core.modules.helm_management.helm_vars_management import HelmDeploymentEnvVarsFilter
-from core.modules.helm_management.helm_vars_management import HelmVarsDataProcessing
+from core.modules.helm_management.helm_values_chart import HelmConfigValuesFilter
+from core.modules.helm_management.helm_deployment_vars import HelmDeploymentEnvVarsFilter
+from core.modules.helm_management.helm_deployment_vars import HelmVarsDataProcessing
 from core.modules.utility_services import DictCleanerDataUtility
 
 

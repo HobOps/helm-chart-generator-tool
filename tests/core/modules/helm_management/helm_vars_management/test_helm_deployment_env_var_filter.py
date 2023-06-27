@@ -6,7 +6,7 @@ from tests.core.modules.helm_management.fixtures import fixture_filtered_helm_va
 from tests.core.modules.helm_management.fixtures import fixture_filtered_deployment_helm_vars_data
 
 # Domain
-from core.modules.helm_management.helm_vars_management import HelmDeploymentEnvVarsFilter
+from core.modules.helm_management.helm_deployment_vars import HelmDeploymentEnvVarsFilter
 
 
 def test_helm_deployment_env_vars_filter_with_valid_params(

@@ -71,7 +71,7 @@ def create_vars_file(config_settings):
 
     ScriptVarsFileCreator.create_vars_file(conf=config_settings)
 
-    from core.modules.helm_management.helm_vars_management import HelmDeploymentVarsCreator
+    from core.modules.helm_management.helm_deployment_vars import HelmDeploymentVarsCreator
 
     helm_deployment_vars_creator = HelmDeploymentVarsCreator()
     helm_deployment_vars = helm_deployment_vars_creator.create_vars_data(conf=config_settings)
@@ -106,7 +106,7 @@ def create_values_file(config_settings):
     create_values_file
     """
 
-    from core.modules.helm_management.helm_values_chart_management import HelmValuesChartCreator
+    from core.modules.helm_management.helm_values_chart import HelmValuesChartCreator
 
     helm_values_file_path = f"config_files/output/charts/{config_settings['chart']['name']}/values.yaml"
 
