@@ -13,6 +13,9 @@ def fixture_filtered_deployment_helm_vars_data():
     """
 
     filtered_deployment_helm_vars_data = {
+        'my-nginx-deployment': {
+            'env': None
+        },
         'nginx-deployment': {
             'env': [
                 {

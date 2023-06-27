@@ -5,9 +5,9 @@ import pytest
 
 
 @pytest.fixture
-def fixture_filtered_helm_values_config_data():
+def fixture_filtered_common_library_config_data():
     """
-    fixture_filtered_helm_values_config_data
+    fixture_filtered_common_library_config_data
     @return: filtered_helm_values_config_data
     @rtype: dict
     """
@@ -56,6 +56,24 @@ def fixture_filtered_helm_values_config_data():
                         '</body>\n'
                         '</html>\n'}}},
             'Deployment': {
+                'my-nginx-deployment': {
+                    'image': {
+                        'repository': 'redis',
+                        'tag': 'latest'
+                    },
+                    'replicas': 1,
+                    'selectorLabels': {
+                        'app': 'my-nginx-deployment'
+                    },
+                    'service': {
+                        'ports': [
+                            {
+                                'port': 8080,
+                                'protocol': 'TCP'
+                            }
+                        ]
+                    },
+                },
                 'nginx-deployment': {
                     'env': [
                         {
