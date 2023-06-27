@@ -24,7 +24,7 @@ class HelmStatefulSetVarsCreator:
         self.__config_data = config_data
         self.__remove_empty_from_dict = DictCleanerDataUtility()
         self.__helm_config_values_filter = HelmConfigValuesFilter()
-        self.__helm_deployment_env_vars_filter = HelmStatefulSetEnvVarsFilter(config_data=self.__config_data)
+        self.__helm_statefulset_env_vars_filter = HelmStatefulSetEnvVarsFilter(config_data=self.__config_data)
 
     def create_vars_data(self, conf: dict):
         """
@@ -42,7 +42,7 @@ class HelmStatefulSetVarsCreator:
             HelmStatefulSetVarsDataProcessing()
             .add_handler(self.__remove_empty_from_dict)
             .add_handler(self.__helm_config_values_filter)
-            .add_handler(self.__helm_deployment_env_vars_filter)
+            .add_handler(self.__helm_statefulset_env_vars_filter)
         )
         output_data = helm_values_pipeline.execute(input_data=conf)
 

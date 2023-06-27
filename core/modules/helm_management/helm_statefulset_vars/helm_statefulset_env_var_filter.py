@@ -34,7 +34,7 @@ class HelmStatefulSetEnvVarsFilter(BaseDataHandler):
         if not isinstance(conf, dict):
             raise ValueError(f"Error conf: {conf} is not dict type")
 
-        deployment_resources = conf["common-library"].get("Deployment")
+        deployment_resources = conf["common-library"].get("StatefulSet")
         deployment_env_vars = {}
 
         for component in deployment_resources:
