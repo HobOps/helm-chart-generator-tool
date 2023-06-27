@@ -68,10 +68,10 @@ def create_vars_file(config_settings):
     """
 
     from app.v1.modules.kubernetes_manager import ScriptVarsFileCreator
+    from core.modules.helm_management.helm_deployment_vars import HelmDeploymentVarsCreator
+    from core.modules.helm_management.helm_statefulset_vars import HelmStatefulSetVarsCreator
 
     ScriptVarsFileCreator.create_vars_file(conf=config_settings)
-
-    from core.modules.helm_management.helm_deployment_vars import HelmDeploymentVarsCreator
 
     helm_deployment_vars_creator = HelmDeploymentVarsCreator()
     helm_deployment_vars = helm_deployment_vars_creator.create_vars_data(conf=config_settings)
@@ -79,6 +79,13 @@ def create_vars_file(config_settings):
     if helm_deployment_vars:
         path = f"config_files/output/vars/{config_settings['chart']['name']}/deployment_vars.json"
         write_file(path=path, values=helm_deployment_vars, mode="json")
+
+    helm_statefulset_vars_creator = HelmStatefulSetVarsCreator()
+    helm_statefulset_vars = helm_statefulset_vars_creator.create_vars_data(conf=config_settings)
+
+    if helm_statefulset_vars:
+        path = f"config_files/output/vars/{config_settings['chart']['name']}/statefulset_vars.json"
+        write_file(path=path, values=helm_statefulset_vars, mode="json")
 
 
 def create_helmignore_file(config_settings):

@@ -41,7 +41,7 @@ def test_config_reader_with_current_params():
     config_data = config_mapper.map_config_data()
 
     assert config_data['components']['ConfigMap'] == ['example-html']
-    assert config_data['components']['Deployment'] == ['nginx-deployment']
+    assert config_data['components']['Deployment'] == ['nginx-deployment', 'my-nginx-deployment']
     assert config_data['components']['Ingress'] == ['nginx-deployment']
 
 

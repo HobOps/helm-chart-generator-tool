@@ -48,10 +48,14 @@ def fixture_config_settings_clean_data():
                 'example-html'
             ],
             'Deployment': [
-                'nginx-deployment'
+                'nginx-deployment',
+                'my-nginx-deployment'
             ],
             'Ingress': [
                 'nginx-deployment'
+            ],
+            'StatefulSet': [
+                'web-statefulset'
             ]
         },
         'kubernetes': {
@@ -100,6 +104,24 @@ def fixture_config_settings_clean_data():
                                           '</body>\n'
                                           '</html>\n'}}},
                 'Deployment': {
+                    'my-nginx-deployment': {
+                        'image': {
+                            'repository': 'redis',
+                            'tag': 'latest'
+                        },
+                        'replicas': 1,
+                        'selectorLabels': {
+                            'app': 'my-nginx-deployment'
+                        },
+                        'service': {
+                            'ports': [
+                                {
+                                    'port': 8080,
+                                    'protocol': 'TCP'
+                                }
+                            ]
+                        },
+                    },
                     'nginx-deployment': {
                         'env': [
                             {
@@ -174,6 +196,51 @@ def fixture_config_settings_clean_data():
                                         }
                                     ]
                                 }
+                            }
+                        ],
+                    }
+                },
+                'StatefulSet': {
+                    'web-statefulset': {
+                        'env': [
+                            {
+                                'name': 'FOO_VARIABLE5',
+                                'value': '456',
+                            },
+                            {
+                                'name': 'FOO_VARIABLE6',
+                                'value': '$(FOO_VARIABLE5)',
+                            },
+                            {
+                                'name': 'FOO_VARIABLE7',
+                                'value': 'host_name_example3',
+                            },
+                            {
+                                'name': 'FOO_VARIABLE8',
+                                'value': '$(FOO_VARIABLE7)',
+                            }
+                        ],
+                        'image': {
+                            'repository': 'registry.k8s.io/nginx-slim',
+                            'tag': '0.8'
+                        },
+                        'replicas': 2,
+                        'selectorLabels': {
+                            'app': 'web-statefulset'
+                        },
+                        'service': {
+                            'ports': [
+                                {
+                                    'name': 'web-statefulset',
+                                    'port': 80,
+                                    'protocol': 'TCP'
+                                }
+                            ]
+                        },
+                        'volumeMounts': [
+                            {
+                                'mountPath': '/usr/share/nginx/html',
+                                'name': 'www',
                             }
                         ],
                     }

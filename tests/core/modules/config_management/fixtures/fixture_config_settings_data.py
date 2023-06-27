@@ -48,10 +48,14 @@ def fixture_config_settings_data():
                 'example-html'
             ],
             'Deployment': [
-                'nginx-deployment'
+                'nginx-deployment',
+                'my-nginx-deployment'
             ],
             'Ingress': [
                 'nginx-deployment'
+            ],
+            'StatefulSet': [
+                'web-statefulset'
             ]
         },
         'kubernetes': {
@@ -100,6 +104,39 @@ def fixture_config_settings_data():
                                           '</body>\n'
                                           '</html>\n'}}},
                 'Deployment': {
+                    'my-nginx-deployment': {
+                        'annotations': {},
+                        'args': None,
+                        'command': None,
+                        'env': [],
+                        'envFrom': [],
+                        'hostAliases': [],
+                        'image': {
+                            'repository': 'redis',
+                            'tag': 'latest'
+                        },
+                        'imagePullSecrets': [],
+                        'livenessProbe': None,
+                        'readinessProbe': None,
+                        'replicas': 1,
+                        'selectorLabels': {
+                            'app': 'my-nginx-deployment'
+                        },
+                        'service': {
+                            'ports': [
+                                {
+                                    'hostIp': None,
+                                    'hostPort': None,
+                                    'name': None,
+                                    'port': 8080,
+                                    'protocol': 'TCP'
+                                }
+                            ]
+                        },
+                        'serviceAccount': None,
+                        'volumeMounts': [],
+                        'volumes': []
+                    },
                     'nginx-deployment': {
                         'annotations': {},
                         'args': None,
@@ -204,6 +241,71 @@ def fixture_config_settings_data():
                             }
                         ],
                         'tls': []
+                    }
+                },
+                'StatefulSet': {
+                    'web-statefulset': {
+                        'annotations': {},
+                        'args': None,
+                        'command': None,
+                        'env': [
+                            {
+                                'name': 'FOO_VARIABLE5',
+                                'value': '456',
+                                'valueFrom': None
+                            },
+                            {
+                                'name': 'FOO_VARIABLE6',
+                                'value': '$(FOO_VARIABLE5)',
+                                'valueFrom': None
+                            },
+                            {
+                                'name': 'FOO_VARIABLE7',
+                                'value': 'host_name_example3',
+                                'valueFrom': None
+                            },
+                            {
+                                'name': 'FOO_VARIABLE8',
+                                'value': '$(FOO_VARIABLE7)',
+                                'valueFrom': None
+                            }
+                        ],
+                        'envFrom': [],
+                        'hostAliases': [],
+                        'image': {
+                            'repository': 'registry.k8s.io/nginx-slim',
+                            'tag': '0.8'
+                        },
+                        'imagePullSecrets': [],
+                        'livenessProbe': None,
+                        'readinessProbe': None,
+                        'replicas': 2,
+                        'selectorLabels': {
+                            'app': 'web-statefulset'
+                        },
+                        'service': {
+                            'ports': [
+                                {
+                                    'hostIp': None,
+                                    'hostPort': None,
+                                    'name': 'web-statefulset',
+                                    'port': 80,
+                                    'protocol': 'TCP'
+                                }
+                            ]
+                        },
+                        'serviceAccount': None,
+                        'volumeMounts': [
+                            {
+                                'mountPath': '/usr/share/nginx/html',
+                                'mountPropagation': None,
+                                'name': 'www',
+                                'readOnly': None,
+                                'subPath': None,
+                                'subPathExpr': None
+                            }
+                        ],
+                        'volumes': []
                     }
                 }
             }
