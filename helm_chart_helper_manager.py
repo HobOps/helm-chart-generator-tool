@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 
 
-import argparse
-
+# Infrastructure
+from framework.base.infrastructure.cli_management.argument_parser import ArgumentParser
 
 # Application
-from app.v1.script import AppMainManager1
-from app.v2.main import AppMainManager2
+from app.app_management import AppVersionCreator
+from app.app_management import ArgumentData
+from app.app_management import AppManagerBase
+from app.app_management import AppVersionCreatorBase
+
+# Domain
+from framework.base.domain.cli_management.argument_parser import BaseArgumentParser
 
 
 class HelmChartHelperManager:
@@ -14,30 +19,47 @@ class HelmChartHelperManager:
     HelmChartHelperManager
     """
 
-    @staticmethod
-    def run():
+    def __init__(self, args_parser: BaseArgumentParser = None, app_version_factory: AppVersionCreatorBase = None):
+        """
+        HelmChartHelperManager
+        @param app_version_factory: app_version_factory
+        @type app_version_factory: AppVersionCreatorBase
+        """
+
+        if not isinstance(args_parser, (BaseArgumentParser, type(None))):
+            raise ValueError(f"Error args_parser: {args_parser} is not an instance of {BaseArgumentParser}")
+
+        if not isinstance(app_version_factory, (AppVersionCreatorBase, type(None))):
+            raise ValueError(f"Error app_version_factory: {app_version_factory} is not an instance of {AppVersionCreatorBase}")
+
+        self.__app_version_factory = app_version_factory or AppVersionCreator()
+        self.__args_parser = args_parser or ArgumentParser()
+
+    def run(self):
         """
         run
-        @return: None
-        @rtype: None
+        @return: app_version
+        @rtype: str
         """
 
-        # Parses program arguments
-        args_parser = argparse.ArgumentParser(description='Generates a helm charts from components on a kubernetes cluster.')
-        args_parser.add_argument('--name', action='store', type=str, help="Name of the helm chart")
-        args_parser.add_argument('--version', action='store', type=str, help="Version number in script")
-        args = args_parser.parse_args()
+        arguments_config = {
+            "name": "Config File Name",
+            "version": "Script Version Str Number",
+        }
 
-        if int(args.version) == 10:
-            app_main1 = AppMainManager1()
-            app_main1.run(args)
+        self.__args_parser.add_arguments(args_config=arguments_config)
+        arguments = self.__args_parser.parse_arguments()
 
-        if 20 < int(args.version) < 23:
-            app_main2 = AppMainManager2()
-            app_main2.run(args)
+        args = ArgumentData(name=arguments['name'], version=arguments['version'])
+
+        print(args)
+
+        app_manager: AppManagerBase = self.__app_version_factory.create_app(args.version)
+        app_version = app_manager.run(args=args)
+
+        return app_version
 
 
 if __name__ == "__main__":
     helper_manager = HelmChartHelperManager()
     helper_manager.run()
-

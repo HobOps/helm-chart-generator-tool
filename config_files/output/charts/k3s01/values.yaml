@@ -1,0 +1,85 @@
+common-library:
+  ConfigMap:
+    example-html:
+      data:
+        index.html: |
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Example HTML Page</title>
+          </head>
+          <body>
+            <h1>Welcome to the Example HTML Page!</h1>
+            <p>This is an example HTML page that will be mounted as the default page in an Nginx container.</p>
+          </body>
+          </html>
+  Deployment:
+    nginx-deployment:
+      replicas: 4
+      selectorLabels:
+        app: nginx-deployment
+      image:
+        repository: nginx
+        tag: latest
+      env:
+      - name: FOO_VARIABLE2
+        value: $(FOO_VARIABLE1)
+      - name: FOO_VARIABLE4
+        value: $(FOO_VARIABLE3)
+      service:
+        ports:
+        - port: 80
+          protocol: TCP
+      volumes:
+      - name: html-volume
+        configMap:
+          name: example-html
+          defaultMode: 420
+      volumeMounts:
+      - mountPath: /usr/share/nginx/html
+        name: html-volume
+    my-nginx-deployment:
+      replicas: 1
+      selectorLabels:
+        app: my-nginx-deployment
+      image:
+        repository: redis
+        tag: latest
+      service:
+        ports:
+        - port: 8080
+          protocol: TCP
+  Ingress:
+    nginx-deployment:
+      rules:
+      - host: k3s01.dc4.infra.hobops.io
+        http:
+          paths:
+          - path: /
+            backend:
+              service:
+                name: nginx-deployment
+                port:
+                  number: 80
+            pathType: Prefix
+  StatefulSet:
+    web-statefulset:
+      replicas: 2
+      selectorLabels:
+        app: web-statefulset
+      image:
+        repository: registry.k8s.io/nginx-slim
+        tag: '0.8'
+      env:
+      - name: FOO_VARIABLE6
+        value: $(FOO_VARIABLE5)
+      - name: FOO_VARIABLE8
+        value: $(FOO_VARIABLE7)
+      service:
+        ports:
+        - name: web-statefulset
+          port: 80
+          protocol: TCP
+      volumeMounts:
+      - mountPath: /usr/share/nginx/html
+        name: www

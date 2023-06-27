@@ -128,8 +128,9 @@ pytest -v
 ```
 
 ## Architecture
-According to best practices and keep design principles as clean as possible, we
-are going to implement in this project from clean architectures a hexagonal architecture
+According to best practices and keep design principles as clean as possible.
+
+As Framework, we are going to implement in this project from clean architectures a hexagonal architecture
 based mainly in 2 things:
 - Ports
 - Adapters
@@ -141,8 +142,19 @@ This way it's going to help us as following:
 And the final result is to be able to create a modular software structure as 
 the foundation of the future framework.
 
+The overall architecture breakdown according to clean architecture equivalency:
+- Framework - The outer circle in the clean architecture. (e.g. Infrastructure, File System, Framework)
+- App - The main use case managed in different versions
+- Core - The domain equivalency aimed to solve the parsing from kubernetes to helm charts
+
+## Disclaimer
+It's really important to consider that this proposed architecture is adjusted considering:
+- The size of the project
+- The size of the development team
+- The frequency of the changes
+
 ## Project Schema
-The following schema its intended to explain how its going to be the future solution
+The following schema its intended to explain how it`s going to be the future solution
 
 ![Modular Structure Schema](helm-chart-generator-tool-map.png)
 

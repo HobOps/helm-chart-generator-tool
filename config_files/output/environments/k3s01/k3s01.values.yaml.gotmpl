@@ -1,0 +1,37 @@
+# Load global and environment settings
+{{ readFile "../../include/values.global.yaml" }}
+{{ readFile "values.environment.yaml" }}
+
+### ConfigMap
+example-html:
+  data: {}
+
+### Deployment
+nginx-deployment:
+  <<: *default-environment
+  <<: *default-global-resources-nolimit
+  replicaCount: 4
+  image:
+    repository: nginx
+    tag: latest
+
+my-nginx-deployment:
+  <<: *default-environment
+  <<: *default-global-resources-nolimit
+  replicaCount: 1
+  image:
+    repository: redis
+    tag: latest
+
+### Ingress
+nginx-deployment:
+  host: k3s01.dc4.infra.hobops.io
+
+### StatefulSet
+web-statefulset:
+  <<: *default-environment
+  <<: *default-global-resources-nolimit
+  replicaCount: 2
+  image:
+    repository: registry.k8s.io/nginx-slim
+    tag: 0.8

@@ -1,0 +1,25 @@
+{
+    "nginx-deployment": {
+        "env": [
+            {
+                "name": "FOO_VARIABLE1",
+                "value": "123"
+            },
+            {
+                "name": "FOO_VARIABLE2",
+                "value": "$(FOO_VARIABLE1)"
+            },
+            {
+                "name": "FOO_VARIABLE3",
+                "value": "host_name_example2"
+            },
+            {
+                "name": "FOO_VARIABLE4",
+                "value": "$(FOO_VARIABLE3)"
+            }
+        ]
+    },
+    "my-nginx-deployment": {
+        "env": null
+    }
+}

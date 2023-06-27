@@ -1,0 +1,22 @@
+{
+    "web-statefulset": {
+        "env": [
+            {
+                "name": "FOO_VARIABLE5",
+                "value": "456"
+            },
+            {
+                "name": "FOO_VARIABLE6",
+                "value": "$(FOO_VARIABLE5)"
+            },
+            {
+                "name": "FOO_VARIABLE7",
+                "value": "host_name_example3"
+            },
+            {
+                "name": "FOO_VARIABLE8",
+                "value": "$(FOO_VARIABLE7)"
+            }
+        ]
+    }
+}
