@@ -3,6 +3,7 @@
 
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
+from jinja2 import Template
 
 # Domain
 from framework.base.domain.path_management.path_doubles import BasePath
@@ -34,7 +35,7 @@ class JinjaTemplateLoader(BaseTemplateLoader):
         @param path_obj: path_obj
         @type path_obj: BasePath
         @return: template
-        @rtype: str
+        @rtype: Template
         """
 
         template = self.__environment.get_template(path_obj.as_posix())
