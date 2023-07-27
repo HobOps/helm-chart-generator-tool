@@ -3,6 +3,7 @@
 
 # Infrastructure
 from framework.base.infrastructure.file_management.file_doubles import FileFaker
+from framework.base.infrastructure.file_management.file_handler import FileHandler
 from framework.base.infrastructure.path_management.path_doubles import PathFaker
 from framework.base.infrastructure.template_management.template_loader import JinjaTemplateLoaderFaker
 
@@ -47,15 +48,17 @@ def test_jinja_template_loader():
         initial_content=template_content,
     )
 
+    template_file.open()
+
     template_dir_path = PathFaker(
         target_path="/user/folder1/template_folder",
         target_path_type=path_types_values.directory,
-        file_obj=template_file,
     )
 
-    template_loader = JinjaTemplateLoaderFaker(template_dir_path=template_dir_path)
+    file_handler = FileHandler(file_obj=template_file)
+
+    template_loader = JinjaTemplateLoaderFaker(template_dir_path=template_dir_path, file_handler=file_handler)
     template_jinja = template_loader.get_template(template_name="template_file")
 
     assert template_loader
     assert template_jinja
-    
