@@ -16,14 +16,12 @@ class BaseTemplateRender(Protocol):
     """
 
     @abstractmethod
-    def render(self, template_path: BasePath, content: str):
+    def render(self, data_to_render: dict):
         """
         render
-        @param template_path: template_path
-        @type template_path: BasePath
-        @param content: content
-        @type content: str
-        @return: template_rendered
+        @param data_to_render: data_to_render
+        @type data_to_render: dict
+        @return: content_rendered
         @rtype: str
         """
 
