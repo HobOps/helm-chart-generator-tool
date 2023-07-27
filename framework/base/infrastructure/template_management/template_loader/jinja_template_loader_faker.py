@@ -29,8 +29,7 @@ class JinjaTemplateLoader(BaseTemplateLoader):
             raise ValueError(f"Error template_dir_path: {template_dir_path} is not an instance of {BasePath}")
 
         self.__template_dir_path = template_dir_path
-        self.__loader = FileSystemLoader(self.__template_dir_path.as_posix())
-        self.__environment = Environment(loader=self.__loader)
+        self.__environment = Environment()
 
     def get_template(self, template_name: str):
         """
@@ -44,7 +43,7 @@ class JinjaTemplateLoader(BaseTemplateLoader):
         if not isinstance(template_name, str):
             raise ValueError(f"Error template_name")
 
-        template = self.__environment.get_template(template_name)
+        template = self.__environment.from_string("dummy_str")
         template_jinja = JinjaTemplateRender(template_jinja=template)
 
         return template_jinja
@@ -58,16 +57,6 @@ class JinjaTemplateLoader(BaseTemplateLoader):
         """
 
         return self.__environment
-
-    @property
-    def loader(self):
-        """
-        loader
-        @return: loader
-        @rtype: FileSystemLoader
-        """
-
-        return self.__loader
 
     @property
     def template_dir_path(self):
