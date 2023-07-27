@@ -20,7 +20,7 @@ class JinjaTemplateLoader(BaseTemplateLoader):
 
     def __init__(self, template_dir_path: BasePath):
         """
-        JinjaTemplateLoader
+        JinjaTemplateLoader constructor
         @param template_dir_path: template_dir_path
         @type template_dir_path: BasePath
         """

@@ -14,7 +14,7 @@ class JinjaTemplateRender(BaseTemplateRender):
 
     def __init__(self, template_jinja: Template):
         """
-        JinjaTemplateRender
+        JinjaTemplateRender constructor
         @param template_jinja: template_jinja
         @type template_jinja: BaseTemplateLoader
         """

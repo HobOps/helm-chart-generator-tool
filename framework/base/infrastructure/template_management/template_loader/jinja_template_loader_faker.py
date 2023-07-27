@@ -13,14 +13,14 @@ from framework.base.domain.template_management.template_loader import BaseTempla
 from framework.base.domain.template_management.template_render import BaseTemplateRender
 
 
-class JinjaTemplateLoader(BaseTemplateLoader):
+class JinjaTemplateLoaderFaker(BaseTemplateLoader):
     """
-    JinjaTemplateLoader
+    JinjaTemplateLoaderFaker
     """
 
     def __init__(self, template_dir_path: BasePath):
         """
-        JinjaTemplateLoader
+        JinjaTemplateLoaderFaker constructor
         @param template_dir_path: template_dir_path
         @type template_dir_path: BasePath
         """
