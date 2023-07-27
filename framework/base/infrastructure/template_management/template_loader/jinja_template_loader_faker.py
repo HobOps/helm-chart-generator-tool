@@ -2,7 +2,6 @@
 
 
 from jinja2 import Environment
-from jinja2 import FileSystemLoader
 
 # Infrastructure
 from framework.base.infrastructure.template_management.template_render import JinjaTemplateRender
